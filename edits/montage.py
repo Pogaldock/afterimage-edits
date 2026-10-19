@@ -625,7 +625,24 @@ def overlay_text(img, lines, y, size):
 
 # ---------- colour looks and raw textures, picked per section so one edit moves between them ----------
 LOOKS = {"psych": 3, "accent": 2, "duo": 2, "night": 1.5, "acid": 1, "tri": 1}
-RAWS = {None: 5, "static": 2, "tear": 1.5, "vhs": 1.5}
+RAWS = {None: 4, "s_hero": 1.5, "s_around": 1.2, "s_luma": 1.3, "s_rings": 1, "s_hex": 1, "s_scan": 1, "tear": 1.2, "vhs": 1.2}
+_RG = {}
+def _grids():
+    if "r" not in _RG:
+        xs, ys = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32)); cx, cy = W / 2, H / 2
+        _RG.update(r=np.hypot(xs - cx, ys - cy) / math.hypot(cx, cy), xs=xs, ys=ys, ang=np.arctan2(ys - cy, xs - cx))
+        hx = xs / 90.0; hy = ys / 78.0; _RG["hex"] = (np.floor(hx + .5 * (np.floor(hy) % 2)) * 7 + np.floor(hy) * 13).astype(np.int32)
+    return _RG
+
+def static_tex(rr, kind_seed, tint=None):
+    """TV noise in a few flavours: chunky or fine, grey, per-channel colour, tinted to the palette, or horizontal streaks"""
+    f = int(kind_seed * 97) % 5; px = (1, 2, 3, 2, 4)[f]; h_, w_ = H // px + 1, W // px + 1
+    if f == 3: n = np.repeat(rr.integers(0, 255, (h_, 1), dtype=np.uint8), w_, 1)[..., None].repeat(3, 2)        # streaks
+    elif f == 1: n = rr.integers(0, 255, (h_, w_, 3), dtype=np.uint8)                                                 # colour noise
+    else: n = rr.integers(0, 255, (h_, w_, 1), dtype=np.uint8).repeat(3, 2)
+    n = n.repeat(px, 0).repeat(px, 1)[:H, :W]
+    if tint is not None and f in (0, 4): n = (n.astype(np.float32) * (np.array(tint, np.float32) / 255 * .8 + .2)).astype(np.uint8)
+    return n
 ACCENTS = [(255, 30, 60), (0, 255, 160), (255, 220, 0), (0, 200, 255), (255, 0, 200), (255, 110, 0)]
 def look_fx(img, look, pal, acc):
     if look in (None, "psych"): return img
@@ -643,9 +660,27 @@ def look_fx(img, look, pal, acc):
         q = np.digitize(L, [.33, .66]); cols = np.array([(10, 0, 30), pal[1], pal[0]], np.float32) / 255; out = cols[q]
     return Image.fromarray((out * 255).astype(np.uint8))
 
-def raw_fx(img, kind, t, k, rr):
+def raw_fx(img, kind, t, k, rr, mask=None, beat=0.0, sseed=.3, tint=None):
+    """static that interacts with the picture: inside the hero, around it, in the shadows, in rings on the kick, in hex cells, in scan bands"""
     if not kind: return img
     a = np.asarray(img).copy(); h, w = a.shape[:2]
+    if kind.startswith("s_"):
+        g = _grids(); n = static_tex(rr, sseed + (k // 2) * .37 if kind != "s_hero" else sseed, tint)
+        if kind == "s_hero" and mask is not None:                             # the hero is a window onto static, edges stay clean
+            m = np.asarray(mask, np.float32) / 255; core = np.asarray(mask.filter(ImageFilter.MinFilter(9)), np.float32) / 255
+            m = (core * (.75 + .25 * beat))[..., None]
+        elif kind == "s_around" and mask is not None:                         # everything but the hero dissolves into static, brightest bits survive
+            L = a.mean(2) / 255; m = ((1 - np.asarray(mask, np.float32) / 255) * np.clip(1.3 - L * 1.6, 0, 1) * (.65 + .35 * beat))[..., None]
+        elif kind == "s_luma":                                                # the shadows are static, the line moves with the kick
+            L = a.mean(2) / 255; th = .22 + .18 * beat + .08 * math.sin(t * 1.3); m = np.clip((th - L) * 6, 0, 1)[..., None]
+        elif kind == "s_rings":                                               # rings of static rolling out from the centre on each kick
+            ph = (g["r"] * 7 - t * 3.2 + sseed * 5) % 1.0; m = (np.clip(1 - np.abs(ph - .5) * 6, 0, 1) * (.35 + .65 * beat))[..., None]
+            if mask is not None: m = m * (1 - np.asarray(mask, np.float32)[..., None] / 255 * .85)
+        elif kind == "s_hex":                                                 # random hex cells flip to static, re-rolled each beat
+            sel = (((g["hex"] * 2654435761 + int(k / max(1, FPS * .45)) * 97) % 1000) < 230 + 200 * beat); m = sel.astype(np.float32)[..., None] * .9
+        else:                                                                 # s_scan: diagonal bands of static sweeping across
+            m = (np.sin((g["xs"] * .6 + g["ys"]) * .012 - t * 6) > .6 - .5 * beat).astype(np.float32)[..., None] * .85
+        return Image.fromarray((a * (1 - m) + n * m).astype(np.uint8))
     if kind == "static":                                                     # TV static over everything, with a rolling bright band
         n = rr.integers(0, 255, (h // 2, w // 2), dtype=np.uint8).repeat(2, 0).repeat(2, 1)[:h, :w, None]
         al = .14 + .1 * math.sin(t * 7); y0 = int((t * 900) % h); band = slice(y0, min(h, y0 + 70))
@@ -747,7 +782,7 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             fr = Image.fromarray((np.array(c1) * .35 * (1 - l) + np.array(c0) * .5 * l).astype(np.uint8)).convert("RGBA")
         else: fr = shader_frame("plasma", t, beat, energy, s.get("sseed", .3), fam=fam).convert("RGBA")
         # hero
-        hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u) * driftz(t)
+        hmask = None; hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u) * driftz(t)
         if "tess_hero" in s["fx"]:                                            # drop: the hero tiles the whole background, hero on top
             fr = shader_frame(TESS[int(s.get("sseed", .5) * 7) % len(TESS)], t, beat, energy, s.get("sseed", .5), tex=hi, fam=fam).convert("RGBA")
         if "kaleido_hero" in s["fx"]:
@@ -807,7 +842,10 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                     for gx in range(cols): C.paste(fr, small, (gx + .5 * (gy % 2)) * W / (cols - 1), gy * small.height - off)
             if h is not None and "echo" in s["fx"]:
                 for j in range(4, 0, -1): C.paste(fr, h, W / 2 + j * 22 * math.cos(t * 3), H * .5 + j * 30, rot=rot, alpha=.15 + .08 * (4 - j))
-            if h is not None: C.paste(fr, h, W / 2, H * .5, rot=rot if mv not in ("coinspin", "slices", "shatter") else 0)
+            if h is not None:
+                C.paste(fr, h, W / 2, H * .5, rot=rot if mv not in ("coinspin", "slices", "shatter") else 0)
+                if s.get("raw") in ("s_hero", "s_around", "s_rings"):
+                    hm = Image.new("RGBA", (W, H), (0, 0, 0, 0)); C.paste(hm, h, W / 2, H * .5, rot=rot if mv not in ("coinspin", "slices", "shatter") else 0); hmask = hm.split()[3]
         if "ascii_bg" in s["fx"]:                                                # background in ASCII, hero stays clean on top
             bgi = apply_fx(fr.convert("RGB"), ["ascii"], {"pal": s["pal"], "cell": 14, "apal": True}, t, beat).convert("RGBA")
             if h is not None: C.paste(bgi, h, W / 2, H * .5)
@@ -823,11 +861,14 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             if "im" not in mf: mf["im"] = fetch_image(mf["img"])
             if mf["im"] is not None: img = cover(mf["im"], zoom=1.15)
         img = look_fx(img, s.get("look"), s["pal"], s.get("acc", (255, 30, 60)))
-        img = raw_fx(img, s.get("raw"), t, k, NR)
+        img = raw_fx(img, s.get("raw"), t, k, NR, hmask, beat, s.get("sseed", .3), s.get("acc"))
         pre = img
         n_in = k - kstart; tr = s.get("tr", "cut"); mfr = max(3, min(9, int(per_beat * FPS)))
-        if tr == "static" and n_in < 3:                                               # a burst of pure static between shots
-            nz = NR.integers(0, 255, (H // 3, W // 3), dtype=np.uint8).repeat(3, 0).repeat(3, 1)[:H, :W]; img = Image.fromarray(np.stack([nz] * 3, 2))
+        if tr == "static" and frozen is not None and n_in < 5:                        # static ring wipe: old frame outside, static band, new frame inside
+            g = _grids(); a_ = (n_in + 1) / 5; band = .28
+            inner = (g["r"] < a_ * 1.1)[..., None]; ring = ((g["r"] >= a_ * 1.1) & (g["r"] < a_ * 1.1 + band))[..., None]
+            nz = static_tex(NR, s.get("sseed", .3) + n_in * .21, s.get("acc"))
+            img = Image.fromarray(np.where(inner, np.asarray(img), np.where(ring, nz, np.asarray(frozen))).astype(np.uint8))
         if frozen is not None and n_in < mfr and tr in ("melt", "zoom"):
             a = (n_in + 1) / (mfr + 1)
             if tr == "melt":                                                          # liquid morph: both frames flow into each other
