@@ -77,11 +77,18 @@ def sc_candidates(q, n=8):
     for line in p.stdout.splitlines():
         try: j = json.loads(line)
         except Exception: continue
-        out.append({"id": str(j.get("id")), "url": j.get("webpage_url") or j.get("original_url"), "title": j.get("title") or "", "dur": float(j.get("duration") or 0), "genre": (j.get("genre") or ""), "plays": int(j.get("view_count") or 0), "uploader": j.get("uploader") or ""})
+        out.append({"id": str(j.get("id")), "url": j.get("webpage_url") or j.get("original_url"), "title": j.get("title") or "", "dur": float(j.get("duration") or 0), "genre": (j.get("genre") or ""), "plays": int(j.get("view_count") or 0), "uploader": j.get("uploader") or "",
+                    "age": max(1.0, (time.time() - float(j["timestamp"])) / 86400) if j.get("timestamp") else None})
     return out
 
 STOP = {"type", "beat", "music", "the", "a", "of", "and", "mix", "set"}
-def score_candidate(c, q, want):
+def score_viral(c, q, want, cfg):
+    """going viral now: plays per day since upload dominates; old or tiny tracks are out"""
+    base = score_candidate(c, q, want, min_plays=int(cfg.get("min_plays", 0)))
+    if base < 0 or c.get("age") is None or c["age"] > float(cfg.get("max_age_days", 540)): return -1
+    return base - math.log10(1 + c["plays"]) * 1.1 + math.log10(1 + c["plays"]) * .5 + math.log10(1 + c["plays"] / c["age"]) * 1.6
+
+def score_candidate(c, q, want, min_plays=None):
     """whole-word matches only (substring matching let 'd-beat' pick Initial D for punk); at least one genre word must hit"""
     txt = " " + " ".join(re.findall(r"[a-z0-9]+", (c["title"] + " " + c["genre"] + " " + c["uploader"]).lower())) + " "
     toks = [t for t in re.findall(r"[a-z0-9]+", q.lower()) if t not in STOP and len(t) > 2]
@@ -91,7 +98,8 @@ def score_candidate(c, q, want):
     if any(f" {x} " in txt for x in ("podcast", "episode", "interview", "tutorial", "asmr", "audiobook", "eurobeat", "nightcore", "anime", "cover", "covers", "goes pop", "karaoke", "reaction", "tutorial", "maroon", "8d", "ringtone")): return -1
     if want and gen == 0: return -1
     if any(b in txt for b in (" " + " ".join(re.findall(r"[a-z0-9]+", x.lower())) + " " for x in MONT.get("block", []))): return -1
-    if c["plays"] < int(MONT.get("music", {}).get("_techno", {}).get("min_plays", 0) if MONT.get("music_mode") == "techno" else 0): return -1
+    if min_plays is None: min_plays = int(MONT.get("music", {}).get("_techno", {}).get("min_plays", 0) if MONT.get("music_mode") == "techno" else 0)
+    if c["plays"] < min_plays: return -1
     pop = math.log10(1 + c["plays"])                                     # popular inside the scene: plays dominate once it's on-genre
     return hit * 1.2 + gen * .8 + pop * 1.1 + (.5 if 150 <= c["dur"] <= 480 else 0)
 
@@ -108,15 +116,27 @@ def find_track(style, r, used):
         q = r.choice(mq["yt"]); res = dl(f"ytsearch2:{q}", os.path.join(AUD, f"{style}_yt.%(ext)s"), ("--extractor-args", "youtube:player_client=tv"))
         if res.get("ok") and res["id"] not in used: res["src"] = "youtube"; res["q"] = q; return res, tries
         tries.append(("youtube", q, res.get("err", "used")))
-    for q in r.sample(mq["sc"], min(5, len(mq["sc"]))):
-        try: cands = sc_candidates(q, 12)
+    vir = MONT["music"].get("_viral") if MONT.get("music_mode") == "techno" else None
+    passes = []
+    if vir and r.random() < float(vir.get("share", .7)):                 # most edits: something going viral in the scene right now
+        sc = lambda c, q: score_viral(c, q, want, vir); passes.append((r.sample(vir["sc"], min(5, len(vir["sc"]))), sc, 20))
+    passes.append((r.sample(mq["sc"], min(5, len(mq["sc"]))), lambda c, q: score_candidate(c, q, want), 12))
+    for qs, scf, n in passes:
+        res, more = _sc_pass(style, r, used, qs, scf, n); tries += more
+        if res: return res, tries
+    return None, tries
+
+def _sc_pass(style, r, used, qs, scf, n):
+    tries = []
+    for q in qs:
+        try: cands = sc_candidates(q, n)
         except Exception as e: tries.append(("soundcloud", q, str(e)[:80])); continue
-        cands = [c for c in cands if c["id"] not in used and c["url"] and int(hashlib.sha1(c["id"].encode()).hexdigest(), 16) % SHARD_OF == SHARD_NO]; cands.sort(key=lambda c: -score_candidate(c, q, want))
-        top = [c for c in cands[:6] if score_candidate(c, q, want) >= 0]; r.shuffle(top); top.sort(key=lambda c: -score_candidate(c, q, want) + r.uniform(0, .6))
+        cands = [c for c in cands if c["id"] not in used and c["url"] and int(hashlib.sha1(c["id"].encode()).hexdigest(), 16) % SHARD_OF == SHARD_NO]; cands.sort(key=lambda c: -scf(c, q))
+        top = [c for c in cands[:6] if scf(c, q) >= 0]; r.shuffle(top); top.sort(key=lambda c: -scf(c, q) + r.uniform(0, .6))
         for c in top[:3]:
-            if score_candidate(c, q, want) < 0: break
+            if scf(c, q) < 0: break
             res = dl(c["url"], os.path.join(AUD, f"{style}_{c['id']}.%(ext)s"))
-            if res.get("ok"): res.update(src="soundcloud", q=q, genre=c["genre"], plays=c["plays"]); return res, tries
+            if res.get("ok"): res.update(src="soundcloud", q=q, genre=c["genre"], plays=c["plays"], per_day=int(c["plays"] / c["age"]) if c.get("age") else None); return res, tries
             tries.append(("soundcloud", c["url"], res.get("err", "?")))
         if not cands: tries.append(("soundcloud", q, "no candidates"))
     return None, tries
@@ -861,13 +881,13 @@ def publish(mont, flags):
 
 # ============================ probe ============================
 def probe():
-    for style in ["witch", "black", "hyper", "free", "punk"]:
-        mq = MONT["music"][style]; q = mq["sc"][0]; want = [w.lower() for w in mq.get("want", [])]
+    """what the viral pool would pick right now: top candidates per query with plays/day"""
+    vir = MONT["music"]["_viral"]; want = [w.lower() for w in MONT["music"]["_techno"].get("want", [])]
+    for q in vir["sc"][:14]:
         try:
-            cands = sc_candidates(q); cands.sort(key=lambda c: -score_candidate(c, q, want))
-            report["probe"].append({"q": f"sc:{q}", "top": [f"{c['title'][:50]} [{c['genre']}] {c['plays']} → {score_candidate(c, q, want):.2f}" for c in cands[:4]]})
-        except Exception as e: report["probe"].append({"q": f"sc:{q}", "err": str(e)[:160]})
-    r = dl("ytsearch1:100 gecs money machine", os.path.join(AUD, "yt.%(ext)s"), ("--extractor-args", "youtube:player_client=tv")); r["q"] = "youtube"; r.pop("path", None); report["probe"].append(r)
+            cands = sc_candidates(q, 12); cands.sort(key=lambda c: -score_viral(c, q, want, vir))
+            report["probe"].append({"q": q, "top": [f"{c['title'][:55]} | {c['plays']} plays | {int(c['plays'] / c['age']) if c.get('age') else '?'}/day | {int(c['age']) if c.get('age') else '?'}d → {score_viral(c, q, want, vir):.2f}" for c in cands[:4]]})
+        except Exception as e: report["probe"].append({"q": q, "err": str(e)[:160]})
 
 def write_report():
     L = [f"# montage — {report['started']}", ""]
