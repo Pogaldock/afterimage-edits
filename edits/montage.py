@@ -41,7 +41,8 @@ W, H, FPS = 1080, 1920, 24                                           # native 9:
 OUT_W, OUT_H = 1080, 1920
 CAP_Y = .70                                                           # captions sit above TikTok's bottom UI band
 DUR_MIN, DUR_MAX = 12.0, 17.0
-KEEP_ITEMS = 40                                                      # newest N stay on the site, plus every edit you kept (HD files are bigger)
+KEEP_ITEMS = int(MONT.get("keep", 120)) # newest N unwatched stay on the site, plus every edit you kept or downloaded
+WATCHED_TTL = 48 * 3600                                             # played through, not kept, not downloaded → gone this long after
 
 def log(*a): print(time.strftime("%H:%M:%S"), *a, flush=True)
 def err(where, e): m = f"{where}: {type(e).__name__}: {str(e)[:200]}"; log("ERR", m); report["errors"].append(m)
@@ -49,6 +50,9 @@ def obj_get(key):
     r = S.get(SITE + "/api/atlas/cur/obj", params={"o": key}, headers=AUTH, timeout=300); return r.content if r.status_code == 200 else None
 def obj_put(key, data, ctype="application/octet-stream"):
     r = S.put(SITE + "/api/atlas/cur/obj", params={"o": key}, data=data, headers={**AUTH, "content-type": ctype}, timeout=600); r.raise_for_status(); return r.json()
+def obj_del(key):
+    try: S.delete(SITE + "/api/atlas/cur/obj", params={"o": key}, headers=AUTH, timeout=60)
+    except Exception: pass
 def fam_of(style): return next((f for f, v in MONT["families"].items() if style in v["styles"]), "dark")
 
 # ============================ audio sources ============================
@@ -791,8 +795,18 @@ def make(cap, shard=0, of=1):
     finish(mont, flags)
 
 def finish(mont, flags):
-    ok = set(flags.get("mok", [])); dead = set(flags.get("mdead", []))
-    mont["items"] = [it for k, it in enumerate(mont["items"]) if it["id"] not in dead and (k < KEEP_ITEMS or it["id"] in ok)]
+    ok = set(flags.get("mok", [])) | set(flags.get("mdl", [])); dead = set(flags.get("mdead", [])); seen = flags.get("mseen") or {}; t = time.time()
+    before = mont["items"]; keep, fresh = [], 0
+    for it in before:
+        i = it["id"]
+        if i in ok: keep.append(it); continue
+        if i in dead: continue
+        if i in seen and t - seen[i] > WATCHED_TTL: continue                 # watched through, left alone: done with it
+        if fresh < KEEP_ITEMS: keep.append(it); fresh += 1
+    gone = {it["id"] for it in before} - {it["id"] for it in keep}
+    for i in gone:                                                          # free the storage for real, not just hide it
+        for ext in ("mp4", "jpg"): obj_del(f"atlas/mont/{i}.{ext}")
+    report["pruned"] = len(gone); mont["items"] = keep
     obj_put("atlas/mont.json", json.dumps(mont).encode(), "application/json")
     report["total"] = len(mont["items"])
     try:
