@@ -123,6 +123,65 @@ void main(){
   vec3 col = pal(t*.15+T*.1+float(it)*.01)*(1.-float(it)/80.)*1.4*(1.+.8*B);
   o=vec4(col*exp(-t*.12),1.);
 }""",
+# hexagonal tessellation of a cut-out: every cell rotates on a ripple from the centre, tinted per cell, glowing cell edges
+"hextile": """
+vec4 hexc(vec2 p){ vec2 r=vec2(1.,1.7320508), h=r*.5; vec2 a=mod(p,r)-h, b=mod(p-h,r)-h; vec2 g=dot(a,a)<dot(b,b)?a:b; return vec4(g,p-g); }
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y; uv*=rot(T*.04+S*3.);
+  float sc=2.6+2.2*S+.35*sin(T*.37); vec4 h=hexc(uv*sc+vec2(T*.11,T*.23)); vec2 id=h.zw; float d=length(id-vec2(T*.11,T*.23));
+  float a=T*.9-d*.7+B*.6+floor(hash(id)*6.)*1.0471976;
+  vec2 q=(h.xy*rot(a))*(1.25-.15*B)+.5;
+  vec4 tx=(q.x>0.&&q.x<1.&&q.y>0.&&q.y<1.)?texture(TEX,q):vec4(0.);
+  vec3 tint=pal(hash(id)*.6+T*.12+d*.08);
+  vec3 bg=pal(d*.12-T*.25+.5)*(.18+.1*sin(d*3.-T*4.));
+  float hd=max(abs(h.x),dot(abs(h.xy),vec2(.8660254,.5)));
+  float edge=smoothstep(.44,.5,hd)*(.6+1.2*B);
+  vec3 col=mix(bg,tx.rgb*mix(vec3(1.),tint*1.7,.55),tx.a)+tint*edge;
+  o=vec4(col,1.);
+}""",
+# mirrored square wallpaper (p4m) of a cut-out; random cells split into 2x2 smaller copies, re-rolled every half bar
+"wallp": """
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec2 p=uv*(2.2+2.4*S)*(1.+.06*sin(T*.5)); p*=rot(T*.06); p+=vec2(T*.15,-T*.1);
+  vec2 id=floor(p), f=fract(p);
+  if(mod(id.x,2.)>.5) f.x=1.-f.x; if(mod(id.y,2.)>.5) f.y=1.-f.y;
+  float lvl=0.; vec2 sid=id;
+  if(hash(id+floor(T*.9))>.5){ sid=id*2.+floor(f*2.); f=fract(f*2.); lvl=1.; if(hash(sid+3.1+floor(T*.9))>.7){ sid=sid*2.+floor(f*2.); f=fract(f*2.); lvl=2.; } }
+  vec2 q=(f-.5)*rot(B*.35*(hash(sid)-.5))*(1.12-.12*B)+.5;
+  vec4 tx=(q.x>0.&&q.x<1.&&q.y>0.&&q.y<1.)?texture(TEX,q):vec4(0.);
+  float chk=mod(id.x+id.y,2.);
+  vec3 bg=pal(hash(sid)*.4+T*.08+lvl*.2+length(uv)*.3)*(chk>.5?.32:.14);
+  vec3 tint=pal(hash(sid)+.3+T*.1);
+  o=vec4(mix(bg,tx.rgb*mix(vec3(1.),tint*1.6,.5),tx.a),1.);
+}""",
+# two layers of truchet arcs at different scales, flowing; beat thickens the lines
+"truchet": """
+float layer(vec2 p, float k){
+  vec2 id=floor(p), f=fract(p)-.5; if(hash(id+k+floor(T*.4+hash(id)*4.))>.5) f.x=-f.x;
+  vec2 c=(f.x+f.y>0.)?vec2(.5):vec2(-.5); float d=abs(length(f-c)-.5);
+  float w=.07+.06*B; return smoothstep(w,w-.03,d);
+}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y; uv*=rot(.25*sin(T*.21)+S);
+  float n=5.+4.*S; vec2 p=uv*n+vec2(0.,T*.5);
+  float a=layer(p,0.), b=layer(p*2.+vec2(T*.3,0.),7.);
+  vec3 col=pal(floor(p.x)*.05+floor(p.y)*.03+T*.15)*a*1.3+pal(.5+length(uv)+T*.1)*b*.55*(1.-a);
+  col+=pal(length(uv)*.6-T*.2)*.06;
+  o=vec4(col,1.);
+}""",
+# op-art moire: two drifting ring sources multiplied, sliced by rotating spokes
+"opart": """
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec2 c1=vec2(.18*sin(T*.5),.12*cos(T*.3)), c2=vec2(-.16*cos(T*.4),-.14*sin(T*.45));
+  float r1=length(uv-c1), r2=length(uv-c2), f=60.+30.*S;
+  float s=sign(sin(r1*f-T*3.)*sin(r2*f+T*2.));
+  float ang=atan(uv.y,uv.x), sp=sign(sin(ang*(10.+floor(S*14.))+r1*18.-T*2.5));
+  vec3 a=pal(r1*.8+T*.1), b=pal(r2*.8+.5-T*.07);
+  vec3 col=mix(a,b,.5+.5*s)*(.55+.45*sp)*(1.+.6*B);
+  o=vec4(col,1.);
+}""",
 }
 
 VERT = "#version 330\nin vec2 v; void main(){ gl_Position=vec4(v,0.,1.); }"
@@ -146,7 +205,7 @@ class VJ:
         if tex is not None and tex is not self._texsrc:
             im = tex.convert("RGBA").transpose(Image.FLIP_TOP_BOTTOM); im.thumbnail((512, 512))
             if self.tex: self.tex.release()
-            self.tex = self.ctx.texture(im.size, 4, im.tobytes()); self.tex.repeat_x = self.tex.repeat_y = True; self._texsrc = tex
+            self.tex = self.ctx.texture(im.size, 4, im.tobytes()); self.tex.repeat_x = self.tex.repeat_y = True; self.tex.build_mipmaps(); self._texsrc = tex   # mipmaps: small tiles stay clean
         if self.tex is not None and "TEX" in p: self.tex.use(0); p["TEX"].value = 0
         for k, v in (("R", (float(self.w), float(self.h))), ("T", float(t)), ("B", float(beat)), ("E", float(energy)), ("S", float(seed % 1.0))): self._set(p, k, v)
         self.fbo.clear(0, 0, 0, 1); vao.render(mode=5)            # TRIANGLE_STRIP

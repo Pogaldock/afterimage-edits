@@ -20,7 +20,8 @@ def vj():
     if _VJ is None:
         import vj as V; _VJ = V.VJ(720, 1280)
     return _VJ
-VJ_SHADERS = {"rave": ["boxes", "tunnel", "knot", "plasma", "rings", "kaleido", "kifs", "menger"], "crt": ["tunnel", "rings", "plasma", "kaleido", "kifs"], "dark": ["knot", "boxes", "tunnel", "kaleido", "kifs", "menger"]}
+VJ_SHADERS = {"rave": ["boxes", "tunnel", "knot", "plasma", "rings", "kaleido", "kifs", "menger", "truchet", "opart"], "crt": ["tunnel", "rings", "plasma", "kaleido", "kifs", "truchet", "opart"], "dark": ["knot", "boxes", "tunnel", "kaleido", "kifs", "menger", "truchet"]}
+TESS = ["hextile", "wallp"]                                             # tessellations built from a cut-out or symbol
 def shader_frame(name, t, beat, energy, seed, tex=None, dim=1.0, fam="rave"):
     im = vj().frame(name, t, beat, energy, seed, tex).resize((W, H), Image.BILINEAR)
     if fam == "dark": im = ImageEnhance.Color(im).enhance(.45)
@@ -126,8 +127,11 @@ def find_track(style, r, used):
         if res: return res, tries
     return None, tries
 
-def _sc_pass(style, r, used, qs, scf, n):
+def _sc_pass(style, r, used, qs, scf0, n):
     tries = []
+    def scf(c, q):                                                      # your deletes/keeps on this uploader's earlier tracks
+        b = scf0(c, q); u = UPTASTE.get((c.get("uploader") or "").lower(), 0)
+        return -1 if b < 0 or u <= -2 else b + max(-1.5, min(1.0, .6 * u))
     for q in qs:
         try: cands = sc_candidates(q, n)
         except Exception as e: tries.append(("soundcloud", q, str(e)[:80])); continue
@@ -136,7 +140,7 @@ def _sc_pass(style, r, used, qs, scf, n):
         for c in top[:3]:
             if scf(c, q) < 0: break
             res = dl(c["url"], os.path.join(AUD, f"{style}_{c['id']}.%(ext)s"))
-            if res.get("ok"): res.update(src="soundcloud", q=q, genre=c["genre"], plays=c["plays"], per_day=int(c["plays"] / c["age"]) if c.get("age") else None); return res, tries
+            if res.get("ok"): res.update(src="soundcloud", q=q, genre=c["genre"], plays=c["plays"], uploader=c["uploader"], per_day=int(c["plays"] / c["age"]) if c.get("age") else None); return res, tries
             tries.append(("soundcloud", c["url"], res.get("err", "?")))
         if not cands: tries.append(("soundcloud", q, "no candidates"))
     return None, tries
@@ -257,11 +261,23 @@ def fetch_image(it):
     return Image.open(p).convert("RGB")
 
 def weights(mont, flags, key):
-    """1 + keeps − kills for a style / family / source, from your mok/mdead on earlier edits"""
-    ok, dead = set(flags.get("mok", [])), set(flags.get("mdead", [])); w = {}
+    """keeps − deletes for a style / family / source: from the live edits plus the taste ledger (survives pruning)"""
+    ok, dead = set(flags.get("mok", [])) | set(flags.get("mdl", [])), set(flags.get("mdead", [])); w = {}; seen = set()
     for it in mont["items"]:
-        k = it.get(key); w[k] = w.get(k, 0) + (1 if it["id"] in ok else 0) - (.7 if it["id"] in dead else 0)
+        seen.add(it["id"]); k = it.get(key); w[k] = w.get(k, 0) + (1 if it["id"] in ok else 0) - (.7 if it["id"] in dead else 0)
+    for t in mont.get("taste", []):
+        if t["id"] in seen: continue
+        k = t.get(key); w[k] = w.get(k, 0) + (1 if t["v"] > 0 else -.7)
     return w
+
+UPTASTE = {}
+def uploader_taste(mont):
+    """per track uploader: +1 per kept/downloaded edit, −1 per deleted one"""
+    d = {}
+    for t in mont.get("taste", []):
+        u = (t.get("uploader") or "").lower()
+        if u: d[u] = d.get(u, 0) + t["v"]
+    return d
 
 # ============================ rendering ============================
 def cover(im, w=W, h=H, zoom=1.0, px=0.5, py=0.5):
@@ -534,10 +550,11 @@ def make_sections(bars, per, dur, fam, style, walls, r, mont):
             return self.pool.pop()
     moves = Deck(["center", "coinspin", "orbit", "droste", "slices", "split4", "strobe2", "zoomthrough", "triple", "pixelsort", "shatter", "scan"])
     variants = Deck([["echo"], ["tile"], ["mirror2"], ["duo"], ["rgbshift"], ["invert_beats"], ["mirror4"], ["ascii_bg"], ["posterize"]])
-    drops = Deck([["ascii"], ["mirror4"], ["kaleido_hero"], ["ascii", "rgbshift"], ["invert", "mirror2"], ["ascii_bg"], ["kaleido_hero", "duo"], ["posterize", "mirror4"]])
+    drops = Deck([["ascii"], ["mirror4"], ["kaleido_hero"], ["ascii", "rgbshift"], ["invert", "mirror2"], ["ascii_bg"], ["kaleido_hero", "duo"], ["posterize", "mirror4"], ["tess_hero"], ["tess_hero", "rgbshift"]])
     shaders = [x for x in VJ_SHADERS.get(fam, VJ_SHADERS["rave"]) if x != "kaleido"]
     def bg_choice():
         roll = r.random()
+        if roll < .3: return {"bg": "tess", "shader": r.choice(TESS), "tsrc": r.choice(heroes), "sseed": r.random()}   # the background is a pattern made of a smaller symbol / cut-out
         if roll < .62 or not walls: return {"bg": "shader", "shader": r.choice(shaders), "sseed": r.random()}
         if roll < .85: return {"bg": "kwall", "wall": r.choice(walls), "sseed": r.random()}
         return {"bg": "wall", "wall": r.choice(walls), "bpx": r.random(), "bpy": r.random()}
@@ -606,6 +623,10 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
         bar_last = max((b for b in barset if b <= t + 1e-6), default=-9); energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
         # background
         if s["bg"] == "shader": fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
+        elif s["bg"] == "tess":
+            tk = (s["tsrc"], s["pal"][::-1])
+            if tk not in sprites: sprites[tk] = hero_sprite(s["tsrc"], int(W * .45), s["pal"][::-1], fam, r)
+            fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], tex=sprites[tk], dim=.85, fam=fam).convert("RGBA")
         elif s["bg"] == "kwall" and wall_im(s.get("wall")) is not None:
             fr = shader_frame("kaleido", t, beat, energy, s["sseed"], tex=wall_im(s["wall"]).convert("RGBA"), fam=fam).convert("RGBA")
         elif wall_im(s.get("wall")) is not None:
@@ -614,6 +635,8 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
         else: fr = shader_frame("plasma", t, beat, energy, s.get("sseed", .3), fam=fam).convert("RGBA")
         # hero
         hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u)
+        if "tess_hero" in s["fx"]:                                            # drop: the hero tiles the whole background, hero on top
+            fr = shader_frame(TESS[int(s.get("sseed", .5) * 7) % len(TESS)], t, beat, energy, s.get("sseed", .5), tex=hi, fam=fam).convert("RGBA")
         if "kaleido_hero" in s["fx"]:
             kt = kaleido_tex.setdefault(id(hi), hi)
             fr = shader_frame("kaleido", t, beat, energy, s.get("sseed", .5), tex=kt, fam=fam).convert("RGBA")
@@ -772,7 +795,7 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
     poster = os.path.join(WORK, mid + ".jpg"); subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(dur - .2, cuts[1] if len(cuts) > 1 else 0.5) + 0.08:.3f}", "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
-    item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"]}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
+    item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"], "uploader": track.get("uploader", "")}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
             "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
     obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
     if not v2:
@@ -785,7 +808,7 @@ def make(cap, shard=0, of=1):
     if os.environ.get("MONTAGE_OFFLINE"):                               # local test: elements already in _work/montage/els, no site
         els, man, flags, mont = [], {"styles": {}}, {}, {"items": []}; global obj_put; obj_put = lambda k, d, c=None: log("would put", k, len(d))
     else: els, man, flags, mont = sync_library()
-    ws, wf = weights(mont, flags, "style"), weights(mont, flags, "fam"); dead = set(flags.get("mdead", []))
+    ws, wf = weights(mont, flags, "style"), weights(mont, flags, "fam"); dead = set(flags.get("mdead", [])); UPTASTE.update(uploader_taste(mont))
     used = {it["track"]["id"] for it in mont["items"] if it["id"] in dead} | {it["track"]["id"] for it in mont["items"][:12]}
     counts = {s: len(C.pool(s)) for s in CFG if not s.startswith("_")}; recent = [it["style"] for it in mont["items"][:8]]
     styles = [s for s in counts if counts[s] >= 3 or len(man["styles"].get(s, [])) >= 20]   # thin on cut-outs is fine if the wall has images
@@ -823,6 +846,11 @@ def finish(mont, flags):
         if i in dead: continue
         if i in seen and t - seen[i] > WATCHED_TTL: continue                 # watched through, left alone: done with it
         if fresh < KEEP_ITEMS: keep.append(it); fresh += 1
+    led = mont.setdefault("taste", []); have = {t["id"] for t in led}
+    for it in before:                                                   # remember the verdict before the edit itself is gone
+        v = 1 if it["id"] in ok else (-1 if it["id"] in dead else 0)
+        if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
+    mont["taste"] = led[-800:]
     gone = {it["id"] for it in before} - {it["id"] for it in keep}
     for i in gone:                                                          # free the storage for real, not just hide it
         for ext in ("mp4", "jpg"): obj_del(f"atlas/mont/{i}.{ext}")
