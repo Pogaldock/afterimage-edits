@@ -266,7 +266,7 @@ def weights(mont, flags, key):
     for it in mont["items"]:
         seen.add(it["id"]); k = it.get(key); w[k] = w.get(k, 0) + (1 if it["id"] in ok else 0) - (.7 if it["id"] in dead else 0)
     for t in mont.get("taste", []):
-        if t["id"] in seen: continue
+        if t["id"] in seen or (t["v"] < 0 and t.get("why") in ("song", "none")): continue
         k = t.get(key); w[k] = w.get(k, 0) + (1 if t["v"] > 0 else -.7)
     return w
 
@@ -276,6 +276,7 @@ def uploader_taste(mont):
     d = {}
     for t in mont.get("taste", []):
         u = (t.get("uploader") or "").lower()
+        if t["v"] < 0 and t.get("why") in ("video", "none"): continue
         if u: d[u] = d.get(u, 0) + t["v"]
     return d
 
@@ -598,7 +599,7 @@ def overlay_text(img, lines, y, size):
         sp = _FONT_CACHE[key]; b.alpha_composite(sp, (int(W / 2 - sp.width / 2), int(y))); y += sp.height * 1.02
     return b.convert("RGB")
 
-def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
+def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song=None):
     env_t, env_v = env
     avi = os.path.join(WORK, "clean.avi"); kf = ",".join(f"{c:.3f}" for c in sorted(set(keyframes) | {0.0}))
     enc = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
@@ -621,6 +622,16 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
         s = shots[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         last = max((p for p in punches if p <= t + 1e-6), default=-9); beat = math.exp(-(t - last) * 8)
         bar_last = max((b for b in barset if b <= t + 1e-6), default=-9); energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
+        op = s.get("opener")
+        if op and t < op["end"]:                                              # the meme opener: full frame, punched on the beats
+            if "im" not in op:
+                im = fetch_image(op["img"]); op["im"] = ImageEnhance.Contrast(im).enhance(1.1) if im is not None else None
+            if op["im"] is not None:
+                img = cover(op["im"], zoom=1.04 + .07 * beat + .05 * t / op["end"])
+                if top: img = overlay_text(img, top, H * .085, 66)
+                if bottom: img = overlay_text(img, bottom, H * .725, 60)
+                if song: img = overlay_text(img, [song], H * .805, 40)
+                enc.stdin.write(img.tobytes()); continue
         # background
         if s["bg"] == "shader": fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
         elif s["bg"] == "tess":
@@ -709,6 +720,7 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
         img = post(img, fam, t, seed, strobe)
         if top: img = overlay_text(img, top, H * .085, 66)
         if bottom: img = overlay_text(img, bottom, H * .725, 60)
+        if song: img = overlay_text(img, [song], H * .805, 40)
         enc.stdin.write(img.tobytes())
     enc.stdin.close(); enc.wait()
     if enc.returncode: raise RuntimeError("frame encoder failed")
@@ -742,6 +754,20 @@ def _big_enough(f, min_px=180 * 180):
         try: im = Image.open(f); _SIZE[f] = im.width * im.height
         except Exception: _SIZE[f] = 0
     return _SIZE[f] >= min_px
+
+def pick_meme(man, mont, r):
+    """a well-known meme / pop-culture image from the atlas (style "meme"), kept ones first, not one used in the last 25 edits"""
+    if r.random() > float(MONT.get("meme_opener", .85)): return None
+    recent = {it.get("opener") for it in mont["items"][:25]}
+    its = [i for i in man["styles"].get("meme", []) if i["id"] not in recent]
+    ok = [i for i in its if i.get("ok")]; pool = ok if len(ok) >= 5 else sorted(its, key=lambda i: -(i.get("cs") or 0))[:60]
+    return r.choice(pool) if pool else None
+
+def clean_title(t):
+    t = re.sub(r"[\(\[][^\)\]]*(extended|original|mix|edit|remix|tiktok|free|dl|download|bootleg|premiere|out now)[^\)\]]*[\)\]]", lambda m: m.group(0) if re.search(r"remix|bootleg|edit", m.group(0), re.I) and len(m.group(0)) < 40 else "", t, flags=re.I)
+    t = re.split(r"\s[|•]\s|\s\|\s?|#", t)[0]
+    t = re.sub(r"[\U0001F000-\U0001FFFF\u2600-\u27BF]", "", t); t = re.sub(r"\s{2,}", " ", t).strip(" -–")
+    return t[:48] + ("…" if len(t) > 48 else "")
 
 def make_one(style, els, man, flags, mont, used_tracks, seed):
     r = random.Random(seed); fam = fam_of(style)
@@ -779,6 +805,10 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
             if s2 != style: pool += [w_ for w_ in kept_images(man, s2)[:30] if w_["id"] not in recent_walls]
         r.shuffle(pool); walls = pool[:12]
         shots, heroes = make_sections(bars, per, dur, fam, style, walls, r, mont)
+        opener = pick_meme(man, mont, r)
+        if opener:                                                      # pattern interrupt: the meme holds 2 beats (or a whole bar when it's fast), then the edit hits
+            oe = per * (4 if per < .42 else 2); shots[0]["opener"] = {"img": opener, "end": oe}
+            shots.insert(1, {**shots[0], "t0": oe, "mosh": True, "opener": None}); shots[0]["t1"] = oe
         mosh_cuts = [s_["t0"] for s_ in shots if s_.get("mosh") and s_["t0"] > 0]
     else:
         shots = make_shots(cuts, dur, fam, style, figs, walls, lines, r, bars, per if g else 0.45)
@@ -790,13 +820,14 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     if MONT.get("text", {}).get("hooks"):
         hooks = MONT.get("hooks", {}).get(style, []) + MONT.get("hooks", {}).get("_", []); hook = r.choice(hooks) if hooks else None
     hop_t = t[1] - t[0]; sel = (t >= start) & (t <= start + dur); ev = rms[sel] / (rms.max() + 1e-9); env = (t[sel] - start, np.clip(ev * 1.4, 0, 1))
-    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts)
+    song = ("♪ " + clean_title(track["title"])) if MONT.get("text", {}).get("song_name", True) and track.get("title") else None
+    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
     poster = os.path.join(WORK, mid + ".jpg"); subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(dur - .2, cuts[1] if len(cuts) > 1 else 0.5) + 0.08:.3f}", "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
     item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"], "uploader": track.get("uploader", "")}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
-            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
+            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "opener": (shots[0].get("opener") or {}).get("img", {}).get("id") if v2 and shots[0].get("opener") else None, "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
     obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
     if not v2:
         for f in os.listdir(d): os.remove(os.path.join(d, f))
@@ -809,7 +840,7 @@ def make(cap, shard=0, of=1):
         els, man, flags, mont = [], {"styles": {}}, {}, {"items": []}; global obj_put; obj_put = lambda k, d, c=None: log("would put", k, len(d))
     else: els, man, flags, mont = sync_library()
     ws, wf = weights(mont, flags, "style"), weights(mont, flags, "fam"); dead = set(flags.get("mdead", [])); UPTASTE.update(uploader_taste(mont))
-    used = {it["track"]["id"] for it in mont["items"] if it["id"] in dead} | {it["track"]["id"] for it in mont["items"][:12]}
+    used = {it["track"]["id"] for it in mont["items"] if it["id"] in dead} | {it["track"]["id"] for it in mont["items"][:12]} | {t["track"] for t in mont.get("taste", []) if t["v"] < 0 and t.get("why") in ("song", "both", None) and t.get("track")}
     counts = {s: len(C.pool(s)) for s in CFG if not s.startswith("_")}; recent = [it["style"] for it in mont["items"][:8]]
     styles = [s for s in counts if counts[s] >= 3 or len(man["styles"].get(s, [])) >= 20]   # thin on cut-outs is fine if the wall has images
     boost = MONT.get("boost", {})
@@ -849,7 +880,7 @@ def finish(mont, flags):
     led = mont.setdefault("taste", []); have = {t["id"] for t in led}
     for it in before:                                                   # remember the verdict before the edit itself is gone
         v = 1 if it["id"] in ok else (-1 if it["id"] in dead else 0)
-        if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
+        if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "why": (flags.get("mwhy") or {}).get(it["id"]), "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "track": (it.get("track") or {}).get("id"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
     mont["taste"] = led[-800:]
     gone = {it["id"] for it in before} - {it["id"] for it in keep}
     for i in gone:                                                          # free the storage for real, not just hide it
