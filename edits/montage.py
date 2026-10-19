@@ -538,49 +538,73 @@ def pick_heroes(r, style, fam, mont, n):
     r.shuffle(out); return out[:n]
 
 def make_sections(bars, per, dur, fam, style, walls, r, mont):
-    """2-bar sections, one hero each. bar 1 = hero clean, bar 2 = variant. The last bar of every 4-bar phrase is a build-up
-    (a cut on every beat, hero and kaleido alternating, zoom climbing); the next downbeat is the drop: a callback to an earlier
-    hero in ASCII, mirrored or kaleidoscoped. Returns shots with t0/t1."""
+    """Sections of 1 to 3 bars (never a fixed rhythm), one hero each: first bar clean, the rest varied. Build-ups (a cut per beat,
+    zoom climbing) arrive at irregular points and always land on a drop: a callback to an earlier hero in a new treatment.
+    Shots change by hard cut, datamosh, liquid melt or zoom-through; backgrounds range from shaders and tessellations to a
+    landscape and a lattice of 3D shapes built from a tapestry of images. Every cut stays on the beat grid. Returns shots with t0/t1."""
     if len(bars) < 2: bars = [i * 4 * per for i in range(int(dur / (4 * per)) + 1)]
-    bar_len = 4 * per; nb = int(round(dur / bar_len)); nsec = (nb + 1) // 2
-    heroes = pick_heroes(r, style, fam, mont, max(3, nsec)); shots = []; used = []
+    bar_len = 4 * per; nb = int(round(dur / bar_len))
+    heroes = pick_heroes(r, style, fam, mont, max(3, nb // 2 + 1)); shots = []; used = []
     class Deck:
         def __init__(self, items): self.items = list(items); self.pool = []
         def draw(self):
             if not self.pool: self.pool = self.items[:]; r.shuffle(self.pool)
             return self.pool.pop()
     moves = Deck(["center", "coinspin", "orbit", "droste", "slices", "split4", "strobe2", "zoomthrough", "triple", "pixelsort", "shatter", "scan"])
-    variants = Deck([["echo"], ["tile"], ["mirror2"], ["duo"], ["rgbshift"], ["invert_beats"], ["mirror4"], ["ascii_bg"], ["posterize"]])
-    drops = Deck([["ascii"], ["mirror4"], ["kaleido_hero"], ["ascii", "rgbshift"], ["invert", "mirror2"], ["ascii_bg"], ["kaleido_hero", "duo"], ["posterize", "mirror4"], ["tess_hero"], ["tess_hero", "rgbshift"]])
+    variants = Deck([["echo"], ["tile"], ["mirror2"], ["duo"], ["rgbshift"], ["invert_beats"], ["mirror4"], ["ascii_bg"], ["posterize"], ["liquid"], ["liquid", "rgbshift"]])
+    drops = Deck([["ascii"], ["mirror4"], ["kaleido_hero"], ["ascii", "rgbshift"], ["invert", "mirror2"], ["ascii_bg"], ["kaleido_hero", "duo"], ["posterize", "mirror4"], ["tess_hero"], ["tess_hero", "rgbshift"], ["liquid", "mirror4"]])
     shaders = [x for x in VJ_SHADERS.get(fam, VJ_SHADERS["rave"]) if x != "kaleido"]
+    bgs = Deck(["shader", "shader", "tess", "tess", "land", "poly", "kwall", "wall"] if walls else ["shader", "shader", "tess", "tess", "land", "poly"])
     def bg_choice():
-        roll = r.random()
-        if roll < .3: return {"bg": "tess", "shader": r.choice(TESS), "tsrc": r.choice(heroes), "sseed": r.random()}   # the background is a pattern made of a smaller symbol / cut-out
-        if roll < .62 or not walls: return {"bg": "shader", "shader": r.choice(shaders), "sseed": r.random()}
-        if roll < .85: return {"bg": "kwall", "wall": r.choice(walls), "sseed": r.random()}
-        return {"bg": "wall", "wall": r.choice(walls), "bpx": r.random(), "bpy": r.random()}
-    for b in range(nb):
-        t0 = b * bar_len; t1 = min(dur, t0 + bar_len); sec = b // 2; phrase_pos = b % 4
+        k = bgs.draw()
+        if k == "tess": return {"bg": "tess", "shader": r.choice(TESS), "tsrc": r.choice(heroes), "sseed": r.random()}
+        if k == "land": return {"bg": "mosaic", "shader": "tapestry", "sseed": r.random()}
+        if k == "poly": return {"bg": "mosaic", "shader": "polyfield", "sseed": r.random()}
+        if k == "kwall": return {"bg": "kwall", "wall": r.choice(walls), "sseed": r.random()}
+        if k == "wall": return {"bg": "wall", "wall": r.choice(walls), "bpx": r.random(), "bpy": r.random()}
+        return {"bg": "shader", "shader": r.choice(shaders), "sseed": r.random()}
+    def trans(after_drop=False):
+        return r.choices(["cut", "mosh", "melt", "zoom", "static"], weights=[3, 3, 3, 1.5, 1] if not after_drop else [1, 4, 3, 2, 1])[0]
+    lk = {"look": r.choices(list(LOOKS), list(LOOKS.values()))[0], "raw": None, "acc": r.choice(ACCENTS)}
+    def next_look():
+        if r.random() < .3: return dict(lk)                                   # sometimes the look carries over, so it doesn't strobe between styles
+        lk.update(look=r.choices(list(LOOKS), list(LOOKS.values()))[0], raw=r.choices(list(RAWS), list(RAWS.values()))[0], acc=r.choice(ACCENTS)); return dict(lk)
+    b = 0; sec = 0; since_drop = 0
+    while b < nb:
         if sec >= len(heroes): heroes.append(r.choice(heroes))
-        hero = heroes[sec]; pal = HERO_PALS[(sec * 3 + (hash(style) % 7)) % len(HERO_PALS)]
-        if b % 2 == 0: bgc = bg_choice()
-        if b % 2 == 0: move = moves.draw(); other = r.choice([h_ for h_ in heroes if h_ != hero] or heroes)
-        base = {"hero": hero, "other": other, "pal": pal, "move": move, "fx": [], "zoom": 1.0, "rot": r.uniform(-8, 8), "drift": r.uniform(-.04, .04), **bgc}
-        if phrase_pos == 0 and b > 0:                                    # the drop: callback in a new treatment
+        hero = heroes[sec]; pal = HERO_PALS[(sec * 3 + (hash(style) % 7) + r.randrange(3)) % len(HERO_PALS)]
+        bgc = bg_choice(); move = moves.draw(); other = r.choice([h_ for h_ in heroes if h_ != hero] or heroes)
+        L = min(nb - b, r.choices([1, 2, 3], weights=[2, 5, 2])[0])
+        base = {"hero": hero, "other": other, "pal": pal, "move": move, "fx": [], "zoom": 1.0, "rot": r.uniform(-10, 10), "drift": r.uniform(-.05, .05), **bgc, **next_look()}
+        for k in range(L):
+            t0 = (b + k) * bar_len; t1 = min(dur, t0 + bar_len)
+            if k == 0:
+                shots.append({**base, "t0": t0, "t1": t1, "tr": trans(since_drop == 0 and b > 0)}); used.append(hero)
+            else:
+                half = r.random() < .22                                      # sometimes the variant lands on the half bar instead
+                if half and t1 - t0 > per * 2:
+                    shots.append({**base, "t0": t0, "t1": t0 + 2 * per, "fx": variants.draw(), "zoom": 1.05, "tr": "cut"})
+                    shots.append({**base, "t0": t0 + 2 * per, "t1": t1, "fx": variants.draw(), "zoom": 1.1, "tr": r.choice(["cut", "melt"])})
+                else:
+                    shots.append({**base, "t0": t0, "t1": t1, "fx": variants.draw(), "zoom": 1.06, "tr": r.choice(["cut", "cut", "melt", "mosh"])})
+        b += L; sec += 1; since_drop += L
+        # build-up then drop at irregular points: more likely the longer it has been
+        if b + 2 <= nb and r.random() < min(.85, .18 * since_drop):
+            t0 = b * bar_len; t1 = min(dur, t0 + bar_len); beats_in = r.choice([4, 4, 8]) if per < .42 else 4
+            step = bar_len / beats_in
+            for k in range(beats_in):
+                bt0 = t0 + k * step; alt = k % 2 == 1
+                bu = r.choice(["kaleido_hero", "ascii", "invert", "mirror4", "posterize", "tess_hero", "liquid"])
+                shots.append({**base, "t0": bt0, "t1": min(t1, bt0 + step), "move": "center" if not alt else r.choice(["strobe2", "triple", "slices"]), "zoom": 1.0 + .5 * k / beats_in,
+                              "fx": ([bu] if alt else []) + (["rgbshift"] if k == beats_in - 1 else []), "flash": k == beats_in - 1, "tr": "cut"})
+            b += 1
             cb = r.choice(used) if used else hero
-            fx = drops.draw(); mv = moves.draw()
-            shots.append({**base, "hero": cb, "move": mv, "t0": t0, "t1": t1, "fx": fx, "zoom": 1.15, "mosh": True, "drop": True}); used.append(hero); continue
-        if phrase_pos == 3:                                              # build-up: one cut per beat, faster and bigger
-            for k in range(4):
-                bt0 = t0 + k * per; bt1 = min(t1, bt0 + per)
-                alt = k % 2 == 1
-                bu = r.choice(["kaleido_hero", "ascii", "invert", "mirror4", "posterize"])
-                shots.append({**base, "t0": bt0, "t1": bt1, "move": "center" if not alt else r.choice(["strobe2", "triple", "slices"]), "zoom": 1.0 + .1 * k, "fx": ([bu] if alt else []) + (["rgbshift"] if k == 3 else []), "flash": k == 3})
-            continue
-        variant = b % 2 == 1
-        fx = variants.draw() if variant else []
-        shots.append({**base, "t0": t0, "t1": t1, "fx": fx, "zoom": 1.06 if variant else 1.0, "mosh": variant and r.random() < .25})
-        if not variant: used.append(hero)
+            d0 = b * bar_len; d1 = min(dur, d0 + bar_len)
+            if d1 - d0 > 1 / FPS:
+                shots.append({**base, **bg_choice(), **next_look(), "hero": cb, "move": moves.draw(), "t0": d0, "t1": d1, "fx": drops.draw(), "zoom": 1.15, "drop": True, "tr": r.choice(["mosh", "mosh", "melt", "zoom", "static"])})
+                b += 1
+            since_drop = 0
+    for s_ in shots: s_["mosh"] = s_.get("tr") == "mosh"
     return [s_ for s_ in shots if s_["t1"] - s_["t0"] > 1 / FPS], heroes
 
 _FONT_CACHE = {}
@@ -599,7 +623,73 @@ def overlay_text(img, lines, y, size):
         sp = _FONT_CACHE[key]; b.alpha_composite(sp, (int(W / 2 - sp.width / 2), int(y))); y += sp.height * 1.02
     return b.convert("RGB")
 
-def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song=None):
+# ---------- colour looks and raw textures, picked per section so one edit moves between them ----------
+LOOKS = {"psych": 3, "accent": 2, "duo": 2, "night": 1.5, "acid": 1, "tri": 1}
+RAWS = {None: 5, "static": 2, "tear": 1.5, "vhs": 1.5}
+ACCENTS = [(255, 30, 60), (0, 255, 160), (255, 220, 0), (0, 200, 255), (255, 0, 200), (255, 110, 0)]
+def look_fx(img, look, pal, acc):
+    if look in (None, "psych"): return img
+    a = np.asarray(img, np.float32) / 255; L = a @ np.array([.299, .587, .114], np.float32)
+    if look == "accent":                                                     # hard black/white, only the saturated bits keep one vivid colour
+        g = np.clip((L - .5) * 2.2 + .5, 0, 1); sat = a.max(2) - a.min(2); m = np.clip((sat - .35) * 3, 0, 1)[..., None]
+        out = g[..., None] * (1 - m) + (np.array(acc, np.float32) / 255) * np.clip(L * 1.6, .35, 1)[..., None] * m
+    elif look == "duo":                                                      # two strong colours, crushed contrast
+        g = np.clip((L - .45) * 2.4 + .5, 0, 1)[..., None]; c0, c1 = (np.array(c, np.float32) / 255 for c in pal); out = c1 * .08 * (1 - g) + c0 * g
+    elif look == "night":                                                    # dark, glowing, saturated
+        out = np.clip(a ** 1.7 * 1.25, 0, 1); m = out.mean(2, keepdims=True); out = np.clip(m + (out - m) * 1.9, 0, 1)
+    elif look == "acid":                                                     # hue rotated and pushed
+        out = a[..., [1, 2, 0]]; m = out.mean(2, keepdims=True); out = np.clip(m + (out - m) * 2.0, 0, 1)
+    else:                                                                    # tri: three-colour poster
+        q = np.digitize(L, [.33, .66]); cols = np.array([(10, 0, 30), pal[1], pal[0]], np.float32) / 255; out = cols[q]
+    return Image.fromarray((out * 255).astype(np.uint8))
+
+def raw_fx(img, kind, t, k, rr):
+    if not kind: return img
+    a = np.asarray(img).copy(); h, w = a.shape[:2]
+    if kind == "static":                                                     # TV static over everything, with a rolling bright band
+        n = rr.integers(0, 255, (h // 2, w // 2), dtype=np.uint8).repeat(2, 0).repeat(2, 1)[:h, :w, None]
+        al = .14 + .1 * math.sin(t * 7); y0 = int((t * 900) % h); band = slice(y0, min(h, y0 + 70))
+        a = (a * (1 - al) + n * al).astype(np.uint8); a[band] = np.clip(a[band].astype(np.int16) + 60, 0, 255).astype(np.uint8)
+    elif kind == "tear":                                                     # horizontal tearing in bands, re-rolled every few frames
+        r2 = random.Random(k // 3)
+        for _ in range(r2.randint(2, 6)):
+            y = r2.randrange(0, h - 40); hh = r2.randint(8, 90); a[y:y + hh] = np.roll(a[y:y + hh], r2.randint(-160, 160), axis=1)
+    elif kind == "vhs":                                                      # chroma bleed, scan noise and a tracking band
+        a[..., 0] = np.roll(a[..., 0], 6, 1); a[..., 2] = np.roll(a[..., 2], -5, 1)
+        y0 = int((h * .85 + t * 160) % h); hh = 40; seg = a[y0:y0 + hh]
+        a[y0:y0 + hh] = np.clip(seg.astype(np.int16) + rr.integers(-70, 70, seg.shape, dtype=np.int16), 0, 255).astype(np.uint8)
+        a[::3] = (a[::3] * .82).astype(np.uint8)
+    return Image.fromarray(a)
+
+_GRID = {}
+def liquid(img, amp, t, seed=0.0):
+    """flowing displacement: two crossing sine fields, sampled per pixel (amp in px)"""
+    a = np.asarray(img); h, w = a.shape[:2]
+    if (w, h) not in _GRID: _GRID[(w, h)] = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    xs, ys = _GRID[(w, h)]
+    dx = amp * (np.sin(ys * .011 + t * 2.3 + seed * 6) + .5 * np.sin((xs + ys) * .007 - t * 1.7))
+    dy = amp * (np.sin(xs * .013 - t * 1.9 + seed * 9) + .5 * np.sin((xs - ys) * .006 + t * 2.1))
+    ix = np.clip(xs + dx, 0, w - 1).astype(np.int32); iy = np.clip(ys + dy, 0, h - 1).astype(np.int32)
+    return Image.fromarray(a[iy, ix])
+
+def build_mosaic(items, sprites, r):
+    """1024x1024 tapestry: a 4x4 (sometimes uneven) patchwork of different images and cut-outs, for the landscape and 3D lattice"""
+    tiles = [im for im in items if im is not None] + sprites; r.shuffle(tiles)
+    if not tiles: return None
+    mos = Image.new("RGB", (1024, 1024)); cells = []
+    for y in range(4):
+        x = 0
+        while x < 4:
+            wcell = 2 if x < 3 and r.random() < .2 else 1; cells.append((x, y, wcell)); x += wcell
+    for k, (x, y, wc) in enumerate(cells):
+        src = tiles[k % len(tiles)]; cw, ch = 256 * wc, 256
+        if src.mode == "RGBA":
+            bg = Image.new("RGB", (cw, ch), tuple(int(c * .25) for c in HERO_PALS[k % len(HERO_PALS)][1])); sp = C.fit(src, w=int(min(cw, ch) * .9)); bg.paste(sp, (cw // 2 - sp.width // 2, ch // 2 - sp.height // 2), sp); tile = bg
+        else: tile = ImageEnhance.Color(cover(src, cw, ch)).enhance(1.4)
+        mos.paste(tile, (x * 256, y * 256))
+    mos.big = True; return mos
+
+def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song=None, mosaic_src=None, per_beat=.45):
     env_t, env_v = env
     avi = os.path.join(WORK, "clean.avi"); kf = ",".join(f"{c:.3f}" for c in sorted(set(keyframes) | {0.0}))
     enc = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
@@ -616,10 +706,20 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         return walls[it["id"]]
     series = MONT.get("series", {}); top = series.get("top", []); bottom = series.get("bottom", [])
     si = 0; nfr = int(round(dur * FPS)); barset = list(bars)
+    MOS = None
+    if any(s_["bg"] == "mosaic" for s_ in shots) and mosaic_src:
+        wl, extra = mosaic_src; ims = [wall_im(w_) for w_ in wl[:10]] + [fetch_image(e) for e in extra if e]
+        sps = [hero_im({"hero": h_, "pal": HERO_PALS[k_ % len(HERO_PALS)]}) for k_, h_ in enumerate(list(dict.fromkeys(s_["hero"] for s_ in shots)))][:6]
+        MOS = build_mosaic(ims, sps, r)
+    ph = [(r.uniform(.15, .5), r.uniform(0, 6.3)) for _ in range(4)]               # slow, non-repeating drift for zoom and tilt
+    driftz = lambda t: 1 + .035 * math.sin(ph[0][0] * t + ph[0][1]) + .02 * math.sin(ph[1][0] * 2.3 * t + ph[1][1])
+    driftr = lambda t: 4 * math.sin(ph[2][0] * t + ph[2][1]) + 2 * math.sin(ph[3][0] * 1.7 * t + ph[3][1])
+    last_img = None; cur_si = -1; frozen = None; kstart = 0; NR = np.random.default_rng(int(seed * 1000) % 2**31)
     for k in range(nfr):
         t = k / FPS
         while si + 1 < len(shots) and t >= shots[si + 1]["t0"] - 1e-6: si += 1
         s = shots[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
+        if si != cur_si: cur_si = si; frozen = last_img; kstart = k
         last = max((p for p in punches if p <= t + 1e-6), default=-9); beat = math.exp(-(t - last) * 8)
         bar_last = max((b for b in barset if b <= t + 1e-6), default=-9); energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
         op = s.get("opener")
@@ -627,13 +727,15 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             if "im" not in op:
                 im = fetch_image(op["img"]); op["im"] = ImageEnhance.Contrast(im).enhance(1.1) if im is not None else None
             if op["im"] is not None:
-                img = cover(op["im"], zoom=1.04 + .07 * beat + .05 * t / op["end"])
+                img = cover(op["im"], zoom=1.04 + .07 * beat + .05 * t / op["end"]); last_img = img
                 if top: img = overlay_text(img, top, H * .085, 66)
                 if bottom: img = overlay_text(img, bottom, H * .725, 60)
                 if song: img = overlay_text(img, [song], H * .805, 40)
                 enc.stdin.write(img.tobytes()); continue
         # background
         if s["bg"] == "shader": fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
+        elif s["bg"] == "mosaic" and MOS is not None: fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], tex=MOS, fam=fam).convert("RGBA")
+        elif s["bg"] == "mosaic": fr = shader_frame("truchet", t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
         elif s["bg"] == "tess":
             tk = (s["tsrc"], s["pal"][::-1])
             if tk not in sprites: sprites[tk] = hero_sprite(s["tsrc"], int(W * .45), s["pal"][::-1], fam, r)
@@ -645,7 +747,7 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             fr = Image.fromarray((np.array(c1) * .35 * (1 - l) + np.array(c0) * .5 * l).astype(np.uint8)).convert("RGBA")
         else: fr = shader_frame("plasma", t, beat, energy, s.get("sseed", .3), fam=fam).convert("RGBA")
         # hero
-        hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u)
+        hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u) * driftz(t)
         if "tess_hero" in s["fx"]:                                            # drop: the hero tiles the whole background, hero on top
             fr = shader_frame(TESS[int(s.get("sseed", .5) * 7) % len(TESS)], t, beat, energy, s.get("sseed", .5), tex=hi, fam=fam).convert("RGBA")
         if "kaleido_hero" in s["fx"]:
@@ -655,7 +757,7 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             mv = s.get("move", "center")
             if mv == "zoomthrough": z *= .35 + 2.6 * u ** 2                           # flies at the camera across the bar
             h = hi.resize((max(1, int(hi.width * z)), max(1, int(hi.height * z))), Image.BICUBIC)
-            rot = s["rot"] * math.sin(t * .8)
+            rot = s["rot"] * math.sin(t * .8) + driftr(t)
             if mv == "coinspin":                                                # flat 3D spin: width follows cos
                 sx = abs(math.cos(u * math.pi * 2)) * .95 + .05; h = h.resize((max(1, int(h.width * sx)), h.height), Image.BICUBIC)
                 if math.cos(u * math.pi * 2) < 0: h = ImageOps.mirror(h)
@@ -715,6 +817,25 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if "posterize" in s["fx"]: img = ImageOps.posterize(ImageEnhance.Color(img).enhance(1.8), 2)
         fx = s["fx"]; fs = {"pal": s["pal"], "cell": 16, "apal": True}
         img = apply_fx(img, [f for f in fx if f in ("mirror2", "mirror4", "duo", "invert", "ascii", "rgbshift")], fs, t, beat)
+        if "liquid" in fx: img = liquid(img, 14 + 26 * beat, t, s.get("sseed", .3))       # the whole frame flows, harder on the kick
+        mf = s.get("meme_flash")
+        if mf and 0 <= t - mf["t"] < 2.5 / FPS:                                         # the opener meme comes back for a blink
+            if "im" not in mf: mf["im"] = fetch_image(mf["img"])
+            if mf["im"] is not None: img = cover(mf["im"], zoom=1.15)
+        img = look_fx(img, s.get("look"), s["pal"], s.get("acc", (255, 30, 60)))
+        img = raw_fx(img, s.get("raw"), t, k, NR)
+        pre = img
+        n_in = k - kstart; tr = s.get("tr", "cut"); mfr = max(3, min(9, int(per_beat * FPS)))
+        if tr == "static" and n_in < 3:                                               # a burst of pure static between shots
+            nz = NR.integers(0, 255, (H // 3, W // 3), dtype=np.uint8).repeat(3, 0).repeat(3, 1)[:H, :W]; img = Image.fromarray(np.stack([nz] * 3, 2))
+        if frozen is not None and n_in < mfr and tr in ("melt", "zoom"):
+            a = (n_in + 1) / (mfr + 1)
+            if tr == "melt":                                                          # liquid morph: both frames flow into each other
+                img = Image.blend(liquid(frozen, 60 * a, t, .7), liquid(img, 60 * (1 - a), t, .2), a)
+            else:                                                                     # zoom-through: the old frame rushes past the camera
+                zz = 1 + 1.6 * a; ow, oh = int(W * zz), int(H * zz); ox, oy = (ow - W) // 2, (oh - H) // 2
+                img = Image.blend(frozen.resize((ow, oh), Image.BILINEAR).crop((ox, oy, ox + W, oy + H)), img, min(1, a * 1.4))
+        last_img = pre
         strobe = .8 if any(abs(b - t) < 1.2 / FPS for b in barset) else 0.0
         if s.get("flash") and u > .7: strobe = 1.0
         img = post(img, fam, t, seed, strobe)
@@ -744,7 +865,7 @@ def encode_moshed(frames_dir, nfr, cuts, mosh_cuts, out_mp4, audio_path, start, 
         i += 8 + size + (size & 1)
     moshed = os.path.join(WORK, "mosh.avi"); open(moshed, "wb").write(bytes(out + b"".join(frames)))
     vid = os.path.join(WORK, "video.mp4")
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-err_detect", "ignore_err", "-fflags", "+genpts+igndts", "-i", moshed, "-vf", f"scale={OUT_W}:{OUT_H}:flags=lanczos,fps={FPS}", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22", "-maxrate", "9M", "-bufsize", "18M", "-preset", "medium", "-profile:v", "high", "-level", "4.1", "-an", vid], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-err_detect", "ignore_err", "-fflags", "+genpts+igndts", "-i", moshed, "-vf", f"scale={OUT_W}:{OUT_H}:flags=lanczos,fps={FPS}", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23", "-maxrate", "7M", "-bufsize", "14M", "-preset", "medium", "-profile:v", "high", "-level", "4.1", "-an", vid], check=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-ss", f"{start:.3f}", "-t", f"{dur:.3f}", "-i", audio_path, "-filter_complex", f"[1:a]afade=t=in:st=0:d=0.15,afade=t=out:st={dur-0.6:.3f}:d=0.6,loudnorm=I=-14:TP=-1.5[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out_mp4], check=True)
 
 # ============================ one edit ============================
@@ -806,9 +927,13 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         r.shuffle(pool); walls = pool[:12]
         shots, heroes = make_sections(bars, per, dur, fam, style, walls, r, mont)
         opener = pick_meme(man, mont, r)
-        if opener:                                                      # pattern interrupt: the meme holds 2 beats (or a whole bar when it's fast), then the edit hits
-            oe = per * (4 if per < .42 else 2); shots[0]["opener"] = {"img": opener, "end": oe}
-            shots.insert(1, {**shots[0], "t0": oe, "mosh": True, "opener": None}); shots[0]["t1"] = oe
+        if opener:                                                      # pattern interrupt: the meme for one beat (two when fast), then it melts into the edit
+            oe = per * (2 if per < .36 else 1); shots[0]["opener"] = {"img": opener, "end": oe}
+            shots.insert(1, {**shots[0], "t0": oe, "tr": r.choice(["melt", "melt", "mosh"]), "opener": None}); shots[1]["mosh"] = shots[1]["tr"] == "mosh"; shots[0]["t1"] = oe; shots[0]["tr"] = "cut"
+            later = [s_ for s_ in shots[2:] if s_.get("drop")] or shots[len(shots) // 2:]
+            for s_ in r.sample(later, min(len(later), r.choice([1, 1, 2]))):  # and comes back: a blink on a beat, or the drop's backdrop
+                if r.random() < .5: s_["meme_flash"] = {"img": opener, "t": s_["t0"] + per * r.choice([0, 1, 2])}
+                else: s_.update({"bg": "kwall", "wall": opener, "sseed": r.random()})
         mosh_cuts = [s_["t0"] for s_ in shots if s_.get("mosh") and s_["t0"] > 0]
     else:
         shots = make_shots(cuts, dur, fam, style, figs, walls, lines, r, bars, per if g else 0.45)
@@ -820,8 +945,8 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     if MONT.get("text", {}).get("hooks"):
         hooks = MONT.get("hooks", {}).get(style, []) + MONT.get("hooks", {}).get("_", []); hook = r.choice(hooks) if hooks else None
     hop_t = t[1] - t[0]; sel = (t >= start) & (t <= start + dur); ev = rms[sel] / (rms.max() + 1e-9); env = (t[sel] - start, np.clip(ev * 1.4, 0, 1))
-    song = ("♪ " + clean_title(track["title"])) if MONT.get("text", {}).get("song_name", True) and track.get("title") else None
-    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song)
+    song = ("track · " + clean_title(track["title"])) if MONT.get("text", {}).get("song_name", True) and track.get("title") else None
+    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)

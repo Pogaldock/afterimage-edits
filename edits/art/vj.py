@@ -182,6 +182,52 @@ void main(){
   vec3 col=mix(a,b,.5+.5*s)*(.55+.45*sp)*(1.+.6*B);
   o=vec4(col,1.);
 }""",
+# a landscape whose ground is a tapestry of different images: camera skims over rolling hills, glowing seams between tiles
+"tapestry": """
+float hgt(vec2 p){ return .7*sin(p.x*.33+sin(p.y*.19+S*6.))*cos(p.y*.26)+.28*sin(p.x*1.07+p.y*.83+S*9.)+.1*sin(p.x*2.9-p.y*2.3); }
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec3 ro=vec3(sin(T*.11)*3.,1.5+.35*sin(T*.27),T*2.4); vec3 rd=normalize(vec3(uv.x,uv.y-.28,1.)); rd.xy*=rot(.14*sin(T*.37));
+  float t=.1; vec3 p=ro;
+  for(int i=0;i<96;i++){ p=ro+rd*t; float d=p.y-hgt(p.xz); if(d<.0015*t||t>45.) break; t+=d*.42; }
+  vec3 col;
+  if(t<45.){
+    vec2 q=p.xz*.11; vec4 tx=texture(TEX,q);
+    float sl=clamp(.55-(hgt(p.xz+vec2(.12,.12))-hgt(p.xz))*3.5,.25,1.2);
+    col=tx.rgb*sl*(1.+.5*B);
+    vec2 g=abs(fract(q*4.)-.5); col+=pal(T*.1+floor(q.x*4.)*.13+floor(q.y*4.)*.07)*smoothstep(.46,.5,max(g.x,g.y))*(.5+B);
+    col=mix(col,pal(t*.03+T*.04)*.45,smoothstep(14.,45.,t));
+  } else {
+    col=pal(uv.y*.6+T*.05+.3)*.4+vec3(1.)*pow(max(0.,1.-length(uv-vec2(.2*sin(T*.2),.32))),8.)*.6;
+  }
+  o=vec4(col,1.);
+}""",
+# endless lattice of 3D shapes (octahedra, tori, cubes), each wearing the image tapestry, spinning on the beat
+"polyfield": """
+float sdOct(vec3 p,float s){ p=abs(p); return (p.x+p.y+p.z-s)*.57735; }
+float cell(vec3 p, vec3 id){
+  vec3 q=p; q.xy*=rot(T*.8+id.z*.7+id.x+B*.5); q.yz*=rot(T*.55+id.y*1.3);
+  float k=hash(id.xy+id.z*7.3);
+  if(k<.33) return sdOct(q,1.05+.25*B);
+  if(k<.66) return length(vec2(length(q.xz)-.85,q.y))-.28-.08*B;
+  return length(max(abs(q)-vec3(.68+.15*B),0.))-.06;
+}
+float map(vec3 p){ vec3 id=floor((p+2.)/4.); return cell(mod(p+2.,4.)-2.,id); }
+vec3 nor(vec3 p){ vec2 e=vec2(.003,0.); return normalize(vec3(map(p+e.xyy)-map(p-e.xyy),map(p+e.yxy)-map(p-e.yxy),map(p+e.yyx)-map(p-e.yyx))); }
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y; vec3 ro=vec3(2.,2.,T*3.5), rd=normalize(vec3(uv,1.1)); rd.xy*=rot(T*.09+S*6.);
+  float t=0.;
+  for(int i=0;i<88;i++){ float d=map(ro+rd*t); if(d<.0015||t>40.) break; t+=d*.85; }
+  vec3 col=pal(uv.y*.3+T*.06)*.12;
+  if(t<40.){
+    vec3 p=ro+rd*t, n=nor(p), w=abs(n); w/=w.x+w.y+w.z;
+    vec3 tx=texture(TEX,p.yz*.3).rgb*w.x+texture(TEX,p.xz*.3).rgb*w.y+texture(TEX,p.xy*.3).rgb*w.z;
+    float dif=max(dot(n,normalize(vec3(.6,.8,-.4))),0.), fr=pow(1.-max(dot(n,-rd),0.),3.);
+    col=tx*(.3+.8*dif)+pal(fr+T*.1)*fr*(1.2+B);
+    col=mix(col,pal(t*.02+.6)*.15,smoothstep(12.,40.,t));
+  }
+  o=vec4(col,1.);
+}""",
 }
 
 VERT = "#version 330\nin vec2 v; void main(){ gl_Position=vec4(v,0.,1.); }"
@@ -203,7 +249,7 @@ class VJ:
     def frame(self, name, t, beat=0.0, energy=0.5, seed=0.0, tex=None):
         p, vao = self._prog(name)
         if tex is not None and tex is not self._texsrc:
-            im = tex.convert("RGBA").transpose(Image.FLIP_TOP_BOTTOM); im.thumbnail((512, 512))
+            im = tex.convert("RGBA").transpose(Image.FLIP_TOP_BOTTOM); im.thumbnail((1024, 1024) if getattr(tex, 'big', False) or tex.width > 700 else (512, 512))
             if self.tex: self.tex.release()
             self.tex = self.ctx.texture(im.size, 4, im.tobytes()); self.tex.repeat_x = self.tex.repeat_y = True; self.tex.build_mipmaps(); self._texsrc = tex   # mipmaps: small tiles stay clean
         if self.tex is not None and "TEX" in p: self.tex.use(0); p["TEX"].value = 0
