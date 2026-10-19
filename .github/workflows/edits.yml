@@ -26,7 +26,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -q -r edits/requirements.txt && python edits/montage.py --probe && cat edits/last-montage.md >> "$GITHUB_STEP_SUMMARY"
+      - run: pip install -q -r edits/requirements.txt && python edits/montage.py --probe
+      - name: commit probe report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "atlas bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          cp edits/last-montage.md edits/last-probe.md && git add edits/last-probe.md && git commit -q -m "edits: probe report" && git push -q origin HEAD:main
   render:
     if: ${{ github.event.inputs.mode != 'probe' }}
     runs-on: ubuntu-latest
