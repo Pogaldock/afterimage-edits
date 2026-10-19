@@ -1,0 +1,1363 @@
+{
+ "_": "Montage config. families: which styles share a look, cut gap [min,max] seconds, mosh = chance a cut is a datamosh. lines: captions (yours). music: per style — yt (YouTube search, only used when _youtube_ok), sc (SoundCloud searches; results scored by want words in title/genre + plays). Edit freely; the nightly job reads this.",
+ "_youtube_ok": false,
+ "families": {
+  "crt": {
+   "styles": [
+    "crt",
+    "datamosh",
+    "analog",
+    "weird",
+    "digital",
+    "tech",
+    "drone"
+   ],
+   "gap": [
+    0.55,
+    1.6
+   ],
+   "mosh": 0.55
+  },
+  "rave": {
+   "styles": [
+    "free",
+    "techno",
+    "psych",
+    "alien",
+    "robot",
+    "y2k",
+    "aero",
+    "hyper",
+    "digi",
+    "vapor",
+    "punk",
+    "scene",
+    "riot"
+   ],
+   "gap": [
+    0.3,
+    1.0
+   ],
+   "mosh": 0.3
+  },
+  "dark": {
+   "styles": [
+    "drain",
+    "mound",
+    "opium",
+    "witch",
+    "sigil",
+    "goth",
+    "black",
+    "death",
+    "factory",
+    "war"
+   ],
+   "gap": [
+    0.6,
+    1.8
+   ],
+   "mosh": 0.45
+  }
+ },
+ "lines": {
+  "_": [
+   "this isn't what i planned",
+   "i got out of bed for this shit",
+   "be fucking weird",
+   "all my friends are weirdos",
+   "never too late to fuck shit up",
+   "this is not how i thought my life would go",
+   "not the plan",
+   "still here",
+   "not yet"
+  ],
+  "punk": [
+   "THIS POSTER EXPLOITS YOU",
+   "NO FUTURE FOR THE PLAN",
+   "DO IT YOURSELF",
+   "FIGHT WAR NOT WARS",
+   "DESTROY",
+   "PRINTED IN A BEDROOM",
+   "3 CHORDS NOW START A BAND",
+   "NO GODS NO MANAGERS",
+   "XEROX IS FREE AT WORK",
+   "ANTI EVERYTHING",
+   "WE ARE THE FLIES",
+   "BORED",
+   "NO HEROES",
+   "ANYONE CAN DO THIS",
+   "CUT AND PASTE",
+   "SPIT",
+   "SMASH IT UP",
+   "ANTI NOSTALGIA",
+   "LOUD FAST RULES",
+   "PRINTED NOT POLISHED",
+   "NOT FOR SALE",
+   "FUCK THE PLAN",
+   "SAFETY PINS AND SPITE",
+   "GLUE, SCISSORS, RAGE"
+  ],
+  "dark": [
+   "nothing was planned",
+   "the weirdos are the plan",
+   "out of bed again"
+  ],
+  "rave": [
+   "NEVER TOO LATE",
+   "FUCK SHIT UP",
+   "BE WEIRD"
+  ],
+  "free": [
+   "a succession of repetitive beats",
+   "20 or more persons",
+   "temporary autonomous zone",
+   "teknival",
+   "no fences",
+   "the rig is the church",
+   "mud til monday",
+   "squat the field",
+   "sound system not a club",
+   "tribes not crowds",
+   "police at the gate, bass in the chest",
+   "asozial",
+   "4x4 in a field",
+   "rig up at dusk",
+   "the dawn shift",
+   "nobody paid to be here",
+   "acid on the speakers",
+   "the 303 is screaming",
+   "nobody sleeps till the generator dies",
+   "follow the convoy",
+   "bass in the ribcage",
+   "we brought our own power",
+   "find the field",
+   "no tickets, no guest list, no bouncers",
+   "fuck the curfew",
+   "the rig is warm",
+   "sunrise, still dancing",
+   "tekno is a verb",
+   "four days, one beat",
+   "dust and diesel",
+   "the police left, the bass stayed",
+   "make some noise",
+   "squat, rig, repeat",
+   "the wall of speakers",
+   "resonance up, cutoff down",
+   "acid till dawn",
+   "an illegal amount of bass",
+   "freedom to party",
+   "the tribe moves at night",
+   "we are the 20 or more",
+   "off grid, on beat",
+   "stack the bins",
+   "the field remembers",
+   "no stage, no star",
+   "forever acid",
+   "bang the kick"
+  ],
+  "goth": [
+   "the bats have left the bell tower",
+   "nobody dances in daylight",
+   "black is not a phase",
+   "undead undead undead",
+   "dry ice and drum machine",
+   "the batcave is closed",
+   "sleep in the crypt",
+   "candlelight only",
+   "velvet and rot",
+   "the mascara stays on",
+   "midnight is early",
+   "fog machine mass",
+   "we never left 1982",
+   "the cemetery is open",
+   "pale on purpose",
+   "darkness is a dress code"
+  ],
+  "black": [
+   "true kvlt",
+   "grim and frostbitten",
+   "lo-fi on purpose",
+   "recorded in a forest",
+   "no light, only hiss",
+   "corpsepaint at the bus stop",
+   "necro sound",
+   "the demo tape was enough",
+   "frozen tape hiss",
+   "under the full moon",
+   "trees older than god",
+   "winter forever",
+   "cold and ugly on purpose",
+   "no reverb, only frost",
+   "forest recording",
+   "the demo is the masterpiece",
+   "grim"
+  ],
+  "death": [
+   "old school",
+   "tomb rot",
+   "buzzsaw tone",
+   "sunlight studio",
+   "rotting since 1989",
+   "heavier than the grave",
+   "morbid by default",
+   "chainsaw guitars",
+   "guttural",
+   "festering",
+   "blast beat",
+   "rot in peace",
+   "the riff is the weapon",
+   "decomposed",
+   "buried in distortion"
+  ],
+  "witch": [
+   "drag",
+   "screwgaze",
+   "haunted house",
+   "the symbols keep it hidden",
+   "pitched down forever",
+   "ghosts in the reverb",
+   "unsearchable",
+   "triangles and crosses",
+   "everything slowed",
+   "the haunting is the hook",
+   "fog and synth",
+   "occult loops",
+   "the coven uploads at midnight",
+   "pitched into the grave",
+   "cold wave witchcraft"
+  ],
+  "drain": [
+   "drainer",
+   "trash star",
+   "nobody is listening",
+   "sad but shiny",
+   "cry in the club",
+   "ice in the veins, pastel in the eyes",
+   "everything is temporary",
+   "too sad to stop",
+   "glitter in the drain",
+   "stay drained",
+   "angel numbers",
+   "walk on water, sink in the club",
+   "heartbreak in hd",
+   "icy and soft",
+   "crying is a flex"
+  ],
+  "mound": [
+   "haunted mound",
+   "the woods are watching",
+   "buried alive",
+   "no light in the cabin",
+   "grave dirt on the mic",
+   "the mound remembers",
+   "the cabin in the woods",
+   "crows on the wire",
+   "digging all night",
+   "rusty chains",
+   "haunted forever",
+   "the mound is calling",
+   "mud on the boots",
+   "no one comes back"
+  ],
+  "opium": [
+   "rage",
+   "vamp",
+   "all black everything",
+   "no sleep tour",
+   "8 bit heart, 808 lungs",
+   "mosh the stage",
+   "rage forever",
+   "vampire hours",
+   "distortion is the melody",
+   "jump off the stage",
+   "all black",
+   "no sleep",
+   "the 808 is screaming",
+   "rockstar made"
+  ],
+  "digi": [
+   "hexd",
+   "made on a laptop in a bedroom",
+   "discord at 3am",
+   "pitched up and alone",
+   "the server never sleeps",
+   "dm me the stems",
+   "3am in the voice chat",
+   "bedroom pop for the end of the world",
+   "autotune my feelings",
+   "pitched up sadness",
+   "online forever",
+   "the internet raised me",
+   "logged in, lonely",
+   "hyper online"
+  ],
+  "hyper": [
+   "too much is the point",
+   "bubblegum bass",
+   "maximal",
+   "pop music for the end of the world",
+   "louder, brighter, wronger",
+   "all caps feelings",
+   "more more more",
+   "sugar rush",
+   "the drop is a joke",
+   "pop is broken, good",
+   "glitter grenade",
+   "overclocked",
+   "everything at once",
+   "make it louder"
+  ],
+  "y2k": [
+   "millennium bug",
+   "welcome to the future",
+   "chrome everything",
+   "dial up to dance",
+   "party like it's 1999",
+   "frosted tips forever",
+   "the future is chrome",
+   "millennium mode",
+   "inflatable furniture",
+   "frosted everything",
+   "butterfly clips",
+   "neon dial tone",
+   "system ready"
+  ],
+  "aero": [
+   "clean water, clean screen",
+   "the future was glossy",
+   "bubbles and grass",
+   "windows of hope",
+   "optimism.exe",
+   "glass and grass",
+   "sky blue optimism",
+   "the update was beautiful",
+   "bubbles in the startup sound",
+   "everything is clean",
+   "nature in hd"
+  ],
+  "vapor": [
+   "mallsoft",
+   "the food court at 3am",
+   "nothing is for sale",
+   "plaza closed",
+   "the escalator never ends",
+   "aesthetic",
+   "dead mall",
+   "lost in the plaza",
+   "smooth jazz forever",
+   "90s commercial",
+   "marble heads and palm trees",
+   "the store is closed",
+   "pure aesthetics"
+  ],
+  "weird": [
+   "are you lost?",
+   "this place feels familiar",
+   "you have been here before",
+   "don't go back to sleep",
+   "it's okay",
+   "wake up",
+   "who left the lights on?",
+   "nobody is home",
+   "wake up wake up wake up",
+   "the hallway is longer today",
+   "have you seen this place?",
+   "nobody was here",
+   "you are safe here",
+   "why are you here?",
+   "this is not real",
+   "stay a while",
+   "come back",
+   "we missed you"
+  ],
+  "crt": [
+   "signal lost",
+   "no signal",
+   "tracking...",
+   "rewind",
+   "play",
+   "channel 3",
+   "tape ends here",
+   "vertical hold",
+   "please stand by",
+   "test pattern",
+   "fuzz",
+   "channel 0",
+   "the screen is warm",
+   "bad reception",
+   "blue screen"
+  ],
+  "datamosh": [
+   "keyframe missing",
+   "the frames forgot",
+   "pixels remember",
+   "motion without image",
+   "corrupted on purpose",
+   "i-frame deleted",
+   "motion vector",
+   "compression artifact",
+   "the image melts",
+   "glitch is the edit",
+   "bleed"
+  ],
+  "analog": [
+   "recorded over",
+   "side b",
+   "static is a colour",
+   "rec",
+   "hi8",
+   "the tape remembers",
+   "tracking error",
+   "vhs",
+   "eject",
+   "magnetic memory",
+   "low battery",
+   "dropout"
+  ],
+  "scene": [
+   "rawr means i love you",
+   "myspace top 8",
+   "side fringe",
+   "neon and eyeliner",
+   "crunk forever",
+   "xoxo",
+   "emo forever",
+   "glitter and black",
+   "hair dye in the sink",
+   "rawr",
+   "dance like nobody's watching your myspace"
+  ],
+  "sigil": [
+   "bind",
+   "protect",
+   "seal",
+   "channel",
+   "signal",
+   "will",
+   "thorns",
+   "halo",
+   "chrome thorns",
+   "barbed",
+   "wire",
+   "sacred geometry",
+   "cyber tribal"
+  ]
+ },
+ "music": {
+  "_": {
+   "yt": [
+    "underground music"
+   ],
+   "sc": [
+    "experimental"
+   ],
+   "want": [
+    "underground"
+   ]
+  },
+  "crt": {
+   "yt": [
+    "slowed reverb edit audio",
+    "sad phonk"
+   ],
+   "sc": [
+    "slowed reverb",
+    "phonk slowed",
+    "drift phonk"
+   ],
+   "want": [
+    "phonk",
+    "slowed",
+    "reverb"
+   ]
+  },
+  "datamosh": {
+   "yt": [
+    "glitch idm",
+    "breakcore"
+   ],
+   "sc": [
+    "breakcore",
+    "glitch idm",
+    "digital hardcore"
+   ],
+   "want": [
+    "breakcore",
+    "glitch",
+    "idm",
+    "hardcore"
+   ]
+  },
+  "analog": {
+   "yt": [
+    "lo-fi shoegaze",
+    "slowcore"
+   ],
+   "sc": [
+    "shoegaze lo-fi",
+    "slowcore",
+    "dream pop lo-fi"
+   ],
+   "want": [
+    "shoegaze",
+    "slowcore",
+    "lo-fi",
+    "lofi",
+    "dream"
+   ]
+  },
+  "y2k": {
+   "yt": [
+    "eurodance 1999",
+    "trance 2000 anthem"
+   ],
+   "sc": [
+    "eurodance 1999",
+    "y2k trance",
+    "bubblegum dance"
+   ],
+   "want": [
+    "eurodance",
+    "trance",
+    "dance",
+    "2000",
+    "1999"
+   ]
+  },
+  "aero": {
+   "yt": [
+    "frutiger aero music",
+    "2000s chillout lounge"
+   ],
+   "sc": [
+    "frutiger aero",
+    "chillout 2006",
+    "bubble trance"
+   ],
+   "want": [
+    "chillout",
+    "trance",
+    "ambient",
+    "lounge"
+   ]
+  },
+  "vapor": {
+   "yt": [
+    "vaporwave",
+    "mallsoft"
+   ],
+   "sc": [
+    "vaporwave",
+    "mallsoft",
+    "future funk"
+   ],
+   "want": [
+    "vaporwave",
+    "mallsoft",
+    "future funk"
+   ]
+  },
+  "weird": {
+   "yt": [
+    "weirdcore music",
+    "dreamcore ambient"
+   ],
+   "sc": [
+    "weirdcore",
+    "dreamcore",
+    "liminal ambient"
+   ],
+   "want": [
+    "weirdcore",
+    "dreamcore",
+    "ambient",
+    "liminal"
+   ]
+  },
+  "hyper": {
+   "yt": [
+    "hyperpop",
+    "100 gecs type beat"
+   ],
+   "sc": [
+    "hyperpop",
+    "glitchcore",
+    "bubblegum bass"
+   ],
+   "want": [
+    "hyperpop",
+    "glitchcore",
+    "bubblegum",
+    "gecs"
+   ]
+  },
+  "digi": {
+   "yt": [
+    "digicore",
+    "glaive type beat"
+   ],
+   "sc": [
+    "digicore",
+    "glaive ericdoa",
+    "hexd"
+   ],
+   "want": [
+    "digicore",
+    "hexd",
+    "glaive",
+    "ericdoa"
+   ]
+  },
+  "witch": {
+   "yt": [
+    "witch house",
+    "salem king night"
+   ],
+   "sc": [
+    "witch house",
+    "witchhouse",
+    "drag music"
+   ],
+   "want": [
+    "witch",
+    "witchhouse",
+    "drag",
+    "salem"
+   ]
+  },
+  "drain": {
+   "yt": [
+    "bladee ecco2k",
+    "drain gang type beat"
+   ],
+   "sc": [
+    "drain gang type beat",
+    "bladee remix",
+    "ecco2k"
+   ],
+   "want": [
+    "drain",
+    "bladee",
+    "ecco2k",
+    "thaiboy",
+    "lean",
+    "cloud"
+   ]
+  },
+  "mound": {
+   "yt": [
+    "sematary",
+    "haunted mound"
+   ],
+   "sc": [
+    "haunted mound",
+    "sematary",
+    "ghost mountain"
+   ],
+   "want": [
+    "sematary",
+    "haunted",
+    "mound",
+    "ghost mountain",
+    "horrorcore"
+   ]
+  },
+  "opium": {
+   "yt": [
+    "ken carson type beat",
+    "destroy lonely type beat"
+   ],
+   "sc": [
+    "opium type beat",
+    "ken carson type beat",
+    "rage beat"
+   ],
+   "want": [
+    "opium",
+    "carti",
+    "ken carson",
+    "lonely",
+    "rage"
+   ]
+  },
+  "goth": {
+   "yt": [
+    "deathrock",
+    "gothic rock 1983"
+   ],
+   "sc": [
+    "deathrock",
+    "post-punk gothic",
+    "darkwave"
+   ],
+   "want": [
+    "deathrock",
+    "goth",
+    "gothic",
+    "darkwave",
+    "post-punk"
+   ]
+  },
+  "scene": {
+   "yt": [
+    "crunkcore",
+    "scene music 2009"
+   ],
+   "sc": [
+    "crunkcore",
+    "scenecore",
+    "electronicore"
+   ],
+   "want": [
+    "crunkcore",
+    "scene",
+    "electronicore",
+    "brokencyde"
+   ]
+  },
+  "black": {
+   "yt": [
+    "raw black metal",
+    "black metal 1994"
+   ],
+   "sc": [
+    "raw black metal",
+    "black metal",
+    "depressive black metal"
+   ],
+   "want": [
+    "black metal",
+    "raw",
+    "dsbm",
+    "kvlt"
+   ]
+  },
+  "death": {
+   "yt": [
+    "old school death metal",
+    "death metal 1991"
+   ],
+   "sc": [
+    "old school death metal",
+    "death metal",
+    "swedish death metal"
+   ],
+   "want": [
+    "death metal",
+    "old school",
+    "osdm",
+    "swedish"
+   ]
+  },
+  "sigil": {
+   "yt": [
+    "dark ambient industrial",
+    "cyber sigilism music"
+   ],
+   "sc": [
+    "dark ambient",
+    "industrial techno",
+    "ritual ambient"
+   ],
+   "want": [
+    "dark ambient",
+    "industrial",
+    "ritual",
+    "drone"
+   ]
+  },
+  "punk": {
+   "yt": [
+    "hardcore punk 1982",
+    "uk82 punk"
+   ],
+   "sc": [
+    "hardcore punk",
+    "uk82",
+    "d-beat"
+   ],
+   "want": [
+    "punk",
+    "hardcore",
+    "uk82",
+    "d-beat",
+    "oi"
+   ]
+  },
+  "free": {
+   "yt": [
+    "acid techno 2025",
+    "tribe hardtek live"
+   ],
+   "sc": [
+    "acid techno",
+    "acid techno 2025",
+    "acidcore",
+    "acid tekno live",
+    "303 acid rave",
+    "tribecore",
+    "tribe hardtek",
+    "hardtek",
+    "modern hardtek",
+    "raggatek",
+    "free party tekno",
+    "teknival mix",
+    "london acid techno",
+    "chris liberator",
+    "d.a.v.e. the drummer",
+    "geezer acid",
+    "ddr acid techno",
+    "sterling moss acid",
+    "benji303",
+    "fky hardtek",
+    "narkotek",
+    "r-zac hardtek",
+    "billx",
+    "crystal distortion",
+    "69db tekno",
+    "ixindamix",
+    "spiral tribe",
+    "stay up forever",
+    "smitten records acid",
+    "hydraulix acid",
+    "powder records acid",
+    "acid punx"
+   ],
+   "want": [
+    "acid",
+    "tekno",
+    "techno",
+    "tribe",
+    "hardtek",
+    "acidcore",
+    "tribecore",
+    "303",
+    "free party",
+    "teknival",
+    "rave",
+    "raggatek",
+    "tek",
+    "hardcore",
+    "liberator",
+    "spiral"
+   ]
+  },
+  "_techno": {
+   "_": "one pool for every edit: current underground techno — hard techno, acid, tribecore, mental/tekno. Ranked by plays (popular inside the scene), mainstream blocked.",
+   "sc": [
+    "hard techno",
+    "hard techno 2025",
+    "hard techno 2026",
+    "acid techno",
+    "acid techno 2025",
+    "industrial techno",
+    "rave techno",
+    "hard groove techno",
+    "tribecore",
+    "tribe tekno",
+    "hardtek",
+    "mental tekno",
+    "mentalcore",
+    "acidcore",
+    "schranz",
+    "psy techno",
+    "bounce techno",
+    "hard acid",
+    "I Hate Models",
+    "Dax J",
+    "Kobosil",
+    "SPFDJ",
+    "Héctor Oaks",
+    "Klangkuenstler",
+    "Trym",
+    "Nico Moreno",
+    "Shlømo",
+    "VTSS",
+    "Alarico",
+    "Sara Landry",
+    "Lady Maru",
+    "AIROD",
+    "Dr. Rubinstein",
+    "Regal acid",
+    "999999999",
+    "KAS:ST",
+    "Somewhen",
+    "Kander",
+    "Fantasm techno",
+    "Clara Cuvé",
+    "Holy Priest",
+    "Indira Paganotto",
+    "Billx",
+    "FKY",
+    "Narkotek",
+    "R-Zac",
+    "Crystal Distortion",
+    "DJ Hyperactive",
+    "Chris Liberator",
+    "D.A.V.E. The Drummer",
+    "Somniac One",
+    "Ancient Methods",
+    "Perc",
+    "Rebekah techno",
+    "Phase Fatale",
+    "Basswell",
+    "Funk Tribu",
+    "Cera Khin",
+    "Dyen",
+    "Ø [Phase]"
+   ],
+   "want": [
+    "techno",
+    "acid",
+    "tekno",
+    "tribe",
+    "tribecore",
+    "hardtek",
+    "mental",
+    "schranz",
+    "rave",
+    "hard",
+    "industrial",
+    "303",
+    "groove",
+    "bounce",
+    "psy"
+   ],
+   "min_plays": 3000
+  }
+ },
+ "_lines": "lines: '_' are the owner's own lines (every style), family lines go to all styles in that family, style lines are scene vocabulary/slogans (researched) + lines in the scene's voice. No song lyrics. Currently unused: edits use the abstract bank.",
+ "boost": {
+  "free": 2.5,
+  "_": "multiplies how often a style is picked each night"
+ },
+ "flash": {
+  "_": [
+   "WEIRD",
+   "NOW",
+   "NO",
+   "YES",
+   "AGAIN",
+   "WAKE",
+   "LOUD"
+  ],
+  "free": [
+   "ACID",
+   "303",
+   "TEKNO",
+   "BASS",
+   "RIG",
+   "TRIBE",
+   "FIELD",
+   "DAWN",
+   "KICK",
+   "RAVE",
+   "FREE",
+   "NOISE",
+   "4x4"
+  ],
+  "punk": [
+   "NO",
+   "DIY",
+   "SPIT",
+   "RIOT",
+   "BORED",
+   "SMASH"
+  ],
+  "black": [
+   "GRIM",
+   "FROST",
+   "KVLT",
+   "NIGHT"
+  ],
+  "death": [
+   "ROT",
+   "GORE",
+   "DOOM"
+  ],
+  "goth": [
+   "BATS",
+   "VOID",
+   "NIGHT"
+  ],
+  "witch": [
+   "DRAG",
+   "COVEN",
+   "HEX"
+  ],
+  "drain": [
+   "SAD",
+   "ICE",
+   "DRAIN"
+  ],
+  "mound": [
+   "BURY",
+   "GRAVE",
+   "CROW"
+  ],
+  "opium": [
+   "RAGE",
+   "VAMP",
+   "808"
+  ],
+  "digi": [
+   "HEXD",
+   "LAG",
+   "PING"
+  ],
+  "hyper": [
+   "MORE",
+   "POP",
+   "GLITTER"
+  ],
+  "y2k": [
+   "2000",
+   "CHROME",
+   "Y2K"
+  ],
+  "aero": [
+   "SKY",
+   "GLASS"
+  ],
+  "vapor": [
+   "MALL",
+   "SALE"
+  ],
+  "weird": [
+   "WAKE",
+   "LOST",
+   "HOME"
+  ],
+  "crt": [
+   "SIGNAL",
+   "CH3",
+   "REC"
+  ],
+  "datamosh": [
+   "BLEED",
+   "MELT"
+  ],
+  "analog": [
+   "REC",
+   "PLAY"
+  ],
+  "scene": [
+   "RAWR",
+   "XOXO"
+  ],
+  "sigil": [
+   "BIND",
+   "SEAL"
+  ]
+ },
+ "hooks": {
+  "_": [
+   "you weren't there",
+   "this isn't what i planned",
+   "if you know you know",
+   "be fucking weird",
+   "all my friends are weirdos",
+   "not the plan",
+   "watch till the drop"
+  ],
+  "free": [
+   "POV: you found the rig at 4am",
+   "no tickets. no bouncers. no sleep.",
+   "the police left. the bass stayed.",
+   "this is what a free party sounds like",
+   "sunday 7am, still going",
+   "follow the convoy",
+   "an illegal amount of bass",
+   "nobody paid to be here",
+   "the 303 is screaming",
+   "teknival survival guide"
+  ],
+  "punk": [
+   "NO FUTURE FOR THE PLAN",
+   "ANYONE CAN DO THIS",
+   "THIS POSTER EXPLOITS YOU",
+   "PRINTED IN A BEDROOM"
+  ],
+  "goth": [
+   "nobody dances in daylight",
+   "black is not a phase"
+  ],
+  "black": [
+   "recorded in a forest",
+   "grim and frostbitten"
+  ],
+  "death": [
+   "heavier than the grave"
+  ],
+  "witch": [
+   "everything slowed",
+   "the coven uploads at midnight"
+  ],
+  "drain": [
+   "cry in the club",
+   "stay drained"
+  ],
+  "mound": [
+   "the woods are watching",
+   "the mound remembers"
+  ],
+  "opium": [
+   "no sleep tour",
+   "rage forever"
+  ],
+  "digi": [
+   "3am in the voice chat",
+   "the internet raised me"
+  ],
+  "hyper": [
+   "too much is the point",
+   "make it louder"
+  ],
+  "y2k": [
+   "party like it's 1999",
+   "welcome to the future"
+  ],
+  "aero": [
+   "the future was glossy"
+  ],
+  "vapor": [
+   "the food court at 3am",
+   "dead mall"
+  ],
+  "weird": [
+   "are you lost?",
+   "you have been here before",
+   "don't go back to sleep"
+  ],
+  "crt": [
+   "signal lost",
+   "please stand by"
+  ],
+  "datamosh": [
+   "the frames forgot"
+  ],
+  "analog": [
+   "recorded over"
+  ],
+  "scene": [
+   "rawr means i love you"
+  ],
+  "sigil": [
+   "bind. protect. seal."
+  ]
+ },
+ "block": [
+  "eagles of death metal",
+  "guetta",
+  "queen",
+  "bohemian",
+  "maroon 5",
+  "bieber",
+  "drake",
+  "taylor swift",
+  "ed sheeran",
+  "coldplay",
+  "imagine dragons",
+  "linkin park",
+  "the weeknd",
+  "dua lipa",
+  "charlotte de witte remix of",
+  "tiesto",
+  "alok",
+  "david guetta",
+  "calvin harris",
+  "martin garrix",
+  "skrillex",
+  "hardwell",
+  "dimitri vegas",
+  "mix compilation",
+  "dj set",
+  "live set",
+  "full set",
+  "podcast",
+  "radio show",
+  "boiler room",
+  "landser",
+  "skrewdriver",
+  "stahlgewitter",
+  "nsbm",
+  "rac music",
+  "burzum"
+ ],
+ "_block": "block: titles/uploaders containing any of these are never used (mainstream artists that slip through genre words). Add freely.",
+ "music_mode": "techno",
+ "abstract": {
+  "_": "the only text in edits now: rare, abstract. cards = an occasional centred word or two; flash = one word on a bar downbeat.",
+  "cards": [
+   "signal",
+   "elsewhere",
+   "low end",
+   "drift",
+   "phase",
+   "no clock",
+   "carrier",
+   "resonance",
+   "after",
+   "held",
+   "underneath",
+   "out here",
+   "still",
+   "static",
+   "between"
+  ],
+  "flash": [
+   "SIGNAL",
+   "PHASE",
+   "DRIFT",
+   "LOW",
+   "HOLD",
+   "BODY",
+   "NOW",
+   "AGAIN",
+   "OUT",
+   "303",
+   "909",
+   "FIELD",
+   "HEAT",
+   "VOID",
+   "ECHO"
+  ]
+ },
+ "text": {
+  "hooks": false,
+  "captions": false,
+  "card_chance": 0.0,
+  "flash_chance": 0.0
+ },
+ "vj_share": {
+  "rave": 0.55,
+  "crt": 0.35,
+  "dark": 0.4
+ },
+ "intro": {
+  "_": "series opener on some edits: small outlined caption for ~2.4 s, cleared on a bar line",
+  "chance": 0.0,
+  "secs": 2.4,
+  "lines": [
+   [
+    "i'm a new VJ trying to get known"
+   ],
+   [
+    "i'm a new VJ posting on tiktok",
+    "until i get my first gig"
+   ],
+   [
+    "new VJ, posting until i get my first gig",
+    "follow to see the progress"
+   ],
+   [
+    "i'm a new VJ posting until someone books me"
+   ],
+   [
+    "new VJ looking for tracks",
+    "comment what i should use"
+   ]
+  ]
+ },
+ "outro": {
+  "_": "call to action on the last bar of some edits (only when there is no opener)",
+  "chance": 0.0,
+  "lines": [
+   "comment tracks i should use",
+   "drop a track in the comments",
+   "what track next?"
+  ]
+ },
+ "picks": [],
+ "_picks": "picks: paste SoundCloud/YouTube links people suggest in the comments; each is used once, before any search.",
+ "engine": "v2",
+ "series": {
+  "_": "on every edit, the whole time",
+  "top": [
+   "i'm a new VJ",
+   "posting until i get my first gig"
+  ],
+  "bottom": [
+   "comment the track i should do next"
+  ]
+ },
+ "symbols": {
+  "_": [
+   "smiley",
+   "alien",
+   "trefoil",
+   "eye",
+   "yinyang",
+   "spiral",
+   "peace",
+   "anarchy",
+   "sun",
+   "pyramid",
+   "ufo",
+   "star",
+   "23"
+  ],
+  "free": [
+   "23",
+   "smiley",
+   "spiral",
+   "trefoil",
+   "alien",
+   "eye"
+  ],
+  "techno": [
+   "trefoil",
+   "smiley",
+   "eye",
+   "pyramid",
+   "star"
+  ],
+  "alien": [
+   "alien",
+   "ufo",
+   "eye",
+   "pyramid",
+   "spiral"
+  ],
+  "psych": [
+   "spiral",
+   "yinyang",
+   "eye",
+   "sun",
+   "smiley"
+  ],
+  "riot": [
+   "anarchy",
+   "star",
+   "trefoil",
+   "eye"
+  ],
+  "punk": [
+   "anarchy",
+   "star",
+   "smiley"
+  ],
+  "war": [
+   "trefoil",
+   "star",
+   "eye"
+  ],
+  "robot": [
+   "trefoil",
+   "eye",
+   "star",
+   "pyramid"
+  ],
+  "drone": [
+   "eye",
+   "ufo",
+   "trefoil"
+  ],
+  "factory": [
+   "trefoil",
+   "pyramid",
+   "star"
+  ]
+ }
+}

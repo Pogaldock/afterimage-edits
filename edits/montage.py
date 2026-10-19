@@ -1,0 +1,874 @@
+#!/usr/bin/env python3
+"""Nightly montages on free GitHub minutes: a track per style (yt-dlp: YouTube if it ever opens up, else SoundCloud / Bandcamp / archive.org)
++ the atlas library (your cut-outs, the images you kept, your lines) → a beat-cut edit with real datamosh transitions, CRT/xerox/rave post per family.
+Results go to R2 (atlas/mont/<id>.mp4 + .jpg + atlas/mont.json); the curator folds them into the static bundle; the Edits tab plays them.
+Your keep/kill on each edit weights which styles, recipes and tracks get more rolls.
+
+  python montage.py --cap 6        make up to 6 edits
+  python montage.py --probe        only test the audio sources from this runner
+"""
+import os, sys, io, re, json, time, math, random, hashlib, argparse, subprocess, traceback
+import numpy as np
+import requests
+from PIL import Image, ImageDraw, ImageFilter, ImageOps, ImageChops, ImageEnhance
+
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, "art"))
+import collage as C, craft as K, glitch as G
+_VJ = None
+def vj():
+    global _VJ
+    if _VJ is None:
+        import vj as V; _VJ = V.VJ(720, 1280)
+    return _VJ
+VJ_SHADERS = {"rave": ["boxes", "tunnel", "knot", "plasma", "rings", "kaleido", "kifs", "menger"], "crt": ["tunnel", "rings", "plasma", "kaleido", "kifs"], "dark": ["knot", "boxes", "tunnel", "kaleido", "kifs", "menger"]}
+def shader_frame(name, t, beat, energy, seed, tex=None, dim=1.0, fam="rave"):
+    im = vj().frame(name, t, beat, energy, seed, tex).resize((W, H), Image.BILINEAR)
+    if fam == "dark": im = ImageEnhance.Color(im).enhance(.45)
+    return ImageEnhance.Brightness(im).enhance(dim) if dim != 1 else im
+WORK = os.path.join(HERE, "_work", "montage"); ELS = os.path.join(WORK, "els"); AUD = os.path.join(WORK, "audio"); IMG = os.path.join(WORK, "img"); FR = os.path.join(WORK, "frames")
+for d in (WORK, ELS, AUD, IMG, FR): os.makedirs(d, exist_ok=True)
+C.ELS = ELS; G.OUT = WORK
+SITE = os.environ.get("ATLAS_SITE", "https://atlas.symbiozefpv.com"); TOKEN = os.environ.get("ATLAS_TOKEN", "")
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+S = requests.Session(); S.mount("https://", HTTPAdapter(max_retries=Retry(total=6, backoff_factor=2, status_forcelist=[429, 500, 502, 503, 504], allowed_methods=frozenset(["GET", "PUT", "POST"]), raise_on_status=False)))
+AUTH = {"authorization": "Bearer " + TOKEN}
+report = {"started": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()), "probe": [], "errors": [], "made": [], "skipped": []}
+CFG = json.load(open(os.path.join(HERE, "styles.json")))
+MONT = json.load(open(os.path.join(HERE, "montage.json")))          # families, lines, music queries — edit freely
+
+W, H, FPS = 1080, 1920, 24                                           # native 9:16 1080p
+OUT_W, OUT_H = 1080, 1920
+CAP_Y = .70                                                           # captions sit above TikTok's bottom UI band
+DUR_MIN, DUR_MAX = 12.0, 17.0
+KEEP_ITEMS = 40                                                      # newest N stay on the site, plus every edit you kept (HD files are bigger)
+
+def log(*a): print(time.strftime("%H:%M:%S"), *a, flush=True)
+def err(where, e): m = f"{where}: {type(e).__name__}: {str(e)[:200]}"; log("ERR", m); report["errors"].append(m)
+def obj_get(key):
+    r = S.get(SITE + "/api/atlas/cur/obj", params={"o": key}, headers=AUTH, timeout=300); return r.content if r.status_code == 200 else None
+def obj_put(key, data, ctype="application/octet-stream"):
+    r = S.put(SITE + "/api/atlas/cur/obj", params={"o": key}, data=data, headers={**AUTH, "content-type": ctype}, timeout=600); r.raise_for_status(); return r.json()
+def fam_of(style): return next((f for f, v in MONT["families"].items() if style in v["styles"]), "dark")
+
+# ============================ audio sources ============================
+def dl(target, out, extra=()):
+    """yt-dlp any url / search expression → mp3 at out (a %(ext)s template). Returns meta or an error."""
+    cmd = ["yt-dlp", "-q", "--no-warnings", "--no-playlist", "-f", "ba/b", "-x", "--audio-format", "mp3", "--audio-quality", "5", "--socket-timeout", "20", "--retries", "2",
+           "--match-filter", "duration>40 & duration<720 & !is_live", "--print", "after_move:@@%(duration)s\t%(id)s\t%(webpage_url)s\t%(title)s", "-o", out, *extra, target, "--max-downloads", "1"]
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=300); meta = [l[2:] for l in p.stdout.splitlines() if l.startswith("@@") and l.count("\t") >= 3]
+        mp3 = out.replace("%(ext)s", "mp3")
+        if meta and os.path.exists(mp3):
+            d, i, u, t = meta[0].split("\t", 3)
+            try: dv = float(d)
+            except ValueError: dv = 0.0
+            return {"ok": True, "title": t[:120], "dur": dv, "id": i, "url": u, "path": mp3, "bytes": os.path.getsize(mp3)}
+        tail = (p.stderr or p.stdout).strip().splitlines(); return {"ok": False, "err": (tail[-1] if tail else f"rc={p.returncode}")[:220]}
+    except subprocess.TimeoutExpired: return {"ok": False, "err": "timeout"}
+
+def sc_candidates(q, n=8):
+    """SoundCloud search → candidate list with the fields we score on (no download yet)"""
+    p = subprocess.run(["yt-dlp", "-j", "--no-warnings", "--socket-timeout", "20", "--retries", "2", f"scsearch{n}:{q}"], capture_output=True, text=True, timeout=180); out = []
+    for line in p.stdout.splitlines():
+        try: j = json.loads(line)
+        except Exception: continue
+        out.append({"id": str(j.get("id")), "url": j.get("webpage_url") or j.get("original_url"), "title": j.get("title") or "", "dur": float(j.get("duration") or 0), "genre": (j.get("genre") or ""), "plays": int(j.get("view_count") or 0), "uploader": j.get("uploader") or ""})
+    return out
+
+STOP = {"type", "beat", "music", "the", "a", "of", "and", "mix", "set"}
+def score_candidate(c, q, want):
+    """whole-word matches only (substring matching let 'd-beat' pick Initial D for punk); at least one genre word must hit"""
+    txt = " " + " ".join(re.findall(r"[a-z0-9]+", (c["title"] + " " + c["genre"] + " " + c["uploader"]).lower())) + " "
+    toks = [t for t in re.findall(r"[a-z0-9]+", q.lower()) if t not in STOP and len(t) > 2]
+    hit = sum(1 for t in toks if f" {t} " in txt) / max(1, len(toks))
+    gen = sum(1 for w in want if " " + " ".join(re.findall(r"[a-z0-9]+", w.lower())) + " " in txt)
+    if not (45 <= c["dur"] <= 720): return -1
+    if any(f" {x} " in txt for x in ("podcast", "episode", "interview", "tutorial", "asmr", "audiobook", "eurobeat", "nightcore", "anime", "cover", "covers", "goes pop", "karaoke", "reaction", "tutorial", "maroon", "8d", "ringtone")): return -1
+    if want and gen == 0: return -1
+    if any(b in txt for b in (" " + " ".join(re.findall(r"[a-z0-9]+", x.lower())) + " " for x in MONT.get("block", []))): return -1
+    if c["plays"] < int(MONT.get("music", {}).get("_techno", {}).get("min_plays", 0) if MONT.get("music_mode") == "techno" else 0): return -1
+    pop = math.log10(1 + c["plays"])                                     # popular inside the scene: plays dominate once it's on-genre
+    return hit * 1.2 + gen * .8 + pop * 1.1 + (.5 if 150 <= c["dur"] <= 480 else 0)
+
+def find_track(style, r, used):
+    """the style's SoundCloud queries (scored picks) — YouTube tried once, first, only if it worked last run"""
+    mq = MONT["music"]["_techno"] if MONT.get("music_mode") == "techno" else (MONT["music"].get(style) or MONT["music"]["_"]); tries = []; want = [w.lower() for w in mq.get("want", [])]
+    for u in [p_ for p_ in MONT.get("picks", []) if p_ and p_.startswith("http")]:
+        key = hashlib.sha1(u.encode()).hexdigest()[:10]
+        if key in used: continue
+        res = dl(u, os.path.join(AUD, f"pick_{key}.%(ext)s"))
+        if res.get("ok"): res.update(src="pick", q=u, id=key); return res, tries
+        tries.append(("pick", u, res.get("err", "?")))
+    if MONT.get("_youtube_ok") and mq.get("yt"):
+        q = r.choice(mq["yt"]); res = dl(f"ytsearch2:{q}", os.path.join(AUD, f"{style}_yt.%(ext)s"), ("--extractor-args", "youtube:player_client=tv"))
+        if res.get("ok") and res["id"] not in used: res["src"] = "youtube"; res["q"] = q; return res, tries
+        tries.append(("youtube", q, res.get("err", "used")))
+    for q in r.sample(mq["sc"], min(5, len(mq["sc"]))):
+        try: cands = sc_candidates(q, 12)
+        except Exception as e: tries.append(("soundcloud", q, str(e)[:80])); continue
+        cands = [c for c in cands if c["id"] not in used and c["url"] and int(hashlib.sha1(c["id"].encode()).hexdigest(), 16) % SHARD_OF == SHARD_NO]; cands.sort(key=lambda c: -score_candidate(c, q, want))
+        top = [c for c in cands[:6] if score_candidate(c, q, want) >= 0]; r.shuffle(top); top.sort(key=lambda c: -score_candidate(c, q, want) + r.uniform(0, .6))
+        for c in top[:3]:
+            if score_candidate(c, q, want) < 0: break
+            res = dl(c["url"], os.path.join(AUD, f"{style}_{c['id']}.%(ext)s"))
+            if res.get("ok"): res.update(src="soundcloud", q=q, genre=c["genre"], plays=c["plays"]); return res, tries
+            tries.append(("soundcloud", c["url"], res.get("err", "?")))
+        if not cands: tries.append(("soundcloud", q, "no candidates"))
+    return None, tries
+
+# ============================ audio analysis ============================
+def pcm(path, sr=22050):
+    p = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", str(sr), "-f", "s16le", "-"], capture_output=True, check=True)
+    return np.frombuffer(p.stdout, np.int16).astype(np.float32) / 32768, sr
+
+def onsets(x, sr, hop=512, n=1024):
+    """spectral flux onset strength per hop + peak-picked onset times"""
+    nf = max(1, (len(x) - n) // hop); win = np.hanning(n).astype(np.float32); prev = None; flux = np.zeros(nf, np.float32)
+    for i in range(nf):
+        mag = np.abs(np.fft.rfft(x[i * hop:i * hop + n] * win)); mag = np.log1p(mag * 30)
+        if prev is not None: flux[i] = np.maximum(mag - prev, 0).sum()
+        prev = mag
+    flux = flux / (flux.max() + 1e-9); t = np.arange(nf) * hop / sr
+    k = int(0.9 * sr / hop); loc = np.convolve(flux, np.ones(2 * k + 1) / (2 * k + 1), "same"); thr = loc + 0.08
+    peaks = []; last = -1
+    for i in range(1, nf - 1):
+        if flux[i] > thr[i] and flux[i] >= flux[i - 1] and flux[i] >= flux[i + 1] and (last < 0 or t[i] - t[last] > 0.12): peaks.append(i); last = i
+    rms = np.array([np.sqrt((x[i * hop:i * hop + n] ** 2).mean() + 1e-12) for i in range(nf)], np.float32)
+    return t, flux, rms, peaks
+
+def beats(x, sr, hop=512):
+    """kick-band onset envelope → tempo (115-185 BPM, autocorrelation) → beat phase. Returns beat times (s), bpm."""
+    n = 2048; nf = max(1, (len(x) - n) // hop); win = np.hanning(n).astype(np.float32); f = np.fft.rfftfreq(n, 1 / sr); lo = (f > 35) & (f < 160)
+    env = np.zeros(nf, np.float32); prev = None
+    for i in range(nf):
+        m = np.log1p(np.abs(np.fft.rfft(x[i * hop:i * hop + n] * win))[lo] * 20)
+        if prev is not None: env[i] = np.maximum(m - prev, 0).sum()
+        prev = m
+    env = env - np.convolve(env, np.ones(16) / 16, "same"); env = np.clip(env, 0, None); fps = sr / hop
+    seg = env[: int(fps * min(len(env) / fps, 120))]
+    ac = np.correlate(seg, seg, "full")[len(seg) - 1:]; best, bpm = -1, 135.0
+    for b in np.arange(115, 186, 0.25):
+        L = fps * 60 / b; s_ = sum(ac[int(round(L * k))] for k in (1, 2, 4) if int(round(L * k)) < len(ac))
+        if s_ > best: best, bpm = s_, b
+    period = fps * 60 / bpm; phases = np.arange(0, period, .5)
+    score = [env[np.clip((ph + np.arange(0, len(env) - period, period)).astype(int), 0, len(env) - 1)].sum() for ph in phases]
+    ph = phases[int(np.argmax(score))]; bt = (ph + np.arange(0, len(env) - 1, period)) / fps
+    return bt, float(bpm), env, fps
+
+def pick_section(t, flux, rms, peaks, total, dur, r):
+    """loudest, busiest window well inside the track; start snapped to a strong onset"""
+    hop_t = t[1] - t[0] if len(t) > 1 else .02; w = int(dur / hop_t); lo = int(0.12 * len(t)); hi = max(lo + 1, int(0.80 * len(t)) - w)
+    if hi <= lo: return max(0.0, (total - dur) / 2)
+    e = rms / (rms.max() + 1e-9) + 0.6 * np.convolve(flux, np.ones(int(0.5 / hop_t)) / int(0.5 / hop_t), "same")
+    cs = np.concatenate([[0], np.cumsum(e)]); score = (cs[lo + w:hi + w] - cs[lo:hi]) / w
+    i = lo + int(np.argmax(score * np.array([r.uniform(.9, 1.0) for _ in range(len(score))])))
+    strong = [p for p in peaks if abs(p - i) < int(1.2 / hop_t)]
+    if strong: i = max(strong, key=lambda p: flux[p])
+    return float(t[i])
+
+def grid_cuts(bt, start, dur, fam, r, strength_at):
+    """cuts on the beat grid: first 2 bars every beat (hook), then mostly every 2 beats, some 4-beat holds,
+    a stutter (half-beat double cut) before some bar lines. Bar lines = every 4th beat from the section start."""
+    b = [x - start for x in bt if start - 1e-3 <= x <= start + dur - .25]
+    if len(b) < 8: return None
+    per = float(np.median(np.diff(b))); cuts = [0.0]; i = 0; hold = {"crt": [2, 2, 4], "dark": [2, 4, 4], "rave": [1, 2, 2, 2, 4]}.get(fam, [2])
+    while i < len(b) - 1:
+        bar_pos = i % 4
+        step = 1 if i < 8 else r.choice(hold)
+        if step > 1 and bar_pos + step > 4: step = 4 - bar_pos            # land on the bar line
+        if i >= 8 and bar_pos == 3 and r.random() < .25 and fam == "rave": cuts.append(b[i] + per / 2)   # stutter into the bar
+        i += max(1, step)
+        if i < len(b): cuts.append(b[i])
+    cuts = sorted(set(round(c, 4) for c in cuts if c < dur - .2))
+    strengths = {round(c, 3): (1.0 if k % 4 == 0 else .5) * strength_at(c + start) for k, c in enumerate(b) for _ in [0]}
+    bars = [round(c, 3) for k, c in enumerate(b) if k % 4 == 0]
+    return cuts, strengths, b, bars, per
+
+def cut_points(t, flux, peaks, start, dur, fam):
+    """cut times (relative) on the strongest onsets, min/max gap by family; always a cut at 0"""
+    gmin, gmax = MONT["families"][fam]["gap"]; cand = [(float(flux[p]), float(t[p]) - start) for p in peaks if start + 0.1 <= t[p] <= start + dur - 0.5]
+    cand.sort(reverse=True); cuts = [0.0]
+    for s, ct in cand:
+        g = gmin * (.55 if ct < 3.0 else 1)                               # hook: the first 3 s cut harder
+        if all(abs(ct - c) >= g for c in cuts): cuts.append(ct)
+    cuts.sort(); out = [0.0]
+    for c in cuts[1:]:
+        while c - out[-1] > gmax * 1.6: out.append(out[-1] + gmax)   # never a dead stretch
+        out.append(c)
+    while dur - out[-1] > gmax * 1.6: out.append(out[-1] + gmax)
+    strengths = {}
+    for s, ct in cand: strengths[round(ct, 3)] = s
+    return out, strengths
+
+# ============================ library ============================
+def sync_library():
+    els = json.loads(obj_get("atlas/elements.json") or '{"items":[]}')["items"]; man = json.loads(obj_get("atlas/manifest.json") or '{"styles":{}}')
+    flags = json.loads(obj_get("atlas/flags.json") or "{}"); mont = json.loads(obj_get("atlas/mont.json") or '{"items":[]}')
+    n = 0
+    for e in els:
+        p = os.path.join(ELS, e["style"], f"{e.get('kind') or 'thing'}-{e['id']}.png")
+        if os.path.exists(p): continue
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        try:
+            rr = S.get(SITE + "/api/atlas/el/" + e["id"], timeout=60)
+            if rr.status_code == 200 and rr.content[:4] == b"\x89PNG": open(p, "wb").write(rr.content); n += 1
+        except Exception as ex: err("el " + e["id"], ex)
+    live = {f"{e.get('kind') or 'thing'}-{e['id']}.png" for e in els}
+    for st in os.listdir(ELS):
+        for f in os.listdir(os.path.join(ELS, st)):
+            if f not in live: os.remove(os.path.join(ELS, st, f))
+    log(f"library: {len(els)} elements ({n} new), {sum(len(v) for v in man['styles'].values())} images, {len(mont['items'])} edits so far")
+    return els, man, flags, mont
+
+def kept_images(man, style):
+    its = man["styles"].get(style, []); ok = [i for i in its if i.get("ok")]; return ok or sorted(its, key=lambda i: -(i.get("cs") or 0))[:40]
+
+def fetch_image(it):
+    p = os.path.join(IMG, it["id"] + ".jpg")
+    if not os.path.exists(p):
+        rr = S.get(SITE + it["url"], timeout=60)
+        if rr.status_code != 200: return None
+        im = Image.open(io.BytesIO(rr.content)).convert("RGB"); im.thumbnail((1400, 1400)); im.save(p, "JPEG", quality=90)
+    return Image.open(p).convert("RGB")
+
+def weights(mont, flags, key):
+    """1 + keeps − kills for a style / family / source, from your mok/mdead on earlier edits"""
+    ok, dead = set(flags.get("mok", [])), set(flags.get("mdead", [])); w = {}
+    for it in mont["items"]:
+        k = it.get(key); w[k] = w.get(k, 0) + (1 if it["id"] in ok else 0) - (.7 if it["id"] in dead else 0)
+    return w
+
+# ============================ rendering ============================
+def cover(im, w=W, h=H, zoom=1.0, px=0.5, py=0.5):
+    """fill w×h from im, zoomed, anchored at (px,py) of the source"""
+    r = max(w / im.width, h / im.height) * zoom; sw, sh = int(im.width * r), int(im.height * r); big = im.resize((sw, sh), Image.BILINEAR)
+    x = int((sw - w) * px); y = int((sh - h) * py); return big.crop((x, y, x + w, y + h))
+
+def grade(img, fam, r):
+    """bold: saturated, high contrast; dark family stays moody but keeps colour"""
+    if fam == "crt":
+        rgb = ImageEnhance.Color(img).enhance(1.1); arr = np.asarray(rgb).astype(np.float32); arr[..., 2] *= 1.12; return Image.fromarray(np.clip((arr - 20) * 1.25, 0, 255).astype(np.uint8))
+    if fam == "dark":
+        rgb = ImageEnhance.Color(img).enhance(.9); arr = np.asarray(rgb).astype(np.float32); arr[..., 0] *= 1.08; arr[..., 2] *= 1.12; return Image.fromarray(np.clip((arr - 28) * 1.3, 0, 255).astype(np.uint8))
+    rgb = ImageEnhance.Color(img).enhance(1.7); return ImageEnhance.Contrast(rgb).enhance(1.3)
+
+def post(img, fam, t, seed, strobe=0.0):
+    """per-family finish; grain kept low on purpose — film grain is what makes a 15 s clip 30 MB"""
+    if fam == "crt": img = C.chroma(img, 3 + int(2 * abs(math.sin(t * 3)))); img = K.bloom(img, 205, 14, .42); img = ImageEnhance.Contrast(img).enhance(1.2); img = K.phosphor(img, 3, .35); img = C.scanlines(img, 4, .14)
+    elif fam == "dark": img = C.chroma(img, 3); img = K.bloom(img, 210, 20, .35); img = ImageEnhance.Contrast(img).enhance(1.15)
+    else: img = C.chroma(img, 4 + int(5 * strobe)); img = K.bloom(img, 190, 18, .5); img = ImageEnhance.Contrast(img).enhance(1.12)
+    if strobe > 0: img = ImageEnhance.Brightness(img).enhance(1 + 1.1 * strobe)
+    img = C.grain(img, 6, seed + int(t * 100))
+    return C.vignette(img, .45)
+
+def figure_sprite(path, fam, r):
+    f = C.load(path, 1400); f = C.fit(f, h=int(H * r.uniform(.6, .92)))
+    rgb = grade(f.convert("RGB"), fam, r).convert("RGBA"); rgb.putalpha(C.alpha_of(f)); return rgb
+
+PALS = [((255, 0, 110), (0, 240, 255)), ((255, 230, 0), (120, 0, 255)), ((0, 255, 120), (255, 0, 60)), ((255, 90, 0), (0, 40, 255)), ((255, 255, 255), (255, 0, 0)), ((0, 255, 255), (255, 0, 255))]
+def backdrop(fam, style, s, wall, t=0.0, beat=0.0, energy=.5, seed=0.0):
+    """s["bg"] is decided once per shot (wall / plain / shader), so the background doesn't flicker frame to frame"""
+    bg = s.get("bg", "plain")
+    if bg == "shader": return shader_frame(s["shader"], t, beat, energy, seed, dim=(.8 if fam == "rave" else .6), fam=fam).convert("RGBA")
+    if bg == "wall" and wall is not None: b = cover(wall, zoom=1.15, px=s["bpx"], py=s["bpy"]).filter(ImageFilter.GaussianBlur(5)); b = ImageEnhance.Brightness(b).enhance(.5 if fam != "rave" else .7); return b.convert("RGBA")
+    a, b2 = s.get("pal", PALS[0]); base = Image.new("RGB", (W, H), tuple(int(c * .12) for c in b2)); gl = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(gl)
+    d.ellipse([W * .1, H * .15, W * .9, H * .85], fill=tuple(int(c * .55) for c in a) + (255,)); gl = gl.filter(ImageFilter.GaussianBlur(100)); base.paste(gl, (0, 0), gl); return base.convert("RGBA")
+
+def caption_sprite(line, fam, big=False):
+    font = {"crt": "vt323", "dark": "unifrakturcook"}.get(fam, "anton")
+    return K.tx(line if fam in ("crt", "dark") else line.upper(), 104 if big else 46, K.FONT[font], (255, 255, 255, 255), 2)
+
+# ---------------- frame treatments (applied per shot, part of the motif) ----------------
+_ASCII = {}
+def ascii_fx(img, cell=10, pal=None):
+    """real ASCII: every cell becomes a glyph picked by brightness, tinted with the cell's colour (or a 2-colour palette)"""
+    ch = int(cell * 1.6)
+    if cell not in _ASCII:
+        from PIL import ImageFont
+        chars = " .'`:-=+*%#@"; f = ImageFont.truetype(K.FONT["vt323"], int(ch * 1.15)); gl = []
+        for c in chars:
+            m = Image.new("L", (cell, ch), 0); ImageDraw.Draw(m).text((cell / 2, ch / 2), c, font=f, fill=255, anchor="mm"); gl.append(np.asarray(m, np.float32) / 255)
+        _ASCII[cell] = np.stack(gl)
+    G_ = _ASCII[cell]; a = np.asarray(img, np.float32); rows, cols = H // ch, W // cell
+    blk = a[:rows * ch, :cols * cell].reshape(rows, ch, cols, cell, 3).mean(axis=(1, 3)); lum = blk.mean(-1); lo, hi = np.percentile(lum, 3), np.percentile(lum, 97); lum = np.clip((lum - lo) / max(1, hi - lo), 0, 1)
+    idx = np.clip((lum ** .8) * (len(G_) - 1), 0, len(G_) - 1).astype(int); masks = G_[idx]                       # rows, cols, ch, cell
+    pal = pal or ((255, 255, 255), (0, 255, 160)); c0, c1 = np.array(pal[0], np.float32), np.array(pal[1], np.float32); col = c1[None, None] * (1 - lum[..., None]) + c0[None, None] * lum[..., None]
+    out = masks[..., None] * col[:, :, None, None, :]; out = out.transpose(0, 2, 1, 3, 4).reshape(rows * ch, cols * cell, 3)
+    canvas = np.zeros((H, W, 3), np.float32); canvas[:rows * ch, :cols * cell] = out; return Image.fromarray(canvas.astype(np.uint8))
+
+def apply_fx(img, fx, s, t, beat):
+    if "mirror2" in fx: a = np.asarray(img); h = a.shape[1] // 2; a = a.copy(); a[:, h:] = a[:, :h][:, ::-1][:, :a.shape[1] - h]; img = Image.fromarray(a)
+    if "mirror4" in fx: a = np.asarray(img).copy(); hh, hw = a.shape[0] // 2, a.shape[1] // 2; q = a[:hh, :hw]; a[:hh, a.shape[1] - hw:] = q[:, ::-1]; a[a.shape[0] - hh:, :] = a[:hh][::-1]; img = Image.fromarray(a)
+    if "clip" in fx:                                                      # hard clip: crushed, posterised, saturated
+        a = np.asarray(img, np.float32); a = np.clip((a - 90) * 2.4 + 90, 0, 255); a = (a // 64) * 64 + 32; img = ImageEnhance.Color(Image.fromarray(a.astype(np.uint8))).enhance(1.8)
+    if "duo" in fx:
+        c0, c1 = s["pal"]; l = np.asarray(img.convert("L"), np.float32)[..., None] / 255; l = np.clip((l - .5) * 1.8 + .5, 0, 1)
+        img = Image.fromarray((np.array(c1) * (1 - l) + np.array(c0) * l).astype(np.uint8))
+    if "invert" in fx: img = ImageOps.invert(img)
+    if "ascii" in fx: img = ascii_fx(img, s.get("cell", 10), s["pal"] if s.get("apal") else None)
+    if "rgbshift" in fx: img = C.chroma(img, int(6 + 18 * beat))
+    return img
+
+# ---------------- edit grammar: motifs, repetition, build-up, surprise ----------------
+FX_POOL = ["mirror2", "mirror4", "clip", "duo", "ascii", "rgbshift", "invert"]
+def motif(r, fam, figs, walls, name):
+    share = float(MONT.get("vj_share", {}).get(fam, .4))
+    typ = r.choices(["vj", "figure", "wall", "tile", "echo", "burst"], [share * 6, 2.2, 1.4 if walls else 0, 1.2, 1.2, .8])[0]
+    m = {"name": name, "type": typ, "fig": r.choice(figs), "wall": r.choice(walls) if walls else None, "extra": r.sample(figs, min(4, len(figs))),
+         "shader": r.choice(VJ_SHADERS.get(fam) or ["plasma"]), "solo": r.random() < .3, "sseed": r.random(), "pal": r.choice(PALS),
+         "fx": r.sample(FX_POOL, r.choice([0, 1, 1, 2])), "cell": r.choice([8, 10, 12]), "apal": r.random() < .5, "tiles": r.choice([2, 3, 4]),
+         "zoom": r.uniform(1.0, 1.08), "dz": r.uniform(-.05, .1), "px": r.random(), "py": r.random(), "dx": r.uniform(-.1, .1), "dy": r.uniform(-.07, .07)}
+    p_shader = {"rave": .7, "crt": .35, "dark": .45}.get(fam, .4)
+    m["bg"] = "shader" if r.random() < p_shader else ("wall" if r.random() < .5 else "plain")
+    if m["bg"] == "shader" and m["type"] != "vj": m["shader"] = r.choice([x for x in VJ_SHADERS.get(fam, []) if x != "kaleido"] or ["plasma"])
+    return m
+
+def variant(m, r, k):
+    """the same motif, recognisably — mirrored, palette-flipped, re-framed — so repetition stays present but alive"""
+    v = dict(m); v["flip"] = (k % 2 == 1); v["px"] = (m["px"] + .23 * k) % 1; v["dx"] = m["dx"] * (-1 if k % 2 else 1)
+    if k % 3 == 2: v["pal"] = (m["pal"][1], m["pal"][0])
+    if k % 4 == 3 and len(v["fx"]) < 3: v["fx"] = v["fx"] + [r.choice([f for f in FX_POOL if f not in v["fx"]])]
+    return v
+
+def make_shots(cuts, dur, fam, style, figs, walls, lines, r, bars=(), per=0.45):
+    """Phrases of 4 bars. Each phrase sets a short pattern of motifs (e.g. A B / A A B / A B C B) and repeats it with variations.
+    The last bar of a phrase builds (the grid already cuts faster there). The next downbeat resolves the expectation:
+      payoff  — back to the hero motif, bigger, with an added treatment, moshed in from the build-up
+      surprise — a motif never seen before, or a hard treatment (ascii / invert / mirror4), or a fake-out: one beat of black then the payoff
+    Roughly half the phrase boundaries pay off and half surprise, so the viewer learns the pattern and then gets it broken."""
+    letters = "ABCDEFG"; M = {"A": motif(r, fam, figs, walls, "A"), "B": motif(r, fam, figs, walls, "B"), "C": motif(r, fam, figs, walls, "C")}
+    patterns = [["A", "B"], ["A", "A", "B"], ["A", "B", "A", "C"], ["A", "B", "C", "B"], ["A", "A", "B", "B"]]
+    phrase_len = 4 * 4 * per if per else 7.0; bar_len = 4 * per if per else 1.8
+    shots = []; pat = r.choice(patterns); pos = 0; seen = {}; cur_phrase = -1; text_left = 1 if lines and r.random() < float(MONT.get("text", {}).get("card_chance", .35)) else 0
+    for i, c in enumerate(cuts):
+        end = cuts[i + 1] if i + 1 < len(cuts) else dur; ph = int((c + 1e-3) // phrase_len); in_bar = int(((c + 1e-3) % phrase_len) // bar_len)
+        boundary = ph != cur_phrase and i > 0; cur_phrase = ph; event = None
+        if boundary:
+            roll = r.random()
+            if roll < .45: event = "payoff"
+            elif roll < .7: event = "new"
+            elif roll < .87: event = "hardfx"
+            else: event = "fakeout"
+            if r.random() < .5: pat = r.choice(patterns)                    # sometimes the next phrase changes the pattern too
+            pos = 0
+        if event == "new":
+            L = letters[len(M)] if len(M) < len(letters) else r.choice(list(M)); M[L] = motif(r, fam, figs, walls, L); key = L
+        elif event == "payoff" or event == "fakeout": key = "A"
+        else: key = pat[pos % len(pat)]; pos += 1
+        seen[key] = seen.get(key, 0) + 1; m = variant(M[key], r, seen[key] - 1)
+        s = dict(m); s.update(t0=c, t1=end, event=event, mosh=False)
+        if event == "payoff": s["zoom"] = m["zoom"] * 1.12; s["fx"] = list(dict.fromkeys(m["fx"] + [r.choice(["rgbshift", "clip", "mirror2"])])); s["mosh"] = True
+        if event == "hardfx": s["fx"] = [r.choice(["ascii", "invert", "mirror4", "duo"])] + m["fx"][:1]
+        if event == "fakeout" and end - c > per * .9:                      # one beat of nothing, then the payoff
+            blk = dict(s); blk.update(type="black", t1=c + per, fx=[]); shots.append(blk); s["t0"] = c + per; s["mosh"] = False
+        if in_bar == 3 and not boundary and r.random() < .35: s["mosh"] = True   # the build-up bleeds
+        if text_left and i > len(cuts) // 3 and in_bar == 1 and r.random() < .3: s["type"] = "text"; s["line"] = r.choice(lines); text_left -= 1
+        s["bpx"], s["bpy"] = r.random(), r.random(); shots.append(s)
+    return shots
+
+def render(shots, dur, fam, style, cutset, strengths, seed, r, lines, punches=(), hook=None, env=((), ()), bars=(), keyframes=()):
+    env_t, env_v = env
+    avi = os.path.join(WORK, "clean.avi"); kf = ",".join(f"{c:.3f}" for c in sorted(set(keyframes) | {0.0}))
+    enc = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "libxvid", "-q:v", "4", "-g", "9999", "-bf", "0", "-force_key_frames", kf, avi], stdin=subprocess.PIPE)
+    def emit(im): enc.stdin.write(im.convert("RGB").tobytes())
+    io_ = MONT.get("intro", {}); intro = None; outro = None
+    if io_ and r.random() < float(io_.get("chance", 0)):
+        lines_ = r.choice(io_["lines"]); end_ = float(io_.get("secs", 2.4))
+        bl = [b for b in bars if b >= end_ - .3]; end_ = bl[0] if bl else end_          # the opener clears on a bar line
+        intro = ([x for x in lines_ if x], end_)
+    oc = MONT.get("outro", {}); outro = None
+    if oc and not intro and r.random() < float(oc.get("chance", 0)):
+        bl = [b for b in bars if b <= dur - 1.6]; outro = (r.choice(oc["lines"]), bl[-1] if bl else dur - 2.2)
+    d = os.path.join(FR, f"m{seed}"); os.makedirs(d, exist_ok=True)
+    for f in os.listdir(d): os.remove(os.path.join(d, f))
+    nfr = int(round(dur * FPS)); sprites = {}; walls = {}; barset = list(bars)
+    def spr(path):
+        if path not in sprites: sprites[path] = figure_sprite(path, fam, r)
+        return sprites[path]
+    def wall_img(it):
+        if it is None: return None
+        if it["id"] not in walls:
+            im = fetch_image(it); walls[it["id"]] = grade(im, fam, r) if im is not None else None
+        return walls[it["id"]]
+    # flash words: rare, on bar downbeats only
+    fl = MONT.get("abstract", {}).get("flash", []); flashes = {}; fc = float(MONT.get("text", {}).get("flash_chance", .12))
+    for b in barset:
+        if b > 1.0 and fl and r.random() < fc:
+            w_ = r.choice(fl); f0 = int(round(b * FPS))
+            for dd in range(2): flashes[f0 + dd] = w_
+    si = 0
+    for k in range(nfr):
+        t = k / FPS
+        while si + 1 < len(shots) and t >= shots[si + 1]["t0"] - 1e-6: si += 1
+        s = shots[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"]); z = s["zoom"] + s["dz"] * u
+        last = max((p for p in punches if p <= t + 1e-6), default=-9); bar_last = max((b for b in barset if b <= t + 1e-6), default=-9)
+        z *= 1 + .07 * math.exp(-(t - last) * 10) + .06 * math.exp(-(t - bar_last) * 6)       # punch every beat, bigger on the bar
+        beat = math.exp(-(t - last) * 7); energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
+        wl = wall_img(s.get("wall")); typ = s["type"]
+        if typ == "black":
+            emit(Image.new("RGB", (W, H), (0, 0, 0))); continue
+        fg = spr(s["fig"])
+        if typ == "vj":
+            if s["shader"] == "kaleido": fr = shader_frame("kaleido", t, beat, energy, s["sseed"], tex=fg, fam=fam).convert("RGBA")
+            else:
+                fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
+                if not s["solo"]: f = fg.resize((max(1, int(fg.width * z * .85)), max(1, int(fg.height * z * .85))), Image.BILINEAR); C.paste(fr, f, W / 2, H * .55)
+        elif typ == "wall" and wl is not None:
+            fr = cover(wl, zoom=z, px=min(1, max(0, s["px"] + s["dx"] * u)), py=min(1, max(0, s["py"] + s["dy"] * u)))
+            if s.get("flip"): fr = ImageOps.mirror(fr)
+            fr = fr.convert("RGBA")
+        elif typ == "text":
+            fr = backdrop(fam, style, s, wl, t, beat, energy, s["sseed"]); big = caption_sprite(s["line"], fam, big=True); big = C.fit(big, w=min(big.width, int(W * .8))); C.paste(fr, big, W / 2, H / 2)
+        elif typ == "tile":                                               # step-and-repeat grid, rows offset on the beat
+            fr = backdrop(fam, style, s, wl, t, beat, energy, s["sseed"]); n = s["tiles"]; e = C.fit(fg, w=int(W / n * .9))
+            for gy in range(int(H / e.height) + 2):
+                for gx in range(n + 1):
+                    off = (gy % 2) * (W / n / 2) * (1 if int(t / max(per_of(punches), .2)) % 2 else -1)
+                    C.paste(fr, e if (gx + gy) % 2 == 0 or not s.get("flip") else ImageOps.mirror(e), gx * W / n + W / n / 2 + off - W / n / 2 * (n % 2 == 0), gy * e.height + e.height / 2 - (u * e.height) % e.height)
+        elif typ == "echo":                                               # the element and its trail, decaying copies
+            fr = backdrop(fam, style, s, wl, t, beat, energy, s["sseed"]); f = fg.resize((max(1, int(fg.width * z)), max(1, int(fg.height * z))), Image.BILINEAR)
+            for j in range(5, 0, -1): C.paste(fr, f, W / 2 + s["dx"] * W * u - j * 26 * math.cos(t * 2), H * .54 + j * 34 * math.sin(t * 2 + j), alpha=.18 + .1 * (5 - j))
+            C.paste(fr, f, W / 2 + s["dx"] * W * u, H * .54)
+        else:
+            fr = backdrop(fam, style, s, wl, t, beat, energy, s["sseed"]); f = fg.resize((max(1, int(fg.width * z)), max(1, int(fg.height * z))), Image.BILINEAR)
+            if s.get("flip"): f = ImageOps.mirror(f)
+            C.paste(fr, f, W / 2 + s["dx"] * W * u, H * .54 + s["dy"] * H * u)
+            if typ == "burst":
+                for j, ex in enumerate(s["extra"]):
+                    e = spr(ex); e = C.fit(e, w=int(W * .3)); ang = (j * 2.1 + u * 2.5); C.paste(fr, e, W / 2 + math.cos(ang) * W * (.25 + .3 * u), H / 2 + math.sin(ang) * H * (.2 + .3 * u), rot=u * 40 * (1 if j % 2 else -1), alpha=max(0, 1 - u))
+        img = apply_fx(fr.convert("RGB"), s.get("fx", []), s, t, beat)
+        near_bar = any(abs(b - t) < 1.2 / FPS for b in barset); strobe = .9 if near_bar and fam == "rave" else (.4 if near_bar else 0.0)
+        img = post(img, fam, t, seed, strobe)
+        w_ = flashes.get(k)
+        if w_:
+            b = Image.new("RGBA", (W, H), (0, 0, 0, 255)); sp = K.tx(w_, 300, K.FONT[{"crt": "vt323", "dark": "unifrakturcook"}.get(fam, "anton")], (255, 255, 255, 255), 4); sp = C.fit(sp, w=int(W * .86))
+            C.paste(b, sp, W / 2, H / 2); img = C.chroma(b.convert("RGB"), 6)
+        if intro and t < intro[1]:                                         # series opener: TikTok-native caption, top third, outlined
+            b = img.convert("RGBA"); a_ = 1.0 if t < intro[1] - .25 else max(0, (intro[1] - t) / .25); y = H * .26
+            for li, line in enumerate(intro[0]):
+                sp = K.tx(line, 46, K.FONT["oswald"], (255, 255, 255, int(255 * a_)), 0); sp = C.fit(sp, w=min(sp.width, int(W * .84)))
+                ol = K.tx(line, 46, K.FONT["oswald"], (0, 0, 0, int(230 * a_)), 0); ol = C.fit(ol, w=sp.width)
+                for ox, oy in ((-3, 0), (3, 0), (0, -3), (0, 3), (-2, -2), (2, 2), (-2, 2), (2, -2)): C.paste(b, ol, W / 2 + ox, y + oy)
+                C.paste(b, sp, W / 2, y); y += sp.height * 1.35
+            img = b.convert("RGB")
+        if outro and t >= outro[1]:
+            b = img.convert("RGBA"); y = H * .26
+            sp = K.tx(outro[0], 46, K.FONT["oswald"], (255, 255, 255, 255), 0); sp = C.fit(sp, w=min(sp.width, int(W * .84))); ol = K.tx(outro[0], 46, K.FONT["oswald"], (0, 0, 0, 230), 0); ol = C.fit(ol, w=sp.width)
+            for ox, oy in ((-3, 0), (3, 0), (0, -3), (0, 3), (-2, -2), (2, 2), (-2, 2), (2, -2)): C.paste(b, ol, W / 2 + ox, y + oy)
+            C.paste(b, sp, W / 2, y); img = b.convert("RGB")
+        emit(img)
+    enc.stdin.close(); enc.wait()
+    if enc.returncode: raise RuntimeError("frame encoder failed")
+    return d, nfr
+
+def per_of(punches):
+    p = [b - a for a, b in zip(punches, punches[1:]) if b > a]; return float(np.median(p)) if p else .45
+
+# ============================ v2: hero symbols over trippy backgrounds, bar-locked sections ============================
+import symbols as SYM
+HERO_PALS = [((255, 240, 0), (255, 0, 160)), ((0, 255, 200), (120, 0, 255)), ((255, 255, 255), (255, 30, 30)), ((255, 120, 0), (0, 200, 255)),
+             ((180, 255, 0), (255, 0, 90)), ((255, 0, 200), (0, 255, 255)), ((255, 255, 255), (0, 120, 255))]
+
+def hero_sprite(h, size, pal, fam, r):
+    """h = ("sym", name) or ("cut", path) → RGBA, crisp, glowing"""
+    fg, glow = pal
+    if h[0] == "sym":
+        return SYM.symbol(h[1], size, fg + (255,), (10, 0, 20, 255), font=K.FONT["anton"], glow=glow)
+    im = C.load(h[1], 1800); im = C.fit(im, w=size) if im.width >= im.height else C.fit(im, h=size)
+    rgb = ImageEnhance.Contrast(ImageEnhance.Color(im.convert("RGB")).enhance(1.6)).enhance(1.25).convert("RGBA"); rgb.putalpha(C.alpha_of(im))
+    a = C.alpha_of(im).filter(ImageFilter.GaussianBlur(size * .025)); halo = Image.new("RGBA", im.size, glow + (0,)); halo.putalpha(a.point(lambda v: min(255, int(v * 1.5))))
+    out = Image.new("RGBA", im.size, (0, 0, 0, 0)); out.alpha_composite(halo); out.alpha_composite(rgb); return out
+
+def pick_heroes(r, style, fam, mont, n):
+    """vector symbols the scene recognises + the library's own logos/symbols/figures; avoid what recent edits used"""
+    recent = set(sum((it.get("heroes", []) for it in mont["items"][:12]), []))
+    pref = MONT.get("symbols", {}).get(style) or MONT.get("symbols", {}).get("_", SYM.NAMES)
+    syms = [("sym", s_) for s_ in pref if "sym:" + s_ not in recent] or [("sym", s_) for s_ in pref]
+    others = [("sym", s_) for s_ in SYM.NAMES if s_ not in pref and "sym:" + s_ not in recent]
+    cuts = [f for f in C.pool(style, ["logo", "symbol", "person", "face", "speaker", "vinyl", "vehicle"]) if _big_enough(f, 260 * 260) and "cut:" + os.path.basename(f) not in recent]
+    cuts += [f for f in sum((C.pool(s2, ["logo", "symbol"]) for s2 in MONT["families"][fam]["styles"] if s2 != style), []) if _big_enough(f, 260 * 260) and "cut:" + os.path.basename(f) not in recent]
+    r.shuffle(syms); r.shuffle(others); r.shuffle(cuts)
+    out = []; ns = max(2, round(n * .6))
+    out += syms[:ns]; out += [("cut", f) for f in cuts[: n - len(out)]]
+    if len(out) < n: out += others[: n - len(out)]
+    if len(out) < n: out += [("sym", s_) for s_ in r.sample(SYM.NAMES, n - len(out))]
+    r.shuffle(out); return out[:n]
+
+def make_sections(bars, per, dur, fam, style, walls, r, mont):
+    """2-bar sections, one hero each. bar 1 = hero clean, bar 2 = variant. The last bar of every 4-bar phrase is a build-up
+    (a cut on every beat, hero and kaleido alternating, zoom climbing); the next downbeat is the drop: a callback to an earlier
+    hero in ASCII, mirrored or kaleidoscoped. Returns shots with t0/t1."""
+    if len(bars) < 2: bars = [i * 4 * per for i in range(int(dur / (4 * per)) + 1)]
+    bar_len = 4 * per; nb = int(round(dur / bar_len)); nsec = (nb + 1) // 2
+    heroes = pick_heroes(r, style, fam, mont, max(3, nsec)); shots = []; used = []
+    class Deck:
+        def __init__(self, items): self.items = list(items); self.pool = []
+        def draw(self):
+            if not self.pool: self.pool = self.items[:]; r.shuffle(self.pool)
+            return self.pool.pop()
+    moves = Deck(["center", "coinspin", "orbit", "droste", "slices", "split4", "strobe2", "zoomthrough", "triple", "pixelsort", "shatter", "scan"])
+    variants = Deck([["echo"], ["tile"], ["mirror2"], ["duo"], ["rgbshift"], ["invert_beats"], ["mirror4"], ["ascii_bg"], ["posterize"]])
+    drops = Deck([["ascii"], ["mirror4"], ["kaleido_hero"], ["ascii", "rgbshift"], ["invert", "mirror2"], ["ascii_bg"], ["kaleido_hero", "duo"], ["posterize", "mirror4"]])
+    shaders = [x for x in VJ_SHADERS.get(fam, VJ_SHADERS["rave"]) if x != "kaleido"]
+    def bg_choice():
+        roll = r.random()
+        if roll < .62 or not walls: return {"bg": "shader", "shader": r.choice(shaders), "sseed": r.random()}
+        if roll < .85: return {"bg": "kwall", "wall": r.choice(walls), "sseed": r.random()}
+        return {"bg": "wall", "wall": r.choice(walls), "bpx": r.random(), "bpy": r.random()}
+    for b in range(nb):
+        t0 = b * bar_len; t1 = min(dur, t0 + bar_len); sec = b // 2; phrase_pos = b % 4
+        if sec >= len(heroes): heroes.append(r.choice(heroes))
+        hero = heroes[sec]; pal = HERO_PALS[(sec * 3 + (hash(style) % 7)) % len(HERO_PALS)]
+        if b % 2 == 0: bgc = bg_choice()
+        if b % 2 == 0: move = moves.draw(); other = r.choice([h_ for h_ in heroes if h_ != hero] or heroes)
+        base = {"hero": hero, "other": other, "pal": pal, "move": move, "fx": [], "zoom": 1.0, "rot": r.uniform(-8, 8), "drift": r.uniform(-.04, .04), **bgc}
+        if phrase_pos == 0 and b > 0:                                    # the drop: callback in a new treatment
+            cb = r.choice(used) if used else hero
+            fx = drops.draw(); mv = moves.draw()
+            shots.append({**base, "hero": cb, "move": mv, "t0": t0, "t1": t1, "fx": fx, "zoom": 1.15, "mosh": True, "drop": True}); used.append(hero); continue
+        if phrase_pos == 3:                                              # build-up: one cut per beat, faster and bigger
+            for k in range(4):
+                bt0 = t0 + k * per; bt1 = min(t1, bt0 + per)
+                alt = k % 2 == 1
+                bu = r.choice(["kaleido_hero", "ascii", "invert", "mirror4", "posterize"])
+                shots.append({**base, "t0": bt0, "t1": bt1, "move": "center" if not alt else r.choice(["strobe2", "triple", "slices"]), "zoom": 1.0 + .1 * k, "fx": ([bu] if alt else []) + (["rgbshift"] if k == 3 else []), "flash": k == 3})
+            continue
+        variant = b % 2 == 1
+        fx = variants.draw() if variant else []
+        shots.append({**base, "t0": t0, "t1": t1, "fx": fx, "zoom": 1.06 if variant else 1.0, "mosh": variant and r.random() < .25})
+        if not variant: used.append(hero)
+    return [s_ for s_ in shots if s_["t1"] - s_["t0"] > 1 / FPS], heroes
+
+_FONT_CACHE = {}
+def overlay_text(img, lines, y, size):
+    """TikTok-native caption: bold white, thick dark outline, centred"""
+    b = img.convert("RGBA")
+    for line in lines:
+        key = (line, size)
+        if key not in _FONT_CACHE:
+            sp = K.tx(line, size, K.FONT["oswald"], (255, 255, 255, 255), 1); ol = K.tx(line, size, K.FONT["oswald"], (0, 0, 0, 255), 1)
+            sp = C.fit(sp, w=min(sp.width, int(W * .86))); ol = C.fit(ol, w=sp.width)
+            stroke = Image.new("RGBA", (ol.width + 16, ol.height + 16), (0, 0, 0, 0))
+            for ox in range(-5, 6, 2):
+                for oy in range(-5, 6, 2): stroke.alpha_composite(ol, (8 + ox, 8 + oy))
+            stroke.alpha_composite(sp, (8, 8)); _FONT_CACHE[key] = stroke
+        sp = _FONT_CACHE[key]; b.alpha_composite(sp, (int(W / 2 - sp.width / 2), int(y))); y += sp.height * 1.02
+    return b.convert("RGB")
+
+def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes):
+    env_t, env_v = env
+    avi = os.path.join(WORK, "clean.avi"); kf = ",".join(f"{c:.3f}" for c in sorted(set(keyframes) | {0.0}))
+    enc = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "libxvid", "-q:v", "3", "-g", "9999", "-bf", "0", "-force_key_frames", kf, avi], stdin=subprocess.PIPE)
+    sprites = {}; walls = {}; kaleido_tex = {}
+    def hero_im(s):
+        k = (s["hero"], s["pal"])
+        if k not in sprites: sprites[k] = hero_sprite(s["hero"], int(W * .72), s["pal"], fam, r)
+        return sprites[k]
+    def wall_im(it):
+        if it is None: return None
+        if it["id"] not in walls:
+            im = fetch_image(it); walls[it["id"]] = ImageEnhance.Color(im).enhance(1.6) if im is not None else None
+        return walls[it["id"]]
+    series = MONT.get("series", {}); top = series.get("top", []); bottom = series.get("bottom", [])
+    si = 0; nfr = int(round(dur * FPS)); barset = list(bars)
+    for k in range(nfr):
+        t = k / FPS
+        while si + 1 < len(shots) and t >= shots[si + 1]["t0"] - 1e-6: si += 1
+        s = shots[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
+        last = max((p for p in punches if p <= t + 1e-6), default=-9); beat = math.exp(-(t - last) * 8)
+        bar_last = max((b for b in barset if b <= t + 1e-6), default=-9); energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
+        # background
+        if s["bg"] == "shader": fr = shader_frame(s["shader"], t, beat, energy, s["sseed"], fam=fam).convert("RGBA")
+        elif s["bg"] == "kwall" and wall_im(s.get("wall")) is not None:
+            fr = shader_frame("kaleido", t, beat, energy, s["sseed"], tex=wall_im(s["wall"]).convert("RGBA"), fam=fam).convert("RGBA")
+        elif wall_im(s.get("wall")) is not None:
+            c0, c1 = s["pal"]; l = np.asarray(cover(wall_im(s["wall"]), zoom=1.1 + .05 * u, px=s.get("bpx", .5), py=s.get("bpy", .5)).convert("L"), np.float32)[..., None] / 255
+            fr = Image.fromarray((np.array(c1) * .35 * (1 - l) + np.array(c0) * .5 * l).astype(np.uint8)).convert("RGBA")
+        else: fr = shader_frame("plasma", t, beat, energy, s.get("sseed", .3), fam=fam).convert("RGBA")
+        # hero
+        hi = hero_im(s); z = s["zoom"] * (1 + .09 * beat + .05 * math.exp(-(t - bar_last) * 5)) * (1 + s["drift"] * u)
+        if "kaleido_hero" in s["fx"]:
+            kt = kaleido_tex.setdefault(id(hi), hi)
+            fr = shader_frame("kaleido", t, beat, energy, s.get("sseed", .5), tex=kt, fam=fam).convert("RGBA")
+        else:
+            mv = s.get("move", "center")
+            if mv == "zoomthrough": z *= .35 + 2.6 * u ** 2                           # flies at the camera across the bar
+            h = hi.resize((max(1, int(hi.width * z)), max(1, int(hi.height * z))), Image.BICUBIC)
+            rot = s["rot"] * math.sin(t * .8)
+            if mv == "coinspin":                                                # flat 3D spin: width follows cos
+                sx = abs(math.cos(u * math.pi * 2)) * .95 + .05; h = h.resize((max(1, int(h.width * sx)), h.height), Image.BICUBIC)
+                if math.cos(u * math.pi * 2) < 0: h = ImageOps.mirror(h)
+            elif mv == "orbit":                                                 # big ghost + small copy orbiting on the beat
+                C.paste(fr, h, W / 2, H * .5, alpha=.25)
+                h = hi.resize((int(hi.width * .45), int(hi.height * .45)), Image.BICUBIC); a_ = t * 2.4
+                C.paste(fr, h, W / 2 + math.cos(a_) * W * .28, H * .5 + math.sin(a_) * H * .18, rot=a_ * 40); C.paste(fr, h, W / 2 - math.cos(a_) * W * .28, H * .5 - math.sin(a_) * H * .18, rot=-a_ * 40)
+                h = None
+            elif mv == "droste":                                                # the hero inside itself, shrinking in
+                for j in range(6, 0, -1):
+                    hj = hi.resize((max(1, int(hi.width * z * .85 ** j)), max(1, int(hi.height * z * .85 ** j))), Image.BICUBIC); C.paste(fr, hj, W / 2, H * .5, rot=rot + j * 9 * math.sin(t), alpha=.35 + .1 * (6 - j) / 6)
+            elif mv == "split4":                                                # 2x2 of two heroes, swapping on the beat
+                o = sprites.get(("other", s["other"], s["pal"]))
+                if o is None: o = sprites[("other", s["other"], s["pal"])] = hero_sprite(s["other"], int(W * .72), (s["pal"][1], s["pal"][0]), fam, r)
+                flip = int((t - last) < .1) ^ (len([p for p in punches if p <= t]) % 2)
+                for qi, (qx, qy) in enumerate(((.25, .3), (.75, .3), (.25, .7), (.75, .7))):
+                    src = hi if (qi + flip) % 2 == 0 else o; q = src.resize((int(src.width * .46 * z), int(src.height * .46 * z)), Image.BICUBIC); C.paste(fr, q, W * qx, H * qy)
+                h = None
+            elif mv == "strobe2":                                               # two heroes alternating on every beat
+                o = sprites.get(("other", s["other"], s["pal"]))
+                if o is None: o = sprites[("other", s["other"], s["pal"])] = hero_sprite(s["other"], int(W * .72), (s["pal"][1], s["pal"][0]), fam, r)
+                if len([p for p in punches if p <= t]) % 2: h = o.resize((max(1, int(o.width * z)), max(1, int(o.height * z))), Image.BICUBIC)
+            elif mv == "triple":                                                # three offset copies, RGB-split by hand
+                for j, col in enumerate(((255, 0, 80), (0, 255, 220), (255, 255, 0))):
+                    tint = Image.new("RGBA", h.size, col + (0,)); tint.putalpha(h.split()[3].point(lambda v: v * 0.55)); C.paste(fr, tint, W / 2 + (j - 1) * 30 * (1 + beat), H * .5 + (j - 1) * 14)
+            elif mv == "slices":                                                # horizontal strips sliding apart on the beat
+                strips = 12; sh_ = h.height / strips; out_ = Image.new("RGBA", (h.width + 200, h.height), (0, 0, 0, 0))
+                for j in range(strips):
+                    piece = h.crop((0, int(j * sh_), h.width, int((j + 1) * sh_))); out_.alpha_composite(piece, (int(100 + math.sin(j * 1.7 + t * 6) * 90 * beat), int(j * sh_)))
+                h = out_
+            elif mv == "pixelsort":
+                hs = G.pixel_sort(h.convert("RGB"), lo=40, hi=230, axis=1, seed=int(t * 10), chance=.6).convert("RGBA"); hs.putalpha(h.split()[3]); h = hs
+            elif mv == "shatter":                                               # tiles of the hero drifting off-grid
+                n_ = 5; tw, th = h.width // n_, h.height // n_; out_ = Image.new("RGBA", (h.width + 240, h.height + 240), (0, 0, 0, 0))
+                for gy in range(n_):
+                    for gx in range(n_):
+                        rr = random.Random(gx * 31 + gy * 7); piece = h.crop((gx * tw, gy * th, (gx + 1) * tw, (gy + 1) * th)); d_ = 120 * u * u
+                        out_.alpha_composite(piece, (int(120 + gx * tw + rr.uniform(-1, 1) * d_), int(120 + gy * th + rr.uniform(-1, 1) * d_)))
+                h = out_
+            elif mv == "scan":                                                  # the hero revealed by a scanning bar
+                m_ = Image.new("L", h.size, 0); y_ = int(h.height * ((u * 1.6) % 1.0)); ImageDraw.Draw(m_).rectangle([0, 0, h.width, y_], fill=255)
+                h = h.copy(); h.putalpha(ImageChops.multiply(h.split()[3], m_))
+            if h is None: pass
+            if h is not None and "tile" in s["fx"]:
+                small = C.fit(hi, w=int(W * .3)); cols = 4; rows = int(H / small.height) + 2; off = (u * small.height) % small.height
+                for gy in range(rows):
+                    for gx in range(cols): C.paste(fr, small, (gx + .5 * (gy % 2)) * W / (cols - 1), gy * small.height - off)
+            if h is not None and "echo" in s["fx"]:
+                for j in range(4, 0, -1): C.paste(fr, h, W / 2 + j * 22 * math.cos(t * 3), H * .5 + j * 30, rot=rot, alpha=.15 + .08 * (4 - j))
+            if h is not None: C.paste(fr, h, W / 2, H * .5, rot=rot if mv not in ("coinspin", "slices", "shatter") else 0)
+        if "ascii_bg" in s["fx"]:                                                # background in ASCII, hero stays clean on top
+            bgi = apply_fx(fr.convert("RGB"), ["ascii"], {"pal": s["pal"], "cell": 14, "apal": True}, t, beat).convert("RGBA")
+            if h is not None: C.paste(bgi, h, W / 2, H * .5)
+            fr = bgi
+        img = fr.convert("RGB")
+        if "invert_beats" in s["fx"] and (t - last) < .08: img = ImageOps.invert(img)
+        if "posterize" in s["fx"]: img = ImageOps.posterize(ImageEnhance.Color(img).enhance(1.8), 2)
+        fx = s["fx"]; fs = {"pal": s["pal"], "cell": 16, "apal": True}
+        img = apply_fx(img, [f for f in fx if f in ("mirror2", "mirror4", "duo", "invert", "ascii", "rgbshift")], fs, t, beat)
+        strobe = .8 if any(abs(b - t) < 1.2 / FPS for b in barset) else 0.0
+        if s.get("flash") and u > .7: strobe = 1.0
+        img = post(img, fam, t, seed, strobe)
+        if top: img = overlay_text(img, top, H * .085, 66)
+        if bottom: img = overlay_text(img, bottom, H * .725, 60)
+        enc.stdin.write(img.tobytes())
+    enc.stdin.close(); enc.wait()
+    if enc.returncode: raise RuntimeError("frame encoder failed")
+    return nfr
+
+def encode_moshed(frames_dir, nfr, cuts, mosh_cuts, out_mp4, audio_path, start, dur, fam):
+    """xvid AVI with I-frames only at cuts → delete the I-frames at the moshed cuts → h264 + the track"""
+    avi = os.path.join(WORK, "clean.avi")                                # written by render() straight from memory
+    # which I-frames to drop: the ones at moshed cuts (frame index = round(c*FPS)); the first always stays
+    drop_at = {int(round(c * FPS)) for c in mosh_cuts if c > 0}
+    d = bytearray(open(avi, "rb").read()); movi = d.find(b"movi"); i = movi + 4; out = bytearray(d[:i]); frames = []; idx = 0; after = -99
+    while i + 8 <= len(d):
+        fourcc = bytes(d[i:i + 4]); size = int.from_bytes(d[i + 4:i + 8], "little")
+        if fourcc == b"idx1": break
+        chunk = bytes(d[i:i + 8 + size + (size & 1)]); payload = chunk[8:8 + size]
+        if fourcc[2:] == b"dc":
+            ty = G._vop_type(payload); drop = ty == 0 and idx > 0 and any(abs(idx - a) <= 1 for a in drop_at)
+            if drop and frames: frames.append(frames[-1])          # keyframe replaced by the previous frame: frame count (= sync with the track) unchanged
+            else: frames.append(chunk)
+            idx += 1
+        i += 8 + size + (size & 1)
+    moshed = os.path.join(WORK, "mosh.avi"); open(moshed, "wb").write(bytes(out + b"".join(frames)))
+    vid = os.path.join(WORK, "video.mp4")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-err_detect", "ignore_err", "-fflags", "+genpts+igndts", "-i", moshed, "-vf", f"scale={OUT_W}:{OUT_H}:flags=lanczos,fps={FPS}", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22", "-maxrate", "9M", "-bufsize", "18M", "-preset", "medium", "-profile:v", "high", "-level", "4.1", "-an", vid], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-ss", f"{start:.3f}", "-t", f"{dur:.3f}", "-i", audio_path, "-filter_complex", f"[1:a]afade=t=in:st=0:d=0.15,afade=t=out:st={dur-0.6:.3f}:d=0.6,loudnorm=I=-14:TP=-1.5[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out_mp4], check=True)
+
+# ============================ one edit ============================
+_SIZE = {}
+def _big_enough(f, min_px=180 * 180):
+    if f not in _SIZE:
+        try: im = Image.open(f); _SIZE[f] = im.width * im.height
+        except Exception: _SIZE[f] = 0
+    return _SIZE[f] >= min_px
+
+def make_one(style, els, man, flags, mont, used_tracks, seed):
+    r = random.Random(seed); fam = fam_of(style)
+    recent = set(sum((it.get("els", []) for it in mont["items"][:20]), []))   # elements used in the last 20 edits are rested
+    def usable(fs): return [f for f in fs if os.path.basename(f) not in recent and _big_enough(f)]
+    own = usable(C.pool(style)); fam_pool = usable(sum((C.pool(s2) for s2 in MONT["families"][fam]["styles"] if s2 != style), [])); every = usable(sum((C.pool(s2) for s2 in os.listdir(C.ELS)), []))
+    r.shuffle(own); r.shuffle(fam_pool); r.shuffle(every)
+    figs = own[:9] + fam_pool[:4] + every[:3]                           # mostly the style, some of its family, a few wildcards
+    if len(figs) < 6: figs += [f for f in (fam_pool + every) if f not in figs][:10]
+    figs = list(dict.fromkeys(figs))
+    if len(figs) < 3: report["skipped"].append(f"{style}: too few elements"); return None
+    walls = kept_images(man, style); r.shuffle(walls); walls = walls[:14]
+    if os.environ.get("MONTAGE_AUDIO"): track, tries = {"ok": True, "title": "local test", "dur": 0, "id": "local", "url": "", "path": os.environ["MONTAGE_AUDIO"], "src": "local"}, []
+    else: track, tries = find_track(style, r, used_tracks)
+    if not track: report["skipped"].append(f"{style}: no track ({'; '.join(f'{a}:{c}' for a, b, c in tries[:4])})"); return None
+    log(f"{style}: track {track['src']} {track['title']!r} {track['dur']:.0f}s")
+    x, sr = pcm(track["path"]); t, flux, rms, peaks = onsets(x, sr); total = len(x) / sr
+    dur = r.uniform(DUR_MIN, min(DUR_MAX, max(DUR_MIN, total - 2))); start = pick_section(t, flux, rms, peaks, total, dur, r)
+    bt, bpm, kenv, kfps = beats(x, sr)
+    if len(bt): start = float(bt[int(np.argmin(np.abs(bt - start)))])      # section starts on a beat
+    strength_at = lambda tt: float(np.interp(tt, np.arange(len(kenv)) / kfps, kenv / (kenv.max() + 1e-9)))
+    g = grid_cuts(bt, start, dur, fam, r, strength_at)
+    if g:
+        cuts, strengths, beat_list, bars, per = g; dur = min(dur, (bars[-1] if len(bars) > 1 else dur))  # end on a bar line (loops cleanly)
+        cuts = [c for c in cuts if c < dur - .1]
+    else:
+        cuts, strengths = cut_points(t, flux, peaks, start, dur, fam); beat_list = [float(t[p]) - start for p in peaks if start <= t[p] <= start + dur]; bars = []; bpm = 0
+    pm = MONT["families"][fam]["mosh"]
+    lines = MONT.get("abstract", {}).get("cards", [])                   # text is rare and abstract now
+    v2 = MONT.get("engine") == "v2" and g
+    if v2:
+        recent_walls = set(sum((it.get("walls", []) for it in mont["items"][:15]), []))
+        pool = [w_ for w_ in walls if w_["id"] not in recent_walls] or walls
+        for s2 in MONT["families"][fam]["styles"]:                      # widen the image pool with the style's family
+            if s2 != style: pool += [w_ for w_ in kept_images(man, s2)[:30] if w_["id"] not in recent_walls]
+        r.shuffle(pool); walls = pool[:12]
+        shots, heroes = make_sections(bars, per, dur, fam, style, walls, r, mont)
+        mosh_cuts = [s_["t0"] for s_ in shots if s_.get("mosh") and s_["t0"] > 0]
+    else:
+        shots = make_shots(cuts, dur, fam, style, figs, walls, lines, r, bars, per if g else 0.45)
+        mosh_cuts = [s_["t0"] for s_ in shots if s_.get("mosh") and s_["t0"] > 0] + [c for c in cuts[1:] if r.random() < pm * .3]
+    cuts = sorted(set([round(s_["t0"], 4) for s_ in shots]))
+    log(f"{style}: {dur:.1f}s from {start:.1f}s, {bpm:.1f} bpm, {len(cuts)} cuts on the grid, {len(mosh_cuts)} moshed, fam={fam}")
+    punches = [b_ for b_ in beat_list if 0 <= b_ <= dur]
+    hook = None
+    if MONT.get("text", {}).get("hooks"):
+        hooks = MONT.get("hooks", {}).get(style, []) + MONT.get("hooks", {}).get("_", []); hook = r.choice(hooks) if hooks else None
+    hop_t = t[1] - t[0]; sel = (t >= start) & (t <= start + dur); ev = rms[sel] / (rms.max() + 1e-9); env = (t[sel] - start, np.clip(ev * 1.4, 0, 1))
+    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts)
+    else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
+    mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
+    encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
+    poster = os.path.join(WORK, mid + ".jpg"); subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(dur - .2, cuts[1] if len(cuts) > 1 else 0.5) + 0.08:.3f}", "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
+    item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"]}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
+            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
+    obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
+    if not v2:
+        for f in os.listdir(d): os.remove(os.path.join(d, f))
+    return item
+
+SHARD_NO, SHARD_OF = 0, 1
+def make(cap, shard=0, of=1):
+    global SHARD_NO, SHARD_OF; SHARD_NO, SHARD_OF = shard, of
+    if os.environ.get("MONTAGE_OFFLINE"):                               # local test: elements already in _work/montage/els, no site
+        els, man, flags, mont = [], {"styles": {}}, {}, {"items": []}; global obj_put; obj_put = lambda k, d, c=None: log("would put", k, len(d))
+    else: els, man, flags, mont = sync_library()
+    ws, wf = weights(mont, flags, "style"), weights(mont, flags, "fam"); dead = set(flags.get("mdead", []))
+    used = {it["track"]["id"] for it in mont["items"] if it["id"] in dead} | {it["track"]["id"] for it in mont["items"][:12]}
+    counts = {s: len(C.pool(s)) for s in CFG if not s.startswith("_")}; recent = [it["style"] for it in mont["items"][:8]]
+    styles = [s for s in counts if counts[s] >= 3 or len(man["styles"].get(s, [])) >= 20]   # thin on cut-outs is fine if the wall has images
+    boost = MONT.get("boost", {})
+    def w(s): return max(.15, (1 + .6 * ws.get(s, 0) + .3 * wf.get(fam_of(s), 0)) * math.log(2 + counts[s]) * (.35 if s in recent else 1)) * float(boost.get(s, 1))
+    r = random.Random(int(os.environ.get("GITHUB_RUN_ID", 0)) or int(time.time())); picked = []   # same seed on every shard → same plan, each shard takes its slice
+    while len(picked) < cap and styles:                                  # a style can come up twice; each repeat is less likely
+        s = r.choices(styles, [w(x) * ((.6 if float(MONT.get("boost", {}).get(x, 1)) > 1 else .3) ** picked.count(x)) for x in styles])[0]; picked.append(s)
+    if os.environ.get("MONTAGE_STYLES"): picked = os.environ["MONTAGE_STYLES"].split(",")
+    seeds = [r.randrange(10 ** 6) for _ in picked]
+    plan = list(zip(picked, seeds))[shard::of]
+    log(f"shard {shard}/{of}:", [p_[0] for p_ in plan])
+    made = []
+    for s, seed in plan:
+        try:
+            it = make_one(s, els, man, flags, mont, used, seed)
+            if it:
+                made.append(it); used.add(it["track"]["id"]); report["made"].append(f"{s} · {it['track']['title']} ({it['track']['src']}) · {it.get('bpm')} bpm · {it['dur']}s · {it['cuts']} cuts/{it['moshed']} moshed · {it['bytes']//1024} KB")
+                if of == 1: mont["items"].insert(0, it); obj_put("atlas/mont.json", json.dumps({"items": mont["items"]}).encode(), "application/json")
+                else:
+                    import shutil; od = os.path.join(WORK, "out"); os.makedirs(od, exist_ok=True)
+                    for ext in ("mp4", "jpg"): shutil.copy(os.path.join(WORK, f"{it['id']}.{ext}"), os.path.join(od, f"{it['id']}.{ext}"))
+        except Exception as e: err(s, e); report["errors"].append(traceback.format_exc()[-600:])
+    if of > 1:                                                           # shard: hand the edits to the merge job, touch nothing shared
+        od = os.path.join(WORK, "out"); os.makedirs(od, exist_ok=True)
+        json.dump({"items": made, "report": report}, open(os.path.join(od, f"shard-{shard}.json"), "w")); return
+    finish(mont, flags)
+
+def finish(mont, flags):
+    ok = set(flags.get("mok", [])); dead = set(flags.get("mdead", []))
+    mont["items"] = [it for k, it in enumerate(mont["items"]) if it["id"] not in dead and (k < KEEP_ITEMS or it["id"] in ok)]
+    obj_put("atlas/mont.json", json.dumps(mont).encode(), "application/json")
+    report["total"] = len(mont["items"])
+    try:
+        if not os.environ.get("MONTAGE_OFFLINE"): publish(mont, flags)
+    except Exception as e: err("publish", e)
+
+def merge(dirs):
+    """after the shards: collect their edits (mp4/jpg already in R2 and in the artifact dirs), update mont.json once, publish once"""
+    import shutil
+    flags = json.loads(obj_get("atlas/flags.json") or "{}"); mont = json.loads(obj_get("atlas/mont.json") or '{"items":[]}'); new = []
+    for d_ in dirs:
+        for f in os.listdir(d_):
+            if f.startswith("shard-") and f.endswith(".json"):
+                j = json.load(open(os.path.join(d_, f))); new += j["items"]
+                report["made"] += j["report"].get("made", []); report["skipped"] += j["report"].get("skipped", []); report["errors"] += j["report"].get("errors", [])
+            elif f.endswith((".mp4", ".jpg")): shutil.copy(os.path.join(d_, f), os.path.join(WORK, f))
+    new.sort(key=lambda it: -it.get("made", 0)); seen_t = set(); uniq = []
+    for it in new:
+        tid = it.get("track", {}).get("id")
+        if tid in seen_t: continue
+        seen_t.add(tid); uniq.append(it)
+    mont["items"] = uniq + mont["items"]
+    finish(mont, flags)
+
+def publish(mont, flags):
+    """Put tonight's edits on the site without waiting for the curator: tar parts atlas/static-9NN.tar appended to atlas/static.json.
+    The atlas deploy (triggered by this job's deploy hook) unpacks them; the curator's next bundle folds them in and drops these parts."""
+    import tarfile
+    idx = json.loads(obj_get("atlas/static.json") or '{"parts":[]}'); built = idx.get("built", 0)
+    ok = set(flags.get("mok", [])); items = []
+    for it in mont["items"]:
+        it = dict(it); it["ok"] = 1 if it["id"] in ok else 0; items.append(it)
+    fresh = [it for it in items if it.get("made", 0) > built - 60 and os.path.exists(os.path.join(WORK, it["id"] + ".mp4"))]
+    files = [("mont.json", json.dumps({"items": items}).encode())]
+    for it in fresh:
+        files.append((f"mont/{it['id']}.mp4", open(os.path.join(WORK, it["id"] + ".mp4"), "rb").read()))
+        files.append((f"mont/{it['id']}.jpg", open(os.path.join(WORK, it["id"] + ".jpg"), "rb").read()))
+    parts, buf, tf, size = [], None, None, 0
+    def close():
+        nonlocal buf, tf, size
+        if tf is None: return
+        tf.close(); name = f"atlas/static-{901 + len(parts)}.tar"; obj_put(name, buf.getvalue(), "application/x-tar"); parts.append({"key": name, "bytes": len(buf.getvalue())}); buf = tf = None; size = 0
+    for arc, data in files:
+        if tf is not None and size + len(data) > 40e6: close()
+        if tf is None: buf = io.BytesIO(); tf = tarfile.open(fileobj=buf, mode="w", format=tarfile.USTAR_FORMAT)
+        ti = tarfile.TarInfo(arc); ti.size = len(data); ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data)); size += len(data) + 512
+    close()
+    idx = json.loads(obj_get("atlas/static.json") or '{"parts":[]}')          # re-read: the curator may have written meanwhile
+    idx["parts"] = [p for p in idx.get("parts", []) if not re.match(r"atlas/static-9\d\d\.tar$", p["key"])] + parts
+    obj_put("atlas/static.json", json.dumps(idx).encode(), "application/json")
+    report["published"] = f"{len(fresh)} new edits in {len(parts)} part(s); the site picks them up from this run's deploy"; log("publish:", report["published"])
+
+# ============================ probe ============================
+def probe():
+    for style in ["witch", "black", "hyper", "free", "punk"]:
+        mq = MONT["music"][style]; q = mq["sc"][0]; want = [w.lower() for w in mq.get("want", [])]
+        try:
+            cands = sc_candidates(q); cands.sort(key=lambda c: -score_candidate(c, q, want))
+            report["probe"].append({"q": f"sc:{q}", "top": [f"{c['title'][:50]} [{c['genre']}] {c['plays']} → {score_candidate(c, q, want):.2f}" for c in cands[:4]]})
+        except Exception as e: report["probe"].append({"q": f"sc:{q}", "err": str(e)[:160]})
+    r = dl("ytsearch1:100 gecs money machine", os.path.join(AUD, "yt.%(ext)s"), ("--extractor-args", "youtube:player_client=tv")); r["q"] = "youtube"; r.pop("path", None); report["probe"].append(r)
+
+def write_report():
+    L = [f"# montage — {report['started']}", ""]
+    for r in report["probe"]: L.append(f"- `{r.get('q')}` → " + " ".join(f"{k}={str(v)[:160]}" for k, v in r.items() if k != "q"))
+    if report["made"]: L += ["", f"## made ({len(report['made'])}, {report.get('total', '?')} on the site)"] + [f"- {m}" for m in report["made"]]
+    if report["skipped"]: L += ["", "## skipped"] + [f"- {m}" for m in report["skipped"]]
+    if report["errors"]: L += ["", "## errors"] + [f"- {e}" for e in report["errors"]]
+    open(os.path.join(HERE, "last-montage.md"), "w").write("\n".join(L) + "\n"); print("\n".join(L))
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(); ap.add_argument("--probe", action="store_true"); ap.add_argument("--cap", type=int, default=6)
+    ap.add_argument("--shard", type=int, default=0); ap.add_argument("--of", type=int, default=1); ap.add_argument("--merge", nargs="*"); a = ap.parse_args()
+    try:
+        if a.probe: probe()
+        elif a.merge is not None: merge(a.merge)
+        else: make(a.cap, a.shard, a.of)
+    except Exception: report["errors"].append(traceback.format_exc()[-900:])
+    write_report()

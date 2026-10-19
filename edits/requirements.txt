@@ -1,0 +1,7 @@
+yt-dlp
+requests
+pillow
+numpy<2
+fonttools
+brotli
+moderngl
