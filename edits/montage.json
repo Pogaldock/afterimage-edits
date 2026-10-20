@@ -958,16 +958,11 @@
     "techno bootleg",
     "hard techno bootleg",
     "hard techno remix tiktok",
-    "bounce techno remix",
     "hard techno remix 2026",
     "tiktok techno remix",
     "viral hard techno remix",
     "techno remix viral",
-    "hard techno version",
-    "techno version tiktok",
-    "hardstyle techno remix",
     "bounce hard techno remix",
-    "hard techno cover",
     "schranz remix viral",
     "jet2 holiday techno remix",
     "jet2 holiday rave edit",
@@ -975,7 +970,6 @@
     "meme song techno remix",
     "tiktok meme hard techno",
     "famous song hard techno remix",
-    "pop song techno bootleg",
     "throwback hard techno remix",
     "nostalgic song techno remix",
     "indie song hard techno remix"
@@ -1000,7 +994,9 @@
     "Ben Hemsley",
     "Kettama x Partiboi69"
    ],
-   "min_per_day": 250
+   "min_per_day": 250,
+   "min_plays_generic": 200000,
+   "min_per_day_generic": 600
   }
  },
  "_lines": "lines: '_' are the owner's own lines (every style), family lines go to all styles in that family, style lines are scene vocabulary/slogans (researched) + lines in the scene's voice. No song lyrics. Currently unused: edits use the abstract bank.",

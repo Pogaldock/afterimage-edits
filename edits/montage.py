@@ -153,6 +153,9 @@ def score_viral(c, q, want, cfg):
     base = score_candidate(c, q, [] if artist else want, min_plays=int(cfg.get("min_plays", 0)))
     if base < 0 or c.get("age") is None or c["age"] > float(cfg.get("max_age_days", 540)): return -1
     if c["plays"] / c["age"] < float(cfg.get("min_per_day", 0)): return -1          # only things that are moving right now
+    if not artist:                                                       # generic searches: only real hits, no filler uploads
+        if c["plays"] < float(cfg.get("min_plays_generic", 200000)) or c["plays"] / c["age"] < float(cfg.get("min_per_day_generic", 600)): return -1
+        if any(f" {x} " in txt for x in ("type beat", "rap", "club song", "sped up", "slowed", "phonk", "hyper state", "mashup", "megamix", "8d", "nightcore")): return -1
     return base - math.log10(1 + c["plays"]) * 1.1 + math.log10(1 + c["plays"]) * .5 + math.log10(1 + c["plays"] / c["age"]) * 1.6
 
 def score_candidate(c, q, want, min_plays=None):
