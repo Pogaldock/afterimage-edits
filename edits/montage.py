@@ -952,7 +952,24 @@ def lift(im):
     if a is not None: g.putalpha(a)
     return g
 
+def greyed(im):
+    from PIL import ImageOps
+    return ImageOps.autocontrast(im.convert("L"), cutoff=2).convert("RGB") if im is not None else None
+
+def emblem_of(im):
+    """a cut-out made poster-bold: thick black outline round its silhouette, punchier colour; opaque images (memes) kept as they are"""
+    if im is None: return None
+    from PIL import ImageFilter, ImageEnhance
+    im = im.convert("RGBA"); im.thumbnail((900, 900)); a = im.split()[3]
+    if a.getextrema()[0] > 200: return ImageEnhance.Contrast(im.convert("RGB")).enhance(1.25).convert("RGBA")
+    pad = 40; big = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0)); big.paste(im, (pad, pad), im)
+    ring = big.split()[3].point(lambda v: 255 if v > 100 else 0).filter(ImageFilter.MaxFilter(15))
+    out = Image.new("RGBA", big.size, (0, 0, 0, 0)); out.paste((0, 0, 0, 255), (0, 0), ring)
+    rgb = ImageEnhance.Contrast(ImageEnhance.Color(big.convert("RGB")).enhance(1.35)).enhance(1.2).convert("RGBA"); rgb.putalpha(big.split()[3])
+    out.alpha_composite(rgb); return out
+
 TREATMENTS = {
+    "emblem":     {"build": ["emblem", "emblem", "emblemfb"], "drop": ["emblemk", "emblemfb", "emblem"], "srcs": "emblem", "mono": "never", "inv": "drop", "glow": True},
     "monolith":   {"lift": True, "build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
     "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "force": (.25, .8), "paste": {"build": 0, "drop": 0}},
     "shrine":     {"build": ["hyper"], "drop": ["hyperref"], "srcs": "ref", "mono": "build", "inv": "drop", "paste": {"build": 1, "drop": 1}, "paste_center": True},
@@ -992,6 +1009,8 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         except Exception: pass
     # plan per shot, driven by the edit's one treatment
     TR = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
+    emblems = [emblem_of(im) for im in (cut_ims[:2] if cut_ims else []) + ([ref0_ for ref0_ in ref_ims[:1]] if len(cut_ims) < 2 else [])]
+    emblems = [e_ for e_ in emblems if e_ is not None]
     hero = photo(pool[0]) if pool else None                               # "single": one strong photo carries the whole edit
     ref0 = ref_ims[0] if ref_ims else (meme_im or hero)
     plan = []
@@ -1002,9 +1021,12 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
         cut = r.choice(cut_ims) if cut_ims else ps[2]
         if TR["srcs"] == "single": srcs = [hero or ps[0], ps[1], cut, hero or ps[2]]
-        if TR.get("lift"): srcs = [lift(im) for im in srcs]
         elif TR["srcs"] == "ref": srcs = [ref0 or ps[0], ps[1], ref0 or cut, ps[2]]
+        elif TR["srcs"] == "emblem":                                     # one subject for the whole edit (a second one takes over at the drop)
+            em = emblems[1 if post and len(emblems) > 1 else 0] if emblems else None
+            bg = hero or ps[0]; srcs = [bg, (bg if post else greyed(bg)) if bg is not None else None, em or cut, ps[2]]
         else: srcs = [ps[0], ps[1], cut, ps[2]]
+        if TR.get("lift"): srcs = [lift(im) for im in srcs]
         lay = lambda key, default: (TR.get(key) or {}).get(ph, default) if isinstance(TR.get(key), dict) else default
         plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": TR.get("swap") == "bar", "mono": TR["mono"] == "always" or (TR["mono"] == "build" and not post),
                      "inv": TR.get("inv") == "drop" and post, "bal": .25 if post else -.2, "scheme": None,
@@ -1138,9 +1160,10 @@ def clean_title(t):
     t = re.sub(r"[\U0001F000-\U0001FFFF\u2600-\u27BF]", "", t); t = re.sub(r"\s{2,}", " ", t).strip(" -–")
     return t[:48] + ("…" if len(t) > 48 else "")
 
+BASE_W = {"emblem": 3.0, "shrine": 1.5, "fluidicon": 1.0, "monolith": .6, "slime": .6, "attractor": .6}   # from what got likes on TikTok (Oct 2026)
 def pick_treatment(r, mont, flags):
     """weighted by your keeps and deletes on earlier edits of each treatment; new ones start equal"""
-    w = {k: 1.0 for k in TREATMENTS}; ok = set(flags.get("mok", [])) | set(flags.get("mdl", [])); dead = set(flags.get("mdead", []))
+    w = {k: BASE_W.get(k, 1.0) for k in TREATMENTS}; ok = set(flags.get("mok", [])) | set(flags.get("mdl", [])); dead = set(flags.get("mdead", []))
     for it in mont.get("items", []) + mont.get("taste", []):
         k = it.get("treat")
         if k in w: w[k] += (.6 if it["id"] in ok or it.get("v", 0) > 0 else 0) - (.35 if it["id"] in dead or it.get("v", 0) < 0 else 0)

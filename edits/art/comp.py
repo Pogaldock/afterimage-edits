@@ -120,6 +120,11 @@ def emit(g, node, uv):
         n, ch = a; u = g.var()
         L.append(f"vec2 {u}; {{ vec2 c={uv}-.5; float an=atan(c.y,c.x), r=length(c), seg=6.2831/{_f(n)}; an=mod(an,seg); an=abs(an-seg*.5); {u}=vec2(cos(an),sin(an))*r+.5; }}")
         return emit(g, ch, u)
+    if op == "chroma":                    # ("chroma", amount, child): radial RGB split, wider on the kick (the lens fringe on the edits that did best)
+        amt, ch = a; k = f"{_f(amt)}*(1.+2.5*B)"
+        ur = new(f"{uv}+({uv}-.5)*{k}", "vec2"); ub = new(f"{uv}-({uv}-.5)*{k}", "vec2")
+        cr = emit(g, ch, ur); cg = emit(g, ch, uv); cb = emit(g, ch, ub)
+        return new(f"vec4({cr}.r, {cg}.g, {cb}.b, max({cg}.a, max({cr}.a, {cb}.a)))")
     if op == "repeat":                    # ("repeat", nx, ny, child)
         nx, ny, ch = a; u = new(f"fract({uv}*vec2({_f(nx)},{_f(ny)}))", "vec2"); return emit(g, ch, u)
     if op == "pixelate":                  # ("pixelate", n, child)
@@ -246,6 +251,10 @@ def recipes(r):
         "rutt": lambda: ("add", r.uniform(.15, .35), ("rutt",), ("contrast", .35, ("parallax", 0, .05))),
         "rutt2": lambda: ("rutt",),
         "cloudsph": lambda: ("add", 1.0, ("pc",), ("add", .6, ("dim", .1, ("tex", 0, 0)), ("rutt",))),
+        # one bold recognisable thing, big and centred, lens fringe and bloom: the look of the edits that actually got likes
+        "emblem": lambda: ("chroma", r.uniform(.006, .012), ("layer", ("cut", 2, r.uniform(.78, .95), .07, 0), ("dim", .3, ("scale", 1.2, .02, P(1))))),
+        "emblemk": lambda: ("chroma", r.uniform(.014, .026), ("kaleid", r.choice([2, 4, 4, 6]), ("layer", ("cut", 2, r.uniform(.85, 1.05), .12, r.uniform(-.15, .15)), ("dim", .35, ("scale", 1.2, .04, P(1)))))),
+        "emblemfb": lambda: ("chroma", r.uniform(.01, .02), ("feedback", r.uniform(.5, .62), r.uniform(1.02, 1.045), r.uniform(-.02, .02), r.uniform(-.015, .015), ("layer", ("cut", 2, r.uniform(.7, .9), .12, 0), ("dim", .1, P(1))))),
         "dark": lambda: ("dim", .22, ("scale", 1.15, .03, ("tex", 0, 0))),
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
         "cards": lambda: ("add", 1.0, ("cards",), ("dim", .18, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
