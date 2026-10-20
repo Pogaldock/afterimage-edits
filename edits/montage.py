@@ -952,6 +952,17 @@ def lift(im):
     if a is not None: g.putalpha(a)
     return g
 
+def journey_stage(shots, i, r):
+    """where this section sits on the trip: hook → come-up → tunnel (into the drop) → bloom/hyperspace → return"""
+    s = shots[i]; post = [k for k, x in enumerate(shots) if x.get("post", x.get("inten", 1) >= .99)]
+    if i in post:
+        j = post.index(i)
+        if len(post) >= 3 and j == len(post) - 1: return "j_return"
+        return "j_bloom" if j == 0 else r.choice(["j_hyper", "j_bloom"])
+    inten = s.get("inten", .5); last_pre = max((k for k in range(len(shots)) if k not in post), default=-1)
+    if i == last_pre or inten >= .64: return "j_tunnel"
+    return "j_hook" if inten < .45 or i == 0 else "j_comeup"
+
 def greyed(im):
     from PIL import ImageOps
     return ImageOps.autocontrast(im.convert("L"), cutoff=2).convert("RGB") if im is not None else None
@@ -979,6 +990,7 @@ def emblem_of(im):
     out.alpha_composite(rgb); return out
 
 TREATMENTS = {
+    "journey":    {"journey": True, "build": ["j_hook"], "drop": ["j_hyper"], "srcs": "emblem", "mono": "never", "glow": True},
     "emblem":     {"build": ["emblem", "emblemfb", "emblemfb"], "drop": ["emblemk", "emblemk", "emblemfb"], "srcs": "emblem", "mono": "never", "inv": "drop", "glow": True},
     "monolith":   {"lift": True, "build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
     "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "force": (.25, .8), "paste": {"build": 0, "drop": 0}},
@@ -1026,7 +1038,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     plan = []
     for i, s in enumerate(shots):
         post = s.get("post", s.get("inten", 1.0) >= .99); ph = "drop" if post else "build"
-        nm = r.choice(TR[ph]); g = R[nm]() if nm in R else ("contrast", .25, ("scale", 1.2, .03, ("tex", 0, 0)))
+        nm = r.choice(TR[ph])
+        if TR.get("journey"): nm = journey_stage(shots, i, r)
+        g = R[nm]() if nm in R else ("contrast", .25, ("scale", 1.2, .03, ("tex", 0, 0)))
         ps = [photo(pool[(i * 2 + k) % len(pool)]) if pool else None for k in range(3)]
         ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
         cut = r.choice(cut_ims) if cut_ims else ps[2]
@@ -1170,7 +1184,7 @@ def clean_title(t):
     t = re.sub(r"[\U0001F000-\U0001FFFF\u2600-\u27BF]", "", t); t = re.sub(r"\s{2,}", " ", t).strip(" -–")
     return t[:48] + ("…" if len(t) > 48 else "")
 
-BASE_W = {"emblem": 3.0, "shrine": 1.5, "fluidicon": 1.0, "monolith": .6, "slime": .6, "attractor": .6}   # from what got likes on TikTok (Oct 2026)
+BASE_W = {"journey": 3.0, "emblem": 2.0, "shrine": 1.5, "fluidicon": 1.0, "monolith": .6, "slime": .6, "attractor": .6}   # from what got likes on TikTok (Oct 2026)
 def pick_treatment(r, mont, flags):
     """weighted by your keeps and deletes on earlier edits of each treatment; new ones start equal"""
     w = {k: BASE_W.get(k, 1.0) for k in TREATMENTS}; ok = set(flags.get("mok", [])) | set(flags.get("mdl", [])); dead = set(flags.get("mdead", []))

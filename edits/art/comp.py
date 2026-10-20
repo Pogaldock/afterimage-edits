@@ -120,6 +120,25 @@ def emit(g, node, uv):
         n, ch = a; u = g.var()
         L.append(f"vec2 {u}; {{ vec2 c={uv}-.5; float an=atan(c.y,c.x), r=length(c), seg=6.2831/{_f(n)}; an=mod(an,seg); an=abs(an-seg*.5); {u}=vec2(cos(an),sin(an))*r+.5; }}")
         return emit(g, ch, u)
+    if op == "breathe":                   # ("breathe", amp, freq, speed, child): the room breathing, the first open-eye effect people report
+        amp, fr, sp, ch = a
+        u = new(f"{uv} + {_f(amp)}*(1.+1.5*B)*vec2(sin({uv}.y*{_f(fr)}+T*{_f(sp)}) + .5*sin(({uv}.x+{uv}.y)*{_f(fr*1.7)}-T*{_f(sp*.8)}), cos({uv}.x*{_f(fr*1.1)}+T*{_f(sp*1.2)}) + .5*cos(({uv}.x-{uv}.y)*{_f(fr*1.3)}+T*{_f(sp)}))", "vec2")
+        return emit(g, ch, u)
+    if op == "logpolar":                  # ("logpolar", n, k, speed, twist, child): the source wrapped into an endless tunnel (Bressloff et al. 2001:
+        n, k, sp, tw, ch = a              # V1 sees the visual field in log-polar, so straight motion in cortex = falling down a tunnel); twist > 0 = spiral
+        rr = g.var(); u = g.var()
+        L.append(f"float {rr}; vec2 {u}; {{ vec2 c=({uv}-.5)*vec2(R.x/R.y,1.); {rr}=length(c)+1e-4; float th=atan(c.y,c.x)/6.2831853;"
+                 f" vec2 q=vec2(th*{_f(n)} + {_f(tw)}*log({rr}), {_f(k)}*log({rr}) - T*{_f(sp)}*(1.+.6*E)); {u}=abs(fract(q)*2.-1.); }}")
+        c = emit(g, ch, u)
+        return new(f"vec4({c}.rgb*smoothstep(.0,.22,{rr}) + vec3(1.,.95,.9)*exp(-{rr}*11.)*(1.2+B), 1.)")   # light at the end of it
+    if op == "formconst":                 # ("formconst", kind, k, n, speed): Kluver's form constants as luminous contours. Planforms in cortical
+        kind, k, n, sp = a                # coordinates (stripes, hexagons, squares) mapped back through the inverse log-polar map:
+        v = g.var()                       # 0 tunnel rings, 1 funnel rays, 2 spirals, 3 honeycomb/cobweb, 4 chequerboard
+        L.append(f"float {v}; {{ vec2 c=({uv}-.5)*vec2(R.x/R.y,1.); float r=length(c)+1e-4; float x=log(r)*{_f(k)}-T*{_f(sp)}, y=atan(c.y,c.x)/6.2831853*{_f(n)}; vec2 w=vec2(x,y)*6.2831853; float p;"
+                 f" int K={int(kind)}; if (K==0) p=cos(w.x); else if (K==1) p=cos(w.y); else if (K==2) p=cos(w.x+w.y);"
+                 f" else if (K==3) p=(cos(w.x)+cos(-.5*w.x+.866*w.y)+cos(-.5*w.x-.866*w.y))/1.5; else p=cos(w.x)*cos(w.y);"
+                 f" {v}=(1.-smoothstep(0.,.14+.1*B,abs(p)))*smoothstep(.02,.12,r); }}")
+        return new(f"vec4(vec3({v}), {v})")
     if op == "chroma":                    # ("chroma", amount, child): radial RGB split, wider on the kick (the lens fringe on the edits that did best)
         amt, ch = a; k = f"{_f(amt)}*(1.+2.5*B)"
         ur = new(f"{uv}+({uv}-.5)*{k}", "vec2"); ub = new(f"{uv}-({uv}-.5)*{k}", "vec2")
@@ -213,6 +232,8 @@ def recipes(r):
     w = lambda: r.choice([nz(), ("osc", r.uniform(4, 30), r.uniform(.2, 2), r.uniform(.2, 1.5)), ("voronoi", r.uniform(4, 12), r.uniform(.5, 2)), P(1), P(3)])
     fb = lambda ch: ("feedback", r.uniform(.35, .65), r.uniform(1.005, 1.04), r.uniform(-.03, .03), r.uniform(-.02, .02), ch)
     stretch = lambda ch: ("stretch", r.randrange(4), r.uniform(.3, 1.2), ch)
+    NEON = lambda: r.choice([(1, .1, .8), (0, 1, .9), (1, .9, 0), (.55, 1, 0), (.6, .35, 1), (1, .35, 0)])
+    SUBJ = lambda: ("layer", ("rotate", 0, r.choice([-1, 1]) * r.uniform(.03, .07), ("cut", 2, r.uniform(.82, .95), .14, 0)), ("dim", .3, ("scale", 1.15, .03, P(1))))
     R = {
         # a photo peeking through static, the window shaped by another photo's light, the cut-out on top
         "peek": lambda: ("layer", ("cut", 2, r.uniform(.55, .85), .08, r.uniform(-.1, .1)), ("mask", ("modulate", .08, P(0), nz()), (st() if r.random() < .3 else ("contrast", .45, ("scale", 1.3, .04, P(1)))), ("lumakey", r.uniform(.35, .6), .15, r.random() < .5, P(1)))),
@@ -255,6 +276,14 @@ def recipes(r):
         "emblem": lambda: ("chroma", r.uniform(.006, .012), ("layer", ("rotate", 0, r.choice([-1, 1]) * r.uniform(.04, .1), ("cut", 2, r.uniform(.8, .98), .16, r.uniform(-.12, .12))), ("dim", .3, ("scale", 1.2, .05, P(1))))),
         "emblemk": lambda: ("chroma", r.uniform(.014, .026), ("kaleid", r.choice([2, 4, 4, 6]), ("layer", ("cut", 2, r.uniform(.85, 1.05), .12, r.uniform(-.15, .15)), ("dim", .35, ("scale", 1.2, .04, P(1)))))),
         "emblemfb": lambda: ("chroma", r.uniform(.01, .02), ("feedback", r.uniform(.5, .62), r.uniform(1.02, 1.045), r.uniform(-.02, .02), r.uniform(-.015, .015), ("layer", ("cut", 2, r.uniform(.7, .9), .12, 0), ("dim", .1, P(1))))),
+        # the journey (Siegel 1977; Lawrence et al. 2022): the thing breathes, geometry crystallises out of it, a tunnel with light at
+        # the end, hyperspace (kaleidoscopic, chrysanthemum, hyperbolic, neon), then back to the thing
+        "j_hook": lambda: ("chroma", .005, ("breathe", .003, 4, .5, SUBJ())),
+        "j_comeup": lambda: ("chroma", .009, ("breathe", .009, 5, .9, ("add", .6, ("tint", (0, 0, 0), NEON(), ("formconst", r.choice([3, 3, 4, 0]), r.uniform(2.5, 4), r.choice([8, 10, 12, 14]), .12)), SUBJ()))),
+        "j_tunnel": lambda: ("chroma", .014, ("add", .45, ("tint", (0, 0, 0), NEON(), ("formconst", 2, 4, r.choice([8, 10]), .6)), ("logpolar", r.choice([1, 2, 3]), r.uniform(.8, 1.3), r.uniform(.35, .6), r.choice([0, 0, .5]), ("layer", ("cut", 2, .85, .1, 0), P(0))))),
+        "j_bloom": lambda: ("chroma", .02, ("colorama", r.uniform(.15, .3), ("kaleid", r.choice([6, 8]), ("logpolar", r.choice([4, 6]), r.uniform(1, 1.5), r.uniform(.5, .9), r.uniform(.3, .7), ("layer", ("cut", 2, .9, .15, 0), P(0)))))),
+        "j_hyper": lambda: ("chroma", .02, ("add", .35, ("tint", (0, 0, 0), NEON(), ("formconst", 3, 3, 12, .4)), ("colorama", r.uniform(.25, .45), ("hyper", r.choice([7, 8]), 3, 2)))),
+        "j_return": lambda: ("chroma", .01, ("feedback", .45, 1.025, 0, 0, ("breathe", .006, 4, .6, SUBJ()))),
         "dark": lambda: ("dim", .22, ("scale", 1.15, .03, ("tex", 0, 0))),
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
         "cards": lambda: ("add", 1.0, ("cards",), ("dim", .18, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
