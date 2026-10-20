@@ -85,7 +85,9 @@ def sc_candidates(q, n=8):
 STOP = {"type", "beat", "music", "the", "a", "of", "and", "mix", "set"}
 def score_viral(c, q, want, cfg):
     """going viral now: plays per day since upload dominates; old or tiny tracks are out"""
-    base = score_candidate(c, q, want, min_plays=int(cfg.get("min_plays", 0)))
+    txt = " " + " ".join(re.findall(r"[a-z0-9]+", (c["title"] + " " + c["uploader"]).lower())) + " "
+    artist = q in cfg.get("artists", []) and all(f" {w} " in txt for w in re.findall(r"[a-z0-9]+", q.lower().replace(" techno", "").replace(" x ", " ")))
+    base = score_candidate(c, q, [] if artist else want, min_plays=int(cfg.get("min_plays", 0)))
     if base < 0 or c.get("age") is None or c["age"] > float(cfg.get("max_age_days", 540)): return -1
     return base - math.log10(1 + c["plays"]) * 1.1 + math.log10(1 + c["plays"]) * .5 + math.log10(1 + c["plays"] / c["age"]) * 1.6
 
@@ -183,6 +185,24 @@ def beats(x, sr, hop=512):
     score = [env[np.clip((ph + np.arange(0, len(env) - period, period)).astype(int), 0, len(env) - 1)].sum() for ph in phases]
     ph = phases[int(np.argmax(score))]; bt = (ph + np.arange(0, len(env) - 1, period)) / fps
     return bt, float(bpm), env, fps
+
+def pick_drop(bt, kenv, kfps, t, rms, total, dur, r):
+    """find a drop: bars where the kick and loudness come back hard after a quieter stretch. The edit starts in the build-up
+    (about 55% of it before the drop) and ends a few bars into the drop, because people stay for the drop."""
+    if len(bt) < 48: return None
+    bars = np.asarray(bt[::4], np.float64); kt = np.arange(len(kenv)) / kfps; km = kenv.max() + 1e-9; rm = rms.max() + 1e-9
+    def avg(xs, ys, a, b):
+        m = (xs >= a) & (xs < b); return float(ys[m].mean()) if m.any() else 0.0
+    E = [.6 * avg(kt, kenv, bars[i], bars[i + 1]) / km + .4 * avg(t, rms, bars[i], bars[i + 1]) / rm for i in range(len(bars) - 1)]
+    cands = []
+    for i in range(4, len(E) - 2):
+        pre, post = float(np.mean(E[i - 4:i])), float(np.mean(E[i:i + 2]))
+        if post > .5 and post - pre > .12 and E[i] > E[i - 1]: cands.append((post - pre, i))
+    if not cands: return None
+    cands.sort(reverse=True); _, i = r.choice(cands[:3]); drop_t = float(bars[i])
+    want = drop_t - dur * r.uniform(.5, .62); j = int(np.argmin(np.abs(bars - want))); start = float(bars[j])
+    if start < 0 or start + dur > total - .5 or drop_t - start < 4: return None
+    return start, drop_t - start
 
 def pick_section(t, flux, rms, peaks, total, dur, r):
     """loudest, busiest window well inside the track; start snapped to a strong onset"""
@@ -907,8 +927,10 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                             "-c:v", "libxvid", "-q:v", "3", "-g", "9999", "-bf", "0", "-force_key_frames", kf, avi], stdin=subprocess.PIPE)
     series = MONT.get("series", {}); top = series.get("top", []); bottom = series.get("bottom", [])
     R = CP.recipes(r); names = list(R); r.shuffle(names); deck = []
-    def pick_graph(drop):
+    CALM = ["raw", "raw", "rawpair", "peek", "scan", "collide", "glyphs", "tiles", "diff", "warp"]
+    def pick_graph(drop, inten=1.0):
         nonlocal deck
+        if inten < .62 and r.random() < .8: return R[r.choice(CALM)](), "calm"      # the build-up: real photos, light treatments
         if r.random() < (.35 if drop else .22): return CP.random_graph(r, r.choice([2, 3, 3, 4])), "random"
         if not deck: deck = names[:] + ["raw", "raw", "rawpair", "glyphs", "collide"]; r.shuffle(deck)   # raw photo moments and references come up often
         nm = deck.pop()
@@ -930,7 +952,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     for i, s in enumerate(shots):
         tries = 0
         while True:
-            g, nm = pick_graph(s.get("drop")); tries += 1
+            g, nm = pick_graph(s.get("drop"), s.get("inten", 1.0)); tries += 1
             ps = [photo(pool[(i * 2 + k + tries) % len(pool)]) if pool else None for k in range(3)]
             ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
             cut = (meme_im if (meme_im is not None and r.random() < .15) else (r.choice(cut_ims) if cut_ims else ps[2]))
@@ -944,11 +966,13 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             if .07 < test.mean() < .93 and test.std() > .07: break      # not black, not blown out, not flat
         if r.random() < .75:                                            # the whole picture breathes: slow turn + a push on the kick
             g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
-        colour = s.get("drop") or r.random() < .22 or nm in ("fight",)
-        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < .55, "mono": not colour, "inv": r.random() < (.5 if s.get("drop") else .18),
-                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2),
+        inten = s.get("inten", 1.0)
+        colour = s.get("drop") or nm in ("fight",) or r.random() < (.08 if inten < .9 else .3)
+        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < (.3 + .4 * inten), "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
+                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2) * (1.3 if s.get("build") else 1),
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random()})
-    si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None
+    si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
+    drop_plan = next((plan[k_] for k_, s_ in enumerate(shots) if s_.get("drop") and s_.get("post")), None)
     for k in range(nfr):
         t = k / FPS
         ni = si
@@ -968,6 +992,11 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             img = cover(meme_im, zoom=1.04 + .07 * beat + .05 * t / op["end"]); Cx.set_source(3, meme_im)
         else:
             n_in = k - k0; mfr = max(3, min(10, int(.45 * FPS)))
+            tz = s.get("tease")
+            if tz is not None and drop_plan is not None and 0 <= t - tz < 3 / FPS:      # a glimpse of what's coming
+                if not teasing: Cx.compile(drop_plan["g"]); [Cx.set_source(kk, im) for kk, im in enumerate(drop_plan["srcs"])]; teasing = True
+            elif teasing:
+                Cx.compile(P["g"]); [Cx.set_source(kk, im) for kk, im in enumerate(P["srcs"])]; teasing = False
             mix = (n_in + 1) / (mfr + 1) if (s.get("tr") in ("melt", "zoom") and n_in < mfr) else 1.0
             img = Cx.frame(t, beat, energy, P["seed"], mix, pc=(u, P["shape"], P["pa"], 1 - P["pa"]))
             if s.get("tr") == "static" and n_in < 4 and last is not None:   # static ring wipe between sections
@@ -1058,6 +1087,9 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     dur = r.uniform(DUR_MIN, min(DUR_MAX, max(DUR_MIN, total - 2))); start = pick_section(t, flux, rms, peaks, total, dur, r)
     bt, bpm, kenv, kfps = beats(x, sr)
     if len(bt): start = float(bt[int(np.argmin(np.abs(bt - start)))])      # section starts on a beat
+    drop_rel = None
+    dp = pick_drop(bt, kenv, kfps, t, rms, total, dur, r) if len(bt) else None
+    if dp: start, drop_rel = dp; log(f"{style}: build-up from {start:.1f}s, drop at +{drop_rel:.1f}s")
     strength_at = lambda tt: float(np.interp(tt, np.arange(len(kenv)) / kfps, kenv / (kenv.max() + 1e-9)))
     g = grid_cuts(bt, start, dur, fam, r, strength_at)
     if g:
@@ -1075,6 +1107,19 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
             if s2 != style: pool += [w_ for w_ in kept_images(man, s2)[:30] if w_["id"] not in recent_walls]
         r.shuffle(pool); walls = pool[:12]
         shots, heroes = make_sections(bars, per, dur, fam, style, walls, r, mont)
+        if drop_rel:                                                    # the arc: tease in the build-up, everything at the drop
+            for k_, s_ in enumerate(list(shots)):
+                if s_["t0"] < drop_rel - 1e-3 < s_["t1"] - 1e-3:            # a shot always starts exactly on the drop
+                    a_, b_ = dict(s_), dict(s_); a_["t1"] = drop_rel; b_["t0"] = drop_rel; b_.update(drop=True, tr=r.choice(["mosh", "static", "zoom", "melt"]), fx=[])
+                    shots[k_:k_ + 1] = [a_, b_]; break
+            for s_ in shots:
+                s_["post"] = s_["t0"] >= drop_rel - 1e-3
+                s_["inten"] = 1.0 if s_["post"] else .3 + .45 * (s_["t0"] / drop_rel)
+                if not s_["post"] and s_.get("drop"): s_["drop"] = False             # no fake climaxes before the real one
+                if abs(s_["t0"] - drop_rel) < 1e-3: s_["drop"] = True
+                s_["build"] = (not s_["post"]) and s_["t0"] >= drop_rel - 4 * per - 1e-3
+            pre = [s_ for s_ in shots if not s_["post"] and not s_["build"] and s_["t1"] - s_["t0"] > 4 * per - 1e-3]
+            for s_ in r.sample(pre, min(len(pre), r.choice([1, 2]))): s_["tease"] = s_["t0"] + per * r.choice([2, 3])   # a 3-frame glimpse of the drop
         opener = pick_meme(man, mont, r)
         if opener:                                                      # pattern interrupt: the meme for one beat (two when fast), then it melts into the edit
             oe = per * (2 if per < .36 else 1); shots[0]["opener"] = {"img": opener, "end": oe}
@@ -1229,7 +1274,7 @@ def publish(mont, flags):
 def probe():
     """what the viral pool would pick right now: top candidates per query with plays/day"""
     vir = MONT["music"]["_viral"]; want = [w.lower() for w in MONT["music"]["_techno"].get("want", [])]
-    for q in (vir.get("_probe") or vir["sc"])[:26]:
+    for q in vir["sc"][:27]:
         try:
             cands = sc_candidates(q, 12); cands.sort(key=lambda c: -score_viral(c, q, want, vir))
             report["probe"].append({"q": q, "top": [f"{c['title'][:55]} | {c['plays']} plays | {int(c['plays'] / c['age']) if c.get('age') else '?'}/day | {int(c['age']) if c.get('age') else '?'}d → {score_viral(c, q, want, vir):.2f}" for c in cands[:4]]})
