@@ -961,9 +961,11 @@ def journey_stage(shots, i, r):
         j = post.index(i)
         if len(post) >= 3 and j == len(post) - 1: return "j_return"
         return r.choice(["j_shatter", "j_bloom"]) if j == 0 else r.choice(["j_hyper", "j_bloom", "j_shatter"])
-    inten = s.get("inten", .5); last_pre = max((k for k in range(len(shots)) if k not in post), default=-1)
-    if i == last_pre or inten >= .64: return "j_tunnel"
-    return "j_hook" if inten < .45 or i == 0 else "j_comeup"
+    pre = [k for k in range(len(shots)) if k not in post and not shots[k].get("opener")]
+    if not pre or i not in pre: return "j_hook"
+    f = (shots[i]["t0"] - shots[pre[0]]["t0"]) / max(1e-3, shots[pre[-1]]["t1"] - shots[pre[0]]["t0"])   # how far through the build-up, by time
+    if i == pre[-1] or f >= .72: return "j_tunnel"
+    return "j_hook" if f < .35 else "j_comeup"
 
 def greyed(im):
     from PIL import ImageOps
