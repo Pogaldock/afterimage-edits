@@ -1,16 +1,29 @@
-# montage — 2026-10-19 23:33 UTC
+# montage — 2026-10-20 01:07 UTC
 
-- `Gonzi` → top=['Gonzi & Creeds - FULL POWER (Extended Mix) | 190997 plays | 508/day | 375d → 10.27', 'GONZI, TARS - So Naughty! (Extended Mix) | 101304 plays | 223/day | 453d
-- `Gonzi techno` → top=['Sprinter x Donkers - Central Cee & Dave x Gonzi & Creed | 190412 plays | 159/day | 1194d → -1.00', 'Techno Set | Hard Peak Time Techno Mix | DJ Tech Wich | | 
-- `Pusha techno` → top=['Pusha Techno Man (extended) | 233 plays | 0/day | 300d → -1.00', 'pusha t x norbiś x techno | 66 plays | 0/day | 3851d → -1.00', 'Treemendus Radio Brother Sha
-- `Pusha` → top=['Runaway (feat. Pusha T) | 4164842 plays | 1079/day | 3856d → -1.00', 'Kanye West - Runaway (feat. Pusha T) | 9697390 plays | 8875/day | 1092d → -1.00', 'Mercy
-- `viral techno` → top=['ICH WEISS NICHT WEITER (MICHEL.KMK TECHNO BOOTLEG) | 34909 plays | 1227/day | 28d → 9.11', 'No Broke Boys {Viral Hard Techno Remix 🔥} | 60813 plays | 128/day 
-- `techno tiktok` → top=['Harry Potter vs Abracadabra Hard Techno [TikTok] | 349097 plays | 696/day | 501d → 10.12', '[TikTok] Voices in My Head vs Nic Johnston TNT Techno R | 76345 pl
-- `hard techno tiktok` → top=['SAINT JHN x Imanbek - Roses (Hard Techno remix) [TikTok | 349729 plays | 941/day | 371d → 10.33', 'Harry Potter vs Abracadabra Hard Techno [TikTok] | 349097 p
-- `hard techno edit` → top=['Empire Of The Sun - We Are The People (R3CKLES Hard Tec | 47108 plays | 991/day | 47d → 10.43', 'GREEN DAY - BOULEVARD OF BROKEN DREAMS (NAIJ  HARD TECH | 282
-- `hard techno remix` → top=['ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) | 701924 plays | 2009/day | 349d → 11.51', 'Black Out Days (Stay Away) – INSIDIA Hard Techno Remix  | 216187 play
-- `techno edit 2026` → top=['Mashooqa – ATROX EDIT | Techno Remix 2026 | DJ Atrox |  | 28226 plays | 234/day | 120d → 8.52', 'Mashooqa – Techno Edit by ATROX | DJ Atrox | Cocktail 2 | 150
-- `hard techno 2026` → top=['MISH @ DROPZONE 2026 (Full set) - Mainstage - Hard Danc | 2892 plays | 445/day | 6d → -1.00', 'BEAUZ - WE LIKE IT BAD | DJ SET 2026 - PSY POP / HARD T | 38687
-- `schranz 2026` → top=['KOBOSIL - EMOTIONAL SCHRANZ SET (live @ HIVE Festival 2 | 587029 plays | 5406/day | 108d → -1.00', 'CLOUDY @ UNREAL STAGE  MONEGROS 2026 (FULL SCHRANZ SET) | 
-- `hardgroove 2026` → top=['PUSHMANN | AQUASELLA 2026 (Special Hardgroove Set) | 7090 plays | 117/day | 60d → -1.00', 'hardgroove 2026 | 46 plays | 0/day | 157d → -1.00', 'HARDGROOVE 202
-- `acid techno 2026` → top=["light gal's Acid Techno Journey | Notsilly Festival 202 | 394 plays | 48/day | 8d → -1.00", 'Acid Techno Mix July 2026 | 1678 plays | 20/day | 80d → -1.00', '
+- `Gonzi` → top=['Gonzi & Creeds - FULL POWER (Extended Mix) | 191077 plays | 509/day | 375d → 8.67', 'GONZI, CR3WFX - LIKE THAT | 157952 plays | 232/day | 680d → 8.09', 'GONZI
+- `Billx` → top=['Réalise tes raves (Billx remix) | 11357 plays | 156/day | 72d → -1.00', 'BRING BACK THE BASS | 100258 plays | 24/day | 4157d → -1.00', 'Billx - Tree of Life [
+- `Kettama` → top=['KETTAMA - Comes and Goes (Extended Mix) | 1756938 plays | 11499/day | 152d → 11.32', 'KETTAMA - It Gets Better (Forever Mix) (Steel City Danc | 4088156 plays 
+- `Dimitri K` → top=['Dimitri K - Feel The Ground Shake | 604194 plays | 1274/day | 474d → 9.56', 'Dimitri K & Sickddellz - Love The Way You Lie | 106446 plays | 2011/day | 52d → 9
+- `Mischluft` → top=['Mischluft -  Entertain Me (Extended Mix) | 878685 plays | 1007/day | 872d → 9.48', 'Leave This Place (Mischluft Edit) | 719990 plays | 852/day | 845d → 9.32',
+- `Funk Tribu` → top=["Coolio - Gangsta's Paradise (Funk Tribu Edit) | 1059557 plays | 1253/day | 845d → 9.67", 'Me gustas tu (Funk Tribu Edit) | 174380 plays | 1389/day | 125d → 9.
+- `DJ Gigola` → top=['DJ Gigola - La Batteria (Extended Version) | 700309 plays | 796/day | 878d → 9.27', 'La Batteria | 279174 plays | 317/day | 878d → 8.43', 'La Batteria (DBBD R
+- `Partiboi69` → top=['Partiboi69 x KETTAMA - Pumpin (Extended) | 163353 plays | 1424/day | 114d → 8.85', 'Kettama x Partiboi69 - Pumpin [ EXTENDED] | 35042 plays | 106/day | 328d →
+- `Mha Iri` → top=['Fury | 240095 plays | 692/day | 346d → 8.94', 'Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) | 85685 plays | 469/day | 182d → 8.44', 'ATK205 - T78, Mha Iri "The
+- `Nico Moreno` → top=['Nico Moreno x Warface - 2 Be High (Holy Priest Remix) | 591090 plays | 879/day | 672d → 9.30', 'If You Want Me - Nico Moreno remix | 61327 plays | 119/day | 5
+- `Hannah Laing` → top=['4am In A Rave feat. rhys from the sticks | 1939547 plays | 3312/day | 585d → 9.58', 'Hannah Laing | Tomorrowland Main Stage | 20749 plays | 448/day | 46d → -1
+- `Trym` → top=['ARMA X TRYM - In My Mind | 417509 plays | 486/day | 858d → 8.81', 'Cheffy Bb & Yungster Jack - Trym Leaders | 69050 plays | 538/day | 128d → 8.49', 'Sullivan 
+- `Amelie Lens` → top=['Anyma, Argy, Son Of Son - Voices in My Head (Amelie Len | 401404 plays | 902/day | 444d → 9.23', 'Amelie Lens - Falling For You (Radio Edit) | 472111 plays | 
+- `Charlotte de Witte` → top=['Charlotte de Witte feat. Comma Dee - The Heads That Kno | 451873 plays | 1175/day | 384d → 9.44', 'Charlotte de Witte feat. Conduit - A Prayer for the Dan | 2
+- `Indira Paganotto` → top=['Indira Paganotto - CRUSH | 57649 plays | 111/day | 518d → 7.36', 'Indira Paganotto - ARTCORE x Awakenings ADE | 50402 plays | 160/day | 314d → -1.00', 'Indira
+- `Restricted techno` → top=['PLAYBOI CARTI - EVIL J0RDAN (GESES Hard Techno Remix) * | 97885 plays | 168/day | 579d → 7.76', 'Restricted - What Is Techno | 58077 plays | 19/day | 2920d → 
+- `Ben Hemsley` → top=['Gaskin x Ben Hemsley - If your girl only knew | 971015 plays | 2100/day | 462d → 10.01', 'Ben Hemsley & LD50 - SUNSHINE | 41323 plays | 3425/day | 12d → 9.66'
+- `Kettama x Partiboi69` → top=['Partiboi69 x KETTAMA - Pumpin (Extended) | 163353 plays | 1424/day | 114d → 8.85', 'Skream x Partiboi69 - Pound Town | 198698 plays | 327/day | 606d → 8.58', 
+- `hard techno remix` → top=['ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) | 702053 plays | 2009/day | 349d → 11.51', 'Black Out Days (Stay Away) – INSIDIA Hard Techno Remix  | 216196 play
+- `hard techno tiktok` → top=[]
+- `techno tiktok` → top=[]
+- `viral techno` → top=[]
+- `hard techno edit` → top=[]
+- `techno bootleg` → top=[]
+- `hard techno bootleg` → top=[]
+- `hard techno remix tiktok` → top=[]
+- `bounce techno remix` → top=[]
