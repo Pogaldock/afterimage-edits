@@ -1229,7 +1229,7 @@ def publish(mont, flags):
 def probe():
     """what the viral pool would pick right now: top candidates per query with plays/day"""
     vir = MONT["music"]["_viral"]; want = [w.lower() for w in MONT["music"]["_techno"].get("want", [])]
-    for q in vir["sc"][:14]:
+    for q in (vir.get("_probe") or vir["sc"])[:26]:
         try:
             cands = sc_candidates(q, 12); cands.sort(key=lambda c: -score_viral(c, q, want, vir))
             report["probe"].append({"q": q, "top": [f"{c['title'][:55]} | {c['plays']} plays | {int(c['plays'] / c['age']) if c.get('age') else '?'}/day | {int(c['age']) if c.get('age') else '?'}d → {score_viral(c, q, want, vir):.2f}" for c in cands[:4]]})
