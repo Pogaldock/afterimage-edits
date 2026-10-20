@@ -204,6 +204,12 @@ def recipes(r):
         "fight": lambda: ("mask", ("contrast", 1.5, P(r.choice([0, 1]))), ("sim",), ("sim",)),          # the photo lives inside the chemistry
         # real photo, barely touched: a slow push, the cut-out in front. Honest moments between the madness
         "raw": lambda: ("layer", ("cut", 2, r.uniform(.5, .8), .1, r.uniform(-.06, .06)), ("scale", r.uniform(1.0, 1.15), .06, ("scroll", r.uniform(-.01, .01), r.uniform(-.015, .015), P(r.choice([0, 1, 3]))))),
+        # hieroglyphs: a cultural reference reduced to a glyph, repeated into a wall of signs, the wall bent by noise, a photo behind
+        "glyphs": lambda: ("mask", ("tint", (0, 0, 0), (1, 1, 1), ("modulate", r.uniform(.02, .08), ("repeat", r.choice([3, 4, 5]), r.choice([5, 6, 8]), ("thresh", r.uniform(.4, .6), ("tex", 2, 1))), nz())), P(0), ("lumakey", .5, .1, 0, ("modulate", .03, ("repeat", 4, 6, ("thresh", .5, ("tex", 2, 1))), nz()))),
+        # two references colliding: one inside the other's silhouette, swapping on the beat
+        "collide": lambda: ("mask", ("tex", 2, 0), P(1), ("thresh", r.uniform(.4, .6), P(r.choice([0, 3])))),
+        # the reference smeared into a sign: kaleidoscoped and stretched until it is almost unreadable
+        "smear": lambda: ("colorama", r.uniform(.1, .4), ("stretch", r.choice([1, 3]), r.uniform(.15, .45), ("kaleid", 2, ("tex", 2, 0)))),
         "rawpair": lambda: ("mask", P(0), P(1), ("osc", r.uniform(2, 6), r.uniform(.5, 2), 0.)),
         # the photo eaten by the labyrinth: shown only where the chemistry has grown
         "erode": lambda: ("mask", ("modulate", r.uniform(.02, .08), P(r.choice([0, 3])), ("sim",)), ("invert", ("sim",)), ("sim",)),

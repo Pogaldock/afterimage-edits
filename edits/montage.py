@@ -897,7 +897,7 @@ def comp_ctx():
     return _COMP
 
 ANALOG = {0: 3, 1: 2, 2: 1.2, 3: 2, 4: .8}                              # none, VHS, composite, film, CRT
-def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener):
+def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=()):
     """every section is a compositor graph over real material: atlas photos, cut-outs, the meme, static, noise, a point cloud.
     Graphs come from the recipes (generalised from what reads well) or are fully random; dull or near-black graphs are re-rolled."""
     import comp as CP
@@ -910,7 +910,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     def pick_graph(drop):
         nonlocal deck
         if r.random() < (.35 if drop else .22): return CP.random_graph(r, r.choice([2, 3, 3, 4])), "random"
-        if not deck: deck = names[:] + ["raw", "raw", "rawpair"]; r.shuffle(deck)          # raw photo moments come up often
+        if not deck: deck = names[:] + ["raw", "raw", "rawpair", "glyphs", "collide"]; r.shuffle(deck)   # raw photo moments and references come up often
         nm = deck.pop()
         if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
         return R[nm](), nm
@@ -919,6 +919,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if it["id"] not in imgs: imgs[it["id"]] = fetch_image(it)
         return imgs[it["id"]]
     meme_im = fetch_image(opener) if opener else None
+    ref_ims = [im for im in (fetch_image(x) for x in refs) if im is not None]   # cultural references: memes, film stills, cartoons, icons
     pool = [p_ for p_ in photos if p_]; r.shuffle(pool)
     cut_ims = []
     for f in cuts_png[:10]:
@@ -934,6 +935,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
             cut = (meme_im if (meme_im is not None and r.random() < .15) else (r.choice(cut_ims) if cut_ims else ps[2]))
             srcs = [ps[0], ps[1], cut, ps[2]]
+            if ref_ims and r.random() < .65:                            # a reference in most sections, juxtaposed with the scene's own photos
+                srcs[2] = r.choice(ref_ims)
+                if r.random() < .35: srcs[r.choice([1, 3])] = r.choice(ref_ims)
             if tries > 6 or nm != "random": break
             Cx.compile(g); [Cx.set_source(k, im) for k, im in enumerate(srcs)]
             test = np.asarray(Cx.frame(1.0, .5, .5, .3).resize((108, 192)), np.float32) / 255
@@ -1094,7 +1098,8 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     if v2 and MONT.get("engine") == "v3":
         photos = list(walls)
         for s2 in r.sample([x for x in CFG if not x.startswith("_") and x not in ("meme",)], 3): photos += kept_images(man, s2)[:4]   # a few images from elsewhere
-        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener)
+        refs = r.sample(kept_images(man, "meme"), min(3, len(kept_images(man, "meme")))) + r.sample(kept_images(man, "pop"), min(3, len(kept_images(man, "pop"))))
+        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs)
     elif v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
