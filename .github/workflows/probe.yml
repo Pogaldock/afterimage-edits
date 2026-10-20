@@ -22,4 +22,4 @@ jobs:
         run: |
           git config user.name "atlas bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          cp edits/last-montage.md edits/last-probe.md && git add edits/last-probe.md && git commit -q -m "probe: report" && git pull -q --rebase origin main && git push -q origin HEAD:main
+          cp edits/last-montage.md edits/last-probe.md && git checkout -q -B probe && git add edits/last-probe.md && git commit -q -m "probe: report" && git push -q -f origin probe
