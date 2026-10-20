@@ -992,13 +992,13 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         colour = s.get("drop") or nm in ("fight", "fluid", "fluidmix", "slime", "attractor", "attractor2", "hyper", "hyperref") or r.random() < (.08 if inten < .9 else .3)   # simulations keep their colour
         plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": inten >= .99 and r.random() < .35, "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
                      "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.3, .75) * (1.3 if s.get("build") else 1),
-                     "hud": (r.sample(["stream", "readout", "spectrum"], 1) + (["glyphs"] if r.random() < .4 else [])) if inten < .62 else
-                            (r.sample(["readout", "spectrum", "glyphs", "sigil"], 2) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"]), r.choice(["stream", "spectrum"])]),
+                     "hud": ([r.choice(["stream", "glyphs", "target"])] if r.random() < .6 else []) if inten < .62 else
+                            (r.sample(["glyphs", "sigil", "stream", "target"], 1) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"])]),
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random(),
                      "tm": (r.choice([1, 2, 3, 4, 5]) if r.random() < (.35 if inten >= .99 else .15) else 0),      # time displacement for some sections
                      "cf": tuple(r.sample([0, 1, 2, 3], 2)),
-                     "bold": (r.choice(["symbol", "window", "frame", "glyph"]) if r.random() < .4 else None) if inten < .62 else
-                             (r.choice(["symbol", "window", "rings", "bars", "glyph", "chevrons", "symbol"]) if (s.get("drop") or r.random() < .7) else None)})
+                     "bold": (r.choice(["sprite", "window", "pglyph", "dither"]) if r.random() < .4 else None) if inten < .62 else
+                             (r.choice(["sprite", "sprite", "invader", "pglyph", "dither", "band", "window"]) if (s.get("drop") or r.random() < .7) else None)})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
@@ -1012,7 +1012,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"]); Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"], cut_ims + ref_ims + ([meme_im] if meme_im is not None else [])); Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in

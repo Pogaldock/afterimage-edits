@@ -155,4 +155,14 @@ class HUD:
             lab = f"{NAMES.get(ch, 'OBJ')} {int(X):04d}.{int(Y):04d}"
             d.text((X - s, Y + s + 12), lab, font=mono(22), fill=WHITE + (220,))
             if gf: d.text((X + s - 30, Y - s - 40), ch, font=gf, fill=A + (230,))
-        return im
+        return pixelate(im, 4)
+
+def pixelate(im, k):
+    """turn the overlay into hard k×k pixels: each block takes its strongest pixel, then nearest-neighbour back up"""
+    a = np.asarray(im); h, w = a.shape[0] // k * k, a.shape[1] // k * k; b = a[:h, :w].reshape(h // k, k, w // k, k, 4)
+    al = b[..., 3]; idx = al.reshape(h // k, k, w // k, k).transpose(0, 2, 1, 3).reshape(h // k, w // k, k * k).argmax(-1)
+    blk = b.transpose(0, 2, 1, 3, 4).reshape(h // k, w // k, k * k, 4); pick = np.take_along_axis(blk, idx[..., None, None], 2)[:, :, 0]
+    pick[..., 3] = np.where(pick[..., 3] > 60, 255, 0)
+    out = Image.fromarray(pick.astype(np.uint8)).resize((w, h), Image.NEAREST)
+    if (w, h) != im.size: o2 = Image.new("RGBA", im.size, (0, 0, 0, 0)); o2.paste(out, (0, 0)); out = o2
+    return out
