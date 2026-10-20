@@ -910,7 +910,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     def pick_graph(drop):
         nonlocal deck
         if r.random() < (.35 if drop else .22): return CP.random_graph(r, r.choice([2, 3, 3, 4])), "random"
-        if not deck: deck = names[:]; r.shuffle(deck)
+        if not deck: deck = names[:] + ["raw", "raw", "rawpair"]; r.shuffle(deck)          # raw photo moments come up often
         nm = deck.pop()
         if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
         return R[nm](), nm

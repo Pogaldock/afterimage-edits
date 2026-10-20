@@ -201,7 +201,10 @@ def recipes(r):
         "scan": lambda: ("add", 1.0, ("tint", (0, 0, 0), (.3, 1, .9), ("edges", 0)), ("add", .35, ("contrast", .5, P(0)), ("grid", r.choice([6, 9, 12]), .04))),
         # slit-scan: columns of the clip offset in time-ish, through the other photo's light
         # the fight: black/white chemistry vs colour spirals, the photo dissolving into it
-        "fight": lambda: ("add", .9, ("modulate", .015, ("sim",), nz()), ("edges", r.choice([0, 1]))),
+        "fight": lambda: ("mask", ("contrast", 1.5, P(r.choice([0, 1]))), ("sim",), ("sim",)),          # the photo lives inside the chemistry
+        # real photo, barely touched: a slow push, the cut-out in front. Honest moments between the madness
+        "raw": lambda: ("layer", ("cut", 2, r.uniform(.5, .8), .1, r.uniform(-.06, .06)), ("scale", r.uniform(1.0, 1.15), .06, ("scroll", r.uniform(-.01, .01), r.uniform(-.015, .015), P(r.choice([0, 1, 3]))))),
+        "rawpair": lambda: ("mask", P(0), P(1), ("osc", r.uniform(2, 6), r.uniform(.5, 2), 0.)),
         # the photo eaten by the labyrinth: shown only where the chemistry has grown
         "erode": lambda: ("mask", ("modulate", r.uniform(.02, .08), P(r.choice([0, 3])), ("sim",)), ("invert", ("sim",)), ("sim",)),
         # the photo pushed around by the systems like a fluid
@@ -224,7 +227,9 @@ def random_graph(r, depth=3):
         if k == "repeat": return ("repeat", r.choice([2, 3]), r.choice([2, 3, 4]), node(d - 1))
         if k == "swirl": return ("swirl", r.uniform(1, 5), node(d - 1))
         return ("layer", ("lumakey", r.uniform(.3, .6), .2, r.random() < .5, node(d - 1)), node(d - 2))
-    return ("feedback", r.uniform(.5, .85), r.uniform(1.0, 1.03), r.uniform(-.02, .02), r.uniform(-.015, .015), node(depth))
+    g = ("feedback", r.uniform(.5, .85), r.uniform(1.0, 1.03), r.uniform(-.02, .02), r.uniform(-.015, .015), node(depth))
+    # a real photo always shows through: keyed on top or as the window
+    return ("layer", ("lumakey", r.uniform(.35, .6), .15, r.random() < .5, ("tex", r.choice([0, 1]), 0)), g) if r.random() < .7 else ("mask", ("tex", 0, 0), g, ("tex", 1, 0))
 
 # ------------------------------------------------------------------ point cloud
 PC_VS = """#version 330
