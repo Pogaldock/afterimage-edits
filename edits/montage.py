@@ -962,14 +962,16 @@ def iconic(im):
     if a.mean() > .97 or not a.any(): return 0.0
     ys, xs = np.nonzero(a); h, w = ys.ptp() + 1, xs.ptp() + 1; aspect = min(h, w) / max(h, w); fill = a.sum() / (h * w)
     if aspect < .42 or fill < .3 or max(h, w) < 160: return 0.0
-    return aspect * fill * min(1.0, max(h, w) / 500)
+    L = np.asarray(im.convert("L"), np.float32)[a]; bright = min(1.0, (L.mean() + L.std()) / 150)   # a dark thing on a dark ground disappears
+    return aspect * fill * min(1.0, max(h, w) / 500) * (.25 + .75 * bright)
 
 def emblem_of(im):
     """a cut-out made poster-bold: thick black outline round its silhouette, punchier colour; opaque images (memes) kept as they are"""
     if im is None: return None
     from PIL import ImageFilter, ImageEnhance
     im = im.convert("RGBA"); im.thumbnail((900, 900)); a = im.split()[3]
-    if a.getextrema()[0] > 200: return ImageEnhance.Contrast(im.convert("RGB")).enhance(1.25).convert("RGBA")
+    if a.getextrema()[0] > 200: return lift(im.convert("RGB")).convert("RGBA")
+    im = lift(im)
     pad = 40; big = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0)); big.paste(im, (pad, pad), im)
     ring = big.split()[3].point(lambda v: 255 if v > 100 else 0).filter(ImageFilter.MaxFilter(15))
     out = Image.new("RGBA", big.size, (0, 0, 0, 0)); out.paste((0, 0, 0, 255), (0, 0), ring)
