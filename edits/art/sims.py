@@ -76,7 +76,7 @@ class Fluid:
         p, vao = self.advect
         self.vel[self.cv].use(0); _set(p, V=0, Q=0, TX=TX, DT=DT * 60, DIS=.995); self.fvel[1 - self.cv].use(); vao.render(mode=5); self.cv = 1 - self.cv
         self.vel[self.cv].use(0); self.dye[self.cd].use(1); _set(p, V=0, Q=1, TX=TX, DT=DT * 60, DIS=.999); self.fdye[1 - self.cd].use(); vao.render(mode=5); self.cd = 1 - self.cd
-        self.load(src, size, .06)                                            # the image keeps re-forming through the swirl
+        self.load(src, size, .13 if getattr(self, 'force', 1.0) < .5 else .07)   # the image keeps re-forming through the swirl (faster when calm)
         return self.dye[self.cd]
 
 # ============================================================ physarum

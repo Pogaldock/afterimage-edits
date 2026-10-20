@@ -32,7 +32,7 @@ class Paste:
         pool = [("cut", c) for c in cutouts if c is not None] + [("scrap", s) for s in scraps if s is not None]
         r.shuffle(pool)
         for kind, im in pool[:count]:
-            w = self.w * (r.uniform(.5, .62) if center and not self.items else r.uniform(.28, .44))
+            w = self.w * (r.uniform(.5, .62) if center and not self.items else r.uniform(.28, .44) * getattr(self, 'size', 1.0))
             if kind == "cut":
                 im = im.convert("RGBA"); bb = im.split()[3].getbbox()
                 if bb: im = im.crop(bb)

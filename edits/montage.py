@@ -1051,6 +1051,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             kicks += 1
             if P.get("zine"):                                            # zine: a new arrangement of real things on every kick (every other in the build-up)
                 if s.get("post") or kicks % 2 == 0:
+                    PS.size = 1.45
                     PS.plan(r.sample(cut_ims, min(2, len(cut_ims))), r.sample(ref_ims + [hero] if hero is not None else ref_ims, min(1, len(ref_ims) + (hero is not None))), 3 if s.get("post") else 2)
                     Cx.set_source(0, photo(r.choice(pool)) if pool else hero)
         if P.get("glow"):                                                # soft bloom: lines and points glow instead of sitting flat

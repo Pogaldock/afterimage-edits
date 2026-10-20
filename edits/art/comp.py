@@ -160,6 +160,8 @@ def emit(g, node, uv):
     if op == "tint":                      # ("tint", (r,g,b) shadows, (r,g,b) highs, child): duotone onto two colours
         c0, c1, ch = a; c = emit(g, ch, uv)
         return new(f"vec4(mix(vec3({_f(c0[0])},{_f(c0[1])},{_f(c0[2])}), vec3({_f(c1[0])},{_f(c1[1])},{_f(c1[2])}), smoothstep(.1,.9,luma({c}))), {c}.a)")
+    if op == "dim":                       # darken (keeps blacks black, unlike lowering contrast)
+        k, ch = a; c = emit(g, ch, uv); return new(f"vec4({c}.rgb*{_f(k)}, {c}.a)")
     if op == "contrast":
         k, ch = a; c = emit(g, ch, uv); return new(f"vec4(clamp(({c}.rgb-.5)*{_f(k)}+.5,0.,1.), {c}.a)")
     if op == "edges":                     # ("edges", slot): line drawing of a source (scan look)
@@ -243,16 +245,16 @@ def recipes(r):
         "vertigo": lambda: ("dzoom", r.choice([0, 1]), r.uniform(.25, .6)),
         "rutt": lambda: ("add", r.uniform(.15, .35), ("rutt",), ("contrast", .35, ("parallax", 0, .05))),
         "rutt2": lambda: ("rutt",),
-        "cloudsph": lambda: ("add", 1.0, ("pc",), ("contrast", .15, ("tex", 0, 0))),
-        "dark": lambda: ("contrast", .3, ("scale", 1.15, .03, ("tex", 0, 0))),
+        "cloudsph": lambda: ("add", 1.0, ("pc",), ("add", .6, ("dim", .1, ("tex", 0, 0)), ("rutt",))),
+        "dark": lambda: ("dim", .22, ("scale", 1.15, .03, ("tex", 0, 0))),
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
-        "cards": lambda: ("add", 1.0, ("cards",), ("contrast", .3, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
+        "cards": lambda: ("add", 1.0, ("cards",), ("dim", .18, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
         "trails": lambda: ("feedback", r.uniform(.6, .8), r.uniform(1.01, 1.03), r.uniform(-.01, .01), r.uniform(-.01, .01), ("add", 1.0, ("tint", (0, 0, 0), (.4, 1, .9), ("edges", 0)), ("contrast", .35, P(0)))),
         # simulations from the literature, all fed by the photos
         "fluid": lambda: ("contrast", 1.7, ("fluid",)),
-        "fluidmix": lambda: ("layer", ("lumakey", .55, .2, 0, ("fluid",)), ("contrast", .4, P(1))),
+        "fluidmix": lambda: ("layer", ("lumakey", .55, .2, 0, ("fluid",)), ("dim", .3, P(1))),
         "slime": lambda: ("slime",),
-        "attractor": lambda: ("add", 1.0, ("attractor",), ("contrast", .22, P(r.choice([0, 1])))),
+        "attractor": lambda: ("add", 1.0, ("attractor",), ("dim", .14, P(r.choice([0, 1])))),
         "attractor2": lambda: ("attractor",),
         "hyper": lambda: ("hyper", r.choice([7, 5, 8, 6]), r.choice([3, 4]), r.choice([0, 2])),
         "hyperref": lambda: ("colorama", r.uniform(.1, .4), ("hyper", r.choice([7, 8]), 3, 2)),
