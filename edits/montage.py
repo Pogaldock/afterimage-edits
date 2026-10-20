@@ -54,6 +54,69 @@ def obj_put(key, data, ctype="application/octet-stream"):
 def obj_del(key):
     try: S.delete(SITE + "/api/atlas/cur/obj", params={"o": key}, headers=AUTH, timeout=60)
     except Exception: pass
+# ============================ your own videos ============================
+# Uploaded from the Edits tab into atlas/vid/raw/. The "videos" job cuts each one into short 720p clips spread across it,
+# deletes the original, and records the clips in atlas/vid.json. Edits then use a clip as the moving world.
+CLIP_SECS = 6.0
+def cut_videos(max_items=4):
+    v = json.loads(obj_get("atlas/vid.json") or b'{"items": []}'); todo = [x for x in v.get("items", []) if x.get("state") == "raw"][:max_items]
+    done = {}
+    for it in todo:
+        try:
+            ext = it["key"].rsplit(".", 1)[-1]; os.makedirs(WORK, exist_ok=True); src = os.path.join(WORK, f"raw-{it['id']}.{ext}")
+            with S.get(SITE + "/api/atlas/cur/obj", params={"o": it["key"]}, headers=AUTH, timeout=900, stream=True) as r_:
+                r_.raise_for_status()
+                with open(src, "wb") as f:
+                    for ch in r_.iter_content(1 << 20): f.write(ch)
+            dur_ = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", src], capture_output=True, text=True).stdout.strip() or 0)
+            if dur_ < 1.5: raise RuntimeError("too short or unreadable")
+            n = int(max(1, min(12, dur_ // 8))); ln = min(CLIP_SECS, dur_)
+            offs = [dur_ * .05 + (dur_ * .9 - ln) * (k / max(1, n - 1)) for k in range(n)] if n > 1 else [max(0, (dur_ - ln) / 2)]
+            clips = []
+            for k, off in enumerate(offs):
+                out = os.path.join(WORK, f"clip-{it['id']}-{k}.mp4")
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{max(0, off):.2f}", "-i", src, "-t", f"{ln:.2f}", "-an", "-vf", "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,fps=24",
+                                "-c:v", "libx264", "-crf", "26", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-movflags", "+faststart", out], check=True)
+                key = f"atlas/vid/clip/{it['id']}-{k}.mp4"; obj_put(key, open(out, "rb").read(), "video/mp4"); clips.append(key)
+            done[it["id"]] = {"state": "cut", "clips": clips, "secs": round(dur_, 1)}; os.remove(src)
+            log("video", it.get("name"), "->", len(clips), "clips")
+        except Exception as e:
+            err(f"video {it.get('name')}", e); done[it["id"]] = {"state": "failed", "why": str(e)[:120]}
+    if done:                                                              # re-read right before writing so a fresh upload is not lost
+        v = json.loads(obj_get("atlas/vid.json") or b'{"items": []}')
+        for x in v.get("items", []):
+            if x["id"] in done: x.update(done[x["id"]])
+        obj_put("atlas/vid.json", json.dumps(v).encode(), "application/json")
+        for it in todo:
+            if done.get(it["id"], {}).get("state") == "cut": obj_del(it["key"])
+    report.setdefault("videos", []).extend(f"{k}: {d_['state']} {len(d_.get('clips', []))}" for k, d_ in done.items())
+
+OWN = {"clips": None}
+def own_clips():
+    if OWN["clips"] is None:
+        try: v = json.loads(obj_get("atlas/vid.json") or b'{"items": []}'); OWN["clips"] = [c for x in v.get("items", []) if x.get("state") == "cut" for c in x.get("clips", [])]
+        except Exception: OWN["clips"] = []
+    return OWN["clips"]
+
+class ClipReader:
+    """frames of one of your clips, in order, looping, at the edit's frame rate"""
+    def __init__(self, key, w=540, h=960, start=0.0):
+        self.path = os.path.join(WORK, os.path.basename(key)); self.w, self.h = w, h
+        if not os.path.exists(self.path):
+            data = obj_get(key)
+            if not data: raise RuntimeError("clip missing")
+            open(self.path, "wb").write(data)
+        self.p = subprocess.Popen(["ffmpeg", "-loglevel", "error", "-stream_loop", "-1", "-ss", f"{start:.2f}", "-i", self.path, "-vf", f"scale={w}:{h},fps={FPS}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+        self.first = self.next()
+        if self.first is None: self.close(); raise RuntimeError("clip unreadable")
+    def next(self):
+        b = self.p.stdout.read(self.w * self.h * 3)
+        if len(b) < self.w * self.h * 3: return getattr(self, "last", None)
+        self.last = Image.fromarray(np.frombuffer(b, np.uint8).reshape(self.h, self.w, 3)); return self.last
+    def close(self):
+        try: self.p.kill()
+        except Exception: pass
+
 def fam_of(style): return next((f for f, v in MONT["families"].items() if style in v["styles"]), "dark")
 
 # ============================ audio sources ============================
@@ -1037,7 +1100,11 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     TR = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
     good = sorted([im for im in cut_ims if iconic(im) > 0], key=iconic, reverse=True)     # chunky, compact silhouettes; no thin banners or text strips
     emblems = [e_ for e_ in (emblem_of(im) for im in (good[:2] + ref_ims[:2] + ([meme_im] if meme_im is not None else []))[:2]) if e_ is not None]
-    hero = photo(pool[0]) if pool else None                               # "single": one strong photo carries the whole edit
+    clip = None
+    if own_clips() and r.random() < float(MONT.get("own_share", .6)):     # your own footage becomes the world the subject travels through
+        try: clip = ClipReader(r.choice(own_clips()), start=r.uniform(0, 3)); report.setdefault("own", []).append("clip")
+        except Exception as e: err("own clip", e); clip = None
+    hero = clip.first if clip is not None else (photo(pool[0]) if pool else None)                               # "single": one strong photo carries the whole edit
     ref0 = ref_ims[0] if ref_ims else (meme_im or hero)
     plan = []
     for i, s in enumerate(shots):
@@ -1083,6 +1150,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         Cx.splat_dis = P["sd"][0] + (P["sd"][1] - P["sd"][0]) * u; Cx.splat_move = P["smove"]; Cx.splat_slot = P["sslot"]
+        if clip is not None and P["srcs"][0] is hero:                    # the moving footage, frame by frame (depth and splats keep the first frame)
+            fr_ = clip.next()
+            if fr_ is not None: Cx.set_frame(0, fr_)
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
             nxt = photo(r.choice(pool))
@@ -1138,6 +1208,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if song: img = overlay_text(img, [song], H * .805, 40)
         enc.stdin.write(img.tobytes())
     enc.stdin.close(); enc.wait()
+    if clip is not None: clip.close()
     if enc.returncode: raise RuntimeError("frame encoder failed")
     try:
         import depth as DP
@@ -1466,9 +1537,10 @@ def write_report():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--probe", action="store_true"); ap.add_argument("--cap", type=int, default=6)
-    ap.add_argument("--shard", type=int, default=0); ap.add_argument("--of", type=int, default=1); ap.add_argument("--merge", nargs="*"); ap.add_argument("--cleanup", type=int, default=0); a = ap.parse_args()
+    ap.add_argument("--shard", type=int, default=0); ap.add_argument("--of", type=int, default=1); ap.add_argument("--merge", nargs="*"); ap.add_argument("--cleanup", type=int, default=0); ap.add_argument("--videos", action="store_true"); a = ap.parse_args()
     try:
-        if a.cleanup: cleanup(a.cleanup)
+        if a.videos: cut_videos()
+        elif a.cleanup: cleanup(a.cleanup)
         elif a.probe: probe()
         elif a.merge is not None: merge(a.merge)
         else: make(a.cap, a.shard, a.of)

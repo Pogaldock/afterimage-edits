@@ -502,6 +502,12 @@ class Comp:
         self.src[i] = t; self.size[i] = im.size; self.pil[i] = im
         if old is not None and old.size != (2, 2): old.release()
 
+    def set_frame(self, i, im):
+        """replace slot i's pixels with the next video frame; depth and splats stay keyed to the first frame (self.pil unchanged)"""
+        im = im.convert("RGBA"); t = self.src[i]
+        if t is None or tuple(t.size) != im.size or self.pil[i] is None: self.set_source(i, im); return
+        t.write(im.transpose(Image.FLIP_TOP_BOTTOM).tobytes()); t.build_mipmaps()
+
     def compile(self, graph):
         code = to_glsl(graph)
         if code not in self._cache:
