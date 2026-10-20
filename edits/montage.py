@@ -1217,7 +1217,8 @@ def finish(mont, flags):
         if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "why": (flags.get("mwhy") or {}).get(it["id"]), "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "track": (it.get("track") or {}).get("id"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
     mont["taste"] = led[-800:]
     gone = {it["id"] for it in before} - {it["id"] for it in keep}
-    for i in gone:                                                          # free the storage for real, not just hide it
+    archive([it for it in before if it["id"] in gone and it["id"] not in dead], flags)   # seen ones go to the archive, small
+    for i in gone:                                                          # free the full-size copy
         for ext in ("mp4", "jpg"): obj_del(f"atlas/mont/{i}.{ext}")
     report["pruned"] = len(gone); mont["items"] = keep
     obj_put("atlas/mont.json", json.dumps(mont).encode(), "application/json")
@@ -1225,6 +1226,34 @@ def finish(mont, flags):
     try:
         if not os.environ.get("MONTAGE_OFFLINE"): publish(mont, flags)
     except Exception as e: err("publish", e)
+
+ARCH_MAX = float(MONT.get("archive_gb", 2.5)) * 1e9       # with the image library and live edits this keeps storage under ~9 of the free 10 GB
+def archive(items, flags):
+    """keep every seen edit as a 720p copy (~2-4 MB) with its recipe, track and timing, for later use; oldest go past ARCH_MAX"""
+    if not items: return
+    idx = json.loads(obj_get("atlas/arch.json") or '{"items":[]}'); have = {a["id"] for a in idx["items"]}; added = 0
+    for it in items:
+        if it["id"] in have: continue
+        data = obj_get(f"atlas/mont/{it['id']}.mp4")
+        if not data: continue
+        src = os.path.join(WORK, "arch_in.mp4"); dst = os.path.join(WORK, "arch_out.mp4"); open(src, "wb").write(data)
+        try:
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=720:1280:flags=lanczos", "-c:v", "libx264", "-crf", "29", "-preset", "medium", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", dst], check=True, timeout=300)
+            obj_put(f"atlas/arch/{it['id']}.mp4", open(dst, "rb").read(), "video/mp4")
+            jp = obj_get(f"atlas/mont/{it['id']}.jpg")
+            if jp: obj_put(f"atlas/arch/{it['id']}.jpg", jp, "image/jpeg")
+            meta = {k: it.get(k) for k in ("id", "style", "fam", "track", "bpm", "dur", "start", "heroes", "walls", "made", "opener")}
+            meta.update(bytes=os.path.getsize(dst), seen=(flags.get("mseen") or {}).get(it["id"]), why=(flags.get("mwhy") or {}).get(it["id"]), mp4=f"/api/atlas/arch/{it['id']}.mp4", poster=f"/api/atlas/arch/{it['id']}.jpg")
+            idx["items"].insert(0, meta); added += 1
+        except Exception as e: err("archive " + it["id"], e)
+    total = 0; keep = []
+    for a in idx["items"]:                                              # newest first; past the cap the oldest leave
+        total += a.get("bytes", 0)
+        if total <= ARCH_MAX: keep.append(a)
+        else:
+            for ext in ("mp4", "jpg"): obj_del(f"atlas/arch/{a['id']}.{ext}")
+    idx["items"] = keep; obj_put("atlas/arch.json", json.dumps(idx).encode(), "application/json")
+    report["archived"] = f"{added} added, {len(keep)} in the archive ({total / 1e9:.2f} GB)"
 
 def merge(dirs):
     """after the shards: collect their edits (mp4/jpg already in R2 and in the artifact dirs), update mont.json once, publish once"""
