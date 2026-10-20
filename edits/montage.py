@@ -996,10 +996,14 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                             (r.sample(["readout", "spectrum", "glyphs", "sigil"], 2) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"]), r.choice(["stream", "spectrum"])]),
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random(),
                      "tm": (r.choice([1, 2, 3, 4, 5]) if r.random() < (.35 if inten >= .99 else .15) else 0),      # time displacement for some sections
-                     "cf": tuple(r.sample([0, 1, 2, 3], 2))})
+                     "cf": tuple(r.sample([0, 1, 2, 3], 2)),
+                     "bold": (r.choice(["symbol", "window", "frame", "glyph"]) if r.random() < .4 else None) if inten < .62 else
+                             (r.choice(["symbol", "window", "rings", "bars", "glyph", "chevrons", "symbol"]) if (s.get("drop") or r.random() < .7) else None)})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
+    import bold as BOLDM
+    BD = BOLDM.Bold(W, H, r); HD.acc = BD.cols[0]                        # the edit's two bold colours; the data layer shares one
     drop_plan = next((plan[k_] for k_, s_ in enumerate(shots) if s_.get("drop") and s_.get("post")), None)
     for k in range(nfr):
         t = k / FPS
@@ -1008,7 +1012,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
@@ -1044,6 +1048,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         strobe = .6 if any(abs(b - t) < 1.2 / FPS for b in barset) and s.get("drop") else 0.0
         if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)
         img = Cx.analog(img, P["an"], t, beat, P["ak"])
+        img = BD.apply(img, t, beat, u)                                  # bold colour cutting through the black and white
         sp = spec[min(k, len(spec) - 1)] if spec is not None and len(spec) else None
         img = img.convert("RGBA"); img.alpha_composite(HD.frame(t, beat, sp, img)); img = img.convert("RGB")   # the meaning layer, crisp on top
         if top: img = overlay_text(img, top, H * .085, 66)
