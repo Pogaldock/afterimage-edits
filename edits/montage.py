@@ -1508,8 +1508,9 @@ def publish(mont, flags):
     import tarfile
     idx = json.loads(obj_get("atlas/static.json") or '{"parts":[]}')
     built = idx.get("mont_at") or (idx.get("built", 0) - 1800)        # when the last bundle read the edit list (older bundles: a 30 min margin)
-    ok = set(flags.get("mok", [])); items = []
-    for it in mont["items"]:
+    ok = set(flags.get("mok", [])); dl_ = set(flags.get("mdl", [])); dead = set(flags.get("mdead", [])); seen = flags.get("mseen") or {}; items = []
+    for it in mont["items"]:                                            # same rule as the curator's bundle: killed, or seen and left an hour ago → not listed
+        if it["id"] in dead or (it["id"] not in ok and it["id"] not in dl_ and time.time() - seen.get(it["id"], 1e12) > WATCHED_TTL): continue
         it = dict(it); it["ok"] = 1 if it["id"] in ok else 0; items.append(it)
     fresh = []
     for it in items:                                                    # everything made since the last full bundle, not just this batch
