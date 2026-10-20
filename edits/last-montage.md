@@ -1,26 +1,26 @@
-# montage — 2026-10-20 01:03 UTC
+# montage — 2026-10-20 01:34 UTC
 
 
-## made (15, 109 on the site)
-- punk · [TikTok] Voices in My Head vs Nic Johnston TNT Techno Remix (soundcloud) · 139.8 bpm · 12.02s · 7 cuts/2 moshed · 11156 KB
-- digi · [FREE DL] Stay high - Habits (EL5 HARD TECHNO EDIT) (soundcloud) · 159.2 bpm · 10.55s · 10 cuts/3 moshed · 9870 KB
-- scene · Teksa - Natural Disaster  [ Mental Core ] (soundcloud) · 151.0 bpm · 11.13s · 14 cuts/1 moshed · 10414 KB
-- witch · A1-Fky-Aera_51 (soundcloud) · 159.2 bpm · 13.56s · 15 cuts/1 moshed · 12543 KB
-- goth · Harry Potter vs Abracadabra Hard Techno [TikTok] (soundcloud) · 154.5 bpm · 12.43s · 15 cuts/4 moshed · 11485 KB
-- alien · Hard Synths '92 (soundcloud) · 144.8 bpm · 14.92s · 12 cuts/0 moshed · 13626 KB
-- mound · ♫ Ketamane - Sanitatek ♫ -> ♪ Tribecore ♪ (soundcloud) · 173.8 bpm · 15.19s · 22 cuts/2 moshed · 13587 KB
-- digi · BASSJACKERS X DYEN  - BAGUETTE (soundcloud) · 158.0 bpm · 15.19s · 13 cuts/3 moshed · 13845 KB
-- free · R - 301 (Original Mix) (soundcloud) · 145.8 bpm · 13.17s · 11 cuts/1 moshed · 12210 KB
-- vapor · Bloodlust & Holy Priest - Hit The Floor (soundcloud) · 159.2 bpm · 15.07s · 13 cuts/3 moshed · 13832 KB
-- scene · Knife Party - Internet Friends (Holy Priest & elMefti - Hard Techno Edit) (soundcloud) · 150.0 bpm · 16.0s · 17 cuts/3 moshed · 14622 KB
-- mound · ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) (soundcloud) · 154.5 bpm · 10.87s · 12 cuts/1 moshed · 10118 KB
-- psych · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 12.06s · 15 cuts/2 moshed · 11195 KB
-- digital · Gut genug (Luca Version) [Hard Techno Bootleg] Kitschkrieg x Blumengarten (soundcloud) · 144.8 bpm · 14.92s · 14 cuts/1 moshed · 13328 KB
-- war · [Bass House] Ryan Nevis - The Rave *CLUTCH Records* (soundcloud) · 127.8 bpm · 15.03s · 11 cuts/4 moshed · 13810 KB
+## made (19, 128 on the site)
+- tech · PLAYBOI CARTI - EVIL J0RDAN (GESES Hard Techno Remix) *IHATEMODELS, BUNT, RESTRICTED, KAYZO* (soundcloud) · 159.2 bpm · 16.58s · 17 cuts/5 moshed · 14718 KB
+- scene · Charlotte de Witte feat. Conduit - A Prayer for the Dancefloor (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 15 cuts/0 moshed · 17059 KB
+- alien · If You Want Me - Nico Moreno remix (soundcloud) · 150.0 bpm · 14.4s · 16 cuts/3 moshed · 13050 KB
+- aero · Empire Of The Sun - We Are The People (R3CKLES Hard Techno Edit) (soundcloud) · 159.2 bpm · 13.56s · 13 cuts/5 moshed · 12411 KB
+- black · Knurft - The Fate of Ophelia (Hard Techno Remix) (soundcloud) · 159.2 bpm · 16.58s · 15 cuts/3 moshed · 15055 KB
+- punk · Amelie Lens - falling into acid dreams (soundcloud) · 141.8 bpm · 16.93s · 13 cuts/2 moshed · 15362 KB
+- robot · Mischluft - New Funk (soundcloud) · 145.8 bpm · 16.47s · 19 cuts/1 moshed · 14949 KB
+- aero · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 10.3s · 10 cuts/0 moshed · 9093 KB
+- goth · KETTAMA & DJ HEARTSTRING - If U Want My Heart Ft. KLP (Steel City Dance Discs) (soundcloud) · 144.8 bpm · 16.58s · 19 cuts/3 moshed · 15107 KB
+- free · Cheffy Bb & Yungster Jack - Trym Leaders (soundcloud) · 145.8 bpm · 18.11s · 22 cuts/1 moshed · 16472 KB
+- free · Don't Say A Word - Kander (SEMTEX Schranz EDIT) (soundcloud) · 154.5 bpm · 15.53s · 14 cuts/1 moshed · 14041 KB
+- mound · Nico Moreno x Warface - 2 Be High (Holy Priest Remix) (soundcloud) · 159.2 bpm · 16.58s · 14 cuts/2 moshed · 15115 KB
+- black · RAVE ON (LIVE TECHNO BOOTLEG) (soundcloud) · 150.0 bpm · 16.0s · 14 cuts/3 moshed · 14453 KB
+- death · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 15 cuts/2 moshed · 15668 KB
+- mound · DIE ZUKUNFT - COMPUTERLIEBE (LIVE TECHNO BOOTLEG) (soundcloud) · 151.0 bpm · 15.89s · 18 cuts/4 moshed · 14479 KB
+- opium · Roncero - Club Bizarre (Hard Techno Edit) [FREE DL] (soundcloud) · 164.2 bpm · 14.61s · 18 cuts/2 moshed · 13463 KB
+- digi · Nina Chuba - Fata Morgana (Techno Remix) TIKTOK HYPERTECHNO VERSION (soundcloud) · 159.2 bpm · 16.58s · 20 cuts/4 moshed · 15094 KB
+- factory · Gut genug (Luca Version) [Hard Techno Bootleg] Kitschkrieg x Blumengarten (soundcloud) · 144.8 bpm · 14.92s · 16 cuts/1 moshed · 13581 KB
+- free · Aya Nakamura - Sexy Nana (Hard Techno Remix) [FREE DL] (soundcloud) · 159.2 bpm · 16.58s · 16 cuts/3 moshed · 15092 KB
 
 ## skipped
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] 1113181261: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
