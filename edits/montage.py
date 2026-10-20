@@ -888,6 +888,100 @@ def render2(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     if enc.returncode: raise RuntimeError("frame encoder failed")
     return nfr
 
+# ============================ v3: the compositor ============================
+_COMP = None
+def comp_ctx():
+    global _COMP
+    if _COMP is None:
+        import comp as CP; _COMP = CP.Comp(W, H)
+    return _COMP
+
+ANALOG = {0: 3, 1: 2, 2: 1.2, 3: 2, 4: .8}                              # none, VHS, composite, film, CRT
+def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener):
+    """every section is a compositor graph over real material: atlas photos, cut-outs, the meme, static, noise, a point cloud.
+    Graphs come from the recipes (generalised from what reads well) or are fully random; dull or near-black graphs are re-rolled."""
+    import comp as CP
+    Cx = comp_ctx(); env_t, env_v = env
+    avi = os.path.join(WORK, "clean.avi"); kf = ",".join(f"{c:.3f}" for c in sorted(set(keyframes) | {0.0}))
+    enc = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "libxvid", "-q:v", "3", "-g", "9999", "-bf", "0", "-force_key_frames", kf, avi], stdin=subprocess.PIPE)
+    series = MONT.get("series", {}); top = series.get("top", []); bottom = series.get("bottom", [])
+    R = CP.recipes(r); names = list(R); r.shuffle(names); deck = []
+    def pick_graph(drop):
+        nonlocal deck
+        if r.random() < (.35 if drop else .22): return CP.random_graph(r, r.choice([2, 3, 3, 4])), "random"
+        if not deck: deck = names[:]; r.shuffle(deck)
+        nm = deck.pop()
+        if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
+        return R[nm](), nm
+    imgs = {}
+    def photo(it):
+        if it["id"] not in imgs: imgs[it["id"]] = fetch_image(it)
+        return imgs[it["id"]]
+    meme_im = fetch_image(opener) if opener else None
+    pool = [p_ for p_ in photos if p_]; r.shuffle(pool)
+    cut_ims = []
+    for f in cuts_png[:10]:
+        try: cut_ims.append(C.load(f, 1200))
+        except Exception: pass
+    # plan per shot: graph, sources, analog, point-cloud shape
+    plan = []
+    for i, s in enumerate(shots):
+        tries = 0
+        while True:
+            g, nm = pick_graph(s.get("drop")); tries += 1
+            ps = [photo(pool[(i * 2 + k + tries) % len(pool)]) if pool else None for k in range(3)]
+            ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
+            cut = (meme_im if (meme_im is not None and r.random() < .15) else (r.choice(cut_ims) if cut_ims else ps[2]))
+            srcs = [ps[0], ps[1], cut, ps[2]]
+            if tries > 6 or nm != "random": break
+            Cx.compile(g); [Cx.set_source(k, im) for k, im in enumerate(srcs)]
+            test = np.asarray(Cx.frame(1.0, .5, .5, .3).resize((108, 192)), np.float32) / 255
+            if .07 < test.mean() < .93 and test.std() > .07: break      # not black, not blown out, not flat
+        if r.random() < .75:                                            # the whole picture breathes: slow turn + a push on the kick
+            g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
+        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < .55, "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2),
+                     "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random()})
+    si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None
+    for k in range(nfr):
+        t = k / FPS
+        ni = si
+        while ni + 1 < len(shots) and t >= shots[ni + 1]["t0"] - 1e-6: ni += 1
+        if ni != si:                                                     # new section: new graph, new sources
+            si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
+            for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
+            k0 = k
+        s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
+        lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
+        if P.get("swap") and pool and abs(t - lastp) < .5 / FPS and t - s["t0"] > .1 and r.random() < .5:   # on a kick, a new photo drops into the graph
+            nxt = photo(r.choice(pool))
+            if nxt is not None: Cx.set_source(r.choice([0, 0, 1, 3]), nxt)
+        energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
+        op = s.get("opener")
+        if op and t < op["end"] and meme_im is not None:
+            img = cover(meme_im, zoom=1.04 + .07 * beat + .05 * t / op["end"]); Cx.set_source(3, meme_im)
+        else:
+            n_in = k - k0; mfr = max(3, min(10, int(.45 * FPS)))
+            mix = (n_in + 1) / (mfr + 1) if (s.get("tr") in ("melt", "zoom") and n_in < mfr) else 1.0
+            img = Cx.frame(t, beat, energy, P["seed"], mix, pc=(u, P["shape"], P["pa"], 1 - P["pa"]))
+            if s.get("tr") == "static" and n_in < 4 and last is not None:   # static ring wipe between sections
+                g_ = _grids(); a_ = (n_in + 1) / 4; inner = (g_["r"] < a_ * 1.1)[..., None]; ring = ((g_["r"] >= a_ * 1.1) & (g_["r"] < a_ * 1.1 + .28))[..., None]
+                img = Image.fromarray(np.where(inner, np.asarray(img), np.where(ring, static_tex(NR3, P["seed"] + n_in * .2), np.asarray(last))).astype(np.uint8))
+            mf = s.get("meme_flash")
+            if mf and meme_im is not None and 0 <= t - mf["t"] < 2.5 / FPS: img = cover(meme_im, zoom=1.15)
+        last = img
+        strobe = .6 if any(abs(b - t) < 1.2 / FPS for b in barset) and s.get("drop") else 0.0
+        if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)
+        img = Cx.analog(img, P["an"], t, beat, P["ak"])
+        if top: img = overlay_text(img, top, H * .085, 66)
+        if bottom: img = overlay_text(img, bottom, H * .725, 60)
+        if song: img = overlay_text(img, [song], H * .805, 40)
+        enc.stdin.write(img.tobytes())
+    enc.stdin.close(); enc.wait()
+    if enc.returncode: raise RuntimeError("frame encoder failed")
+    return nfr
+NR3 = np.random.default_rng(7)
+
 def encode_moshed(frames_dir, nfr, cuts, mosh_cuts, out_mp4, audio_path, start, dur, fam):
     """xvid AVI with I-frames only at cuts → delete the I-frames at the moshed cuts → h264 + the track"""
     avi = os.path.join(WORK, "clean.avi")                                # written by render() straight from memory
@@ -959,7 +1053,7 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         cuts, strengths = cut_points(t, flux, peaks, start, dur, fam); beat_list = [float(t[p]) - start for p in peaks if start <= t[p] <= start + dur]; bars = []; bpm = 0
     pm = MONT["families"][fam]["mosh"]
     lines = MONT.get("abstract", {}).get("cards", [])                   # text is rare and abstract now
-    v2 = MONT.get("engine") == "v2" and g
+    v2 = MONT.get("engine") in ("v2", "v3") and g
     if v2:
         recent_walls = set(sum((it.get("walls", []) for it in mont["items"][:15]), []))
         pool = [w_ for w_ in walls if w_["id"] not in recent_walls] or walls
@@ -987,7 +1081,11 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         hooks = MONT.get("hooks", {}).get(style, []) + MONT.get("hooks", {}).get("_", []); hook = r.choice(hooks) if hooks else None
     hop_t = t[1] - t[0]; sel = (t >= start) & (t <= start + dur); ev = rms[sel] / (rms.max() + 1e-9); env = (t[sel] - start, np.clip(ev * 1.4, 0, 1))
     song = ("track · " + clean_title(track["title"])) if MONT.get("text", {}).get("song_name", True) and track.get("title") else None
-    if v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
+    if v2 and MONT.get("engine") == "v3":
+        photos = list(walls)
+        for s2 in r.sample([x for x in CFG if not x.startswith("_") and x not in ("meme",)], 3): photos += kept_images(man, s2)[:4]   # a few images from elsewhere
+        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener)
+    elif v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
