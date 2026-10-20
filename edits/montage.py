@@ -943,8 +943,17 @@ def spectrum(x, sr, start, dur, bands=28):
 # One art direction per edit. Each treatment says what the build-up and the drop are made of, where the sources come
 # from, and which of the extra layers (pixel shapes, collage, glyphs, analog, time displacement) it may use. Nothing else
 # appears. Variety comes from edit to edit, not from frame to frame.
+def lift(im):
+    """stretch a dark photo's levels so scan lines and point clouds read instead of sinking into fog"""
+    if im is None: return im
+    from PIL import ImageOps, ImageEnhance
+    a = im.split()[3] if im.mode == "RGBA" else None
+    g = ImageOps.autocontrast(im.convert("RGB"), cutoff=2); g = ImageEnhance.Brightness(g).enhance(1.15); g = ImageEnhance.Contrast(g).enhance(1.3)
+    if a is not None: g.putalpha(a)
+    return g
+
 TREATMENTS = {
-    "monolith":   {"build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
+    "monolith":   {"lift": True, "build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
     "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "force": (.25, .8), "paste": {"build": 0, "drop": 0}},
     "shrine":     {"build": ["hyper"], "drop": ["hyperref"], "srcs": "ref", "mono": "build", "inv": "drop", "paste": {"build": 1, "drop": 1}, "paste_center": True},
     "slime":      {"build": ["slime"], "drop": ["slime"], "srcs": "single", "mono": "never", "tm": {"drop": [4]}, "glow": True},
@@ -993,6 +1002,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
         cut = r.choice(cut_ims) if cut_ims else ps[2]
         if TR["srcs"] == "single": srcs = [hero or ps[0], ps[1], cut, hero or ps[2]]
+        if TR.get("lift"): srcs = [lift(im) for im in srcs]
         elif TR["srcs"] == "ref": srcs = [ref0 or ps[0], ps[1], ref0 or cut, ps[2]]
         else: srcs = [ps[0], ps[1], cut, ps[2]]
         lay = lambda key, default: (TR.get(key) or {}).get(ph, default) if isinstance(TR.get(key), dict) else default
