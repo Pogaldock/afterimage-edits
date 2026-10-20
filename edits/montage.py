@@ -43,7 +43,7 @@ OUT_W, OUT_H = 1080, 1920
 CAP_Y = .70                                                           # captions sit above TikTok's bottom UI band
 DUR_MIN, DUR_MAX = 12.0, 17.0
 KEEP_ITEMS = int(MONT.get("keep", 120)) # newest N unwatched stay on the site, plus every edit you kept or downloaded
-WATCHED_TTL = 48 * 3600                                             # played through, not kept, not downloaded → gone this long after
+WATCHED_TTL = 3600                                                  # seen, not kept, not downloaded → moved to the archive at the next batch after an hour
 
 def log(*a): print(time.strftime("%H:%M:%S"), *a, flush=True)
 def err(where, e): m = f"{where}: {type(e).__name__}: {str(e)[:200]}"; log("ERR", m); report["errors"].append(m)
