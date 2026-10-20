@@ -1,26 +1,26 @@
-# montage — 2026-10-20 12:23 UTC
+# montage — 2026-10-20 17:29 UTC
 
 
-## made (16, 137 on the site)
-- punk · Charlotte de Witte feat. Conduit - A Prayer for the Dancefloor (Original Mix) (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/3 moshed · 15483 KB
-- drain · KETTAMA - String Theory (Dub) (soundcloud) · 145.8 bpm · 13.17s · 14 cuts/3 moshed · 12112 KB
-- aero · Narkotek (Made in Tekos) - 08 (soundcloud) · 183.0 bpm · 14.43s · 19 cuts/4 moshed · 4544 KB
-- hyper · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 18.49s · 16 cuts/0 moshed · 16659 KB
-- drone · PACK GONX EDIT MASHUP  ( PSY - TECHNO - VINA ) (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/1 moshed · 15519 KB
-- robot · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 16 cuts/4 moshed · 15448 KB
-- robot · The Ketchup Song (Aserejé) Techno Remix - NOMAD Edit (soundcloud) · 183.0 bpm · 14.43s · 23 cuts/1 moshed · 7356 KB
-- riot · A1. Regal & Alien Rain - Acid Affair Pt1 (soundcloud) · 135.2 bpm · 19.52s · 18 cuts/5 moshed · 17452 KB
-- factory · Pursuit Of Happiness (INSIDIA Hard Techno Remix) | FREE DL (soundcloud) · 154.5 bpm · 17.09s · 16 cuts/3 moshed · 15254 KB
-- free · RAVE ON (LIVE TECHNO BOOTLEG) (soundcloud) · 150.0 bpm · 12.8s · 16 cuts/3 moshed · 11793 KB
-- sigil · ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) (soundcloud) · 154.5 bpm · 15.53s · 17 cuts/3 moshed · 6685 KB
-- death · WHOOPS [BAIRD SCHRANZ REMIX] (soundcloud) · 159.2 bpm · 15.07s · 24 cuts/2 moshed · 13697 KB
-- alien · Emmanuel Top - This Is Cocaine (Regal Remix) (soundcloud) · 134.2 bpm · 12.51s · 14 cuts/2 moshed · 11246 KB
-- y2k · ARMA X TRYM - In My Mind (soundcloud) · 146.8 bpm · 16.35s · 16 cuts/2 moshed · 14853 KB
-- scene · Prodigy - Omen (Sepromatiq Schranz Remix) [CJ EDIT] (soundcloud) · 151.0 bpm · 14.3s · 16 cuts/3 moshed · 13007 KB
-- digi · Rave 4 love (soundcloud) · 132.8 bpm · 14.46s · 13 cuts/3 moshed · 13202 KB
+## made (19, 147 on the site)
+- aero · JOHN SUMMIT FT. INEZ - CRYSTALLIZED (FABIOMAEN SCHRANZ REMIX) (soundcloud) · 154.5 bpm · 13.98s · 15 cuts/4 moshed · 12811 KB
+- psych · [FREE DL] All The Things She Said (Hard Techno Edit) - Roncero x Gewoonraves (soundcloud) · 169.5 bpm · 14.16s · 21 cuts/2 moshed · 13027 KB
+- psych · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 18.89s · 16 cuts/0 moshed · 16839 KB
+- aero · SAINT JHN x Imanbek - Roses (Hard Techno remix) [TikTok Version] KROMA, Amero, New Beat Order, Seeko (soundcloud) · 156.8 bpm · 15.31s · 18 cuts/6 moshed · 13784 KB
+- mound · Hannah Laing & Marlon Hoffstadt (with Caroline Roxy) - Stomp Your Feet (soundcloud) · 154.5 bpm · 9.32s · 9 cuts/0 moshed · 8718 KB
+- riot · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 15 cuts/2 moshed · 14955 KB
+- black · BIERTORNADO (LIVE TECHNO BOOTLEG) (soundcloud) · 150.0 bpm · 17.6s · 23 cuts/1 moshed · 15839 KB
+- opium · LMFAO - Party Rock Anthem (REG Hard Techno Remix) (soundcloud) · 160.2 bpm · 16.47s · 18 cuts/1 moshed · 8029 KB
+- punk · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 8.59s · 9 cuts/1 moshed · 5060 KB
+- scene · Temper City - Self Aware (N4C HARD TECHNO REMIX) (soundcloud) · 160.2 bpm · 16.47s · 19 cuts/4 moshed · 10315 KB
+- y2k · SHLØMO - I'M NOT DONE YET (soundcloud) · 153.2 bpm · 14.1s · 12 cuts/1 moshed · 5828 KB
+- digi · Ke$ha - Blow (ROYAL Hard Techno Remix) (soundcloud) · 159.2 bpm · 13.56s · 14 cuts/4 moshed · 12430 KB
+- free · Amelie Lens - our frequency (soundcloud) · 142.8 bpm · 16.81s · 14 cuts/2 moshed · 15317 KB
+- aero · The Rocketman & Hannah Laing - Rewind (soundcloud) · 147.8 bpm · 17.87s · 19 cuts/1 moshed · 7944 KB
+- witch · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 10.3s · 10 cuts/0 moshed · 9578 KB
+- opium · Black Out Days (Stay Away) – INSIDIA Hard Techno Remix [FREE DL] (soundcloud) · 158.0 bpm · 16.71s · 22 cuts/4 moshed · 15057 KB
+- vapor · Vyjdy Ivanochku UKRAINIAN HARD TECHNO (soundcloud) · 138.0 bpm · 17.39s · 15 cuts/3 moshed · 7035 KB
+- alien · ICH WEISS NICHT WEITER (MICHEL.KMK TECHNO BOOTLEG) (soundcloud) · 154.5 bpm · 9.32s · 6 cuts/1 moshed · 8700 KB
+- witch · Aya Nakamura - Sexy Nana (Hard Techno Remix) [FREE DL] (soundcloud) · 159.2 bpm · 16.58s · 18 cuts/2 moshed · 15037 KB
 
 ## skipped
-- free: no track (soundcloud:no candidates)
-- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates)
