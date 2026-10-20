@@ -1,16 +1,29 @@
-# montage — 2026-10-19 23:33 UTC
+# montage — 2026-10-20 21:27 UTC
 
-- `Gonzi` → top=['Gonzi & Creeds - FULL POWER (Extended Mix) | 190997 plays | 508/day | 375d → 10.27', 'GONZI, TARS - So Naughty! (Extended Mix) | 101304 plays | 223/day | 453d
-- `Gonzi techno` → top=['Sprinter x Donkers - Central Cee & Dave x Gonzi & Creed | 190412 plays | 159/day | 1194d → -1.00', 'Techno Set | Hard Peak Time Techno Mix | DJ Tech Wich | | 
-- `Pusha techno` → top=['Pusha Techno Man (extended) | 233 plays | 0/day | 300d → -1.00', 'pusha t x norbiś x techno | 66 plays | 0/day | 3851d → -1.00', 'Treemendus Radio Brother Sha
-- `Pusha` → top=['Runaway (feat. Pusha T) | 4164842 plays | 1079/day | 3856d → -1.00', 'Kanye West - Runaway (feat. Pusha T) | 9697390 plays | 8875/day | 1092d → -1.00', 'Mercy
-- `viral techno` → top=['ICH WEISS NICHT WEITER (MICHEL.KMK TECHNO BOOTLEG) | 34909 plays | 1227/day | 28d → 9.11', 'No Broke Boys {Viral Hard Techno Remix 🔥} | 60813 plays | 128/day 
-- `techno tiktok` → top=['Harry Potter vs Abracadabra Hard Techno [TikTok] | 349097 plays | 696/day | 501d → 10.12', '[TikTok] Voices in My Head vs Nic Johnston TNT Techno R | 76345 pl
-- `hard techno tiktok` → top=['SAINT JHN x Imanbek - Roses (Hard Techno remix) [TikTok | 349729 plays | 941/day | 371d → 10.33', 'Harry Potter vs Abracadabra Hard Techno [TikTok] | 349097 p
-- `hard techno edit` → top=['Empire Of The Sun - We Are The People (R3CKLES Hard Tec | 47108 plays | 991/day | 47d → 10.43', 'GREEN DAY - BOULEVARD OF BROKEN DREAMS (NAIJ  HARD TECH | 282
-- `hard techno remix` → top=['ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) | 701924 plays | 2009/day | 349d → 11.51', 'Black Out Days (Stay Away) – INSIDIA Hard Techno Remix  | 216187 play
-- `techno edit 2026` → top=['Mashooqa – ATROX EDIT | Techno Remix 2026 | DJ Atrox |  | 28226 plays | 234/day | 120d → 8.52', 'Mashooqa – Techno Edit by ATROX | DJ Atrox | Cocktail 2 | 150
-- `hard techno 2026` → top=['MISH @ DROPZONE 2026 (Full set) - Mainstage - Hard Danc | 2892 plays | 445/day | 6d → -1.00', 'BEAUZ - WE LIKE IT BAD | DJ SET 2026 - PSY POP / HARD T | 38687
-- `schranz 2026` → top=['KOBOSIL - EMOTIONAL SCHRANZ SET (live @ HIVE Festival 2 | 587029 plays | 5406/day | 108d → -1.00', 'CLOUDY @ UNREAL STAGE  MONEGROS 2026 (FULL SCHRANZ SET) | 
-- `hardgroove 2026` → top=['PUSHMANN | AQUASELLA 2026 (Special Hardgroove Set) | 7090 plays | 117/day | 60d → -1.00', 'hardgroove 2026 | 46 plays | 0/day | 157d → -1.00', 'HARDGROOVE 202
-- `acid techno 2026` → top=["light gal's Acid Techno Journey | Notsilly Festival 202 | 394 plays | 48/day | 8d → -1.00", 'Acid Techno Mix July 2026 | 1678 plays | 20/day | 80d → -1.00', '
+- `Hannah Laing` → top=['4am In A Rave feat. rhys from the sticks | 1940256 plays | 3309/day | 586d → 9.58', 'FWTDJ (All Night Long) | 6841229 plays | 7021/day | 974d → -1.00', 'Fuck 
+- `Ewan McVicar` → top=['Rollercoaster - Ewan McVicar and DART (Unreleased- As P | 151035 plays | 3664/day | 41d → 9.99', 'Ewan McVicar & DART - Rollercoaster (FULL Unreleased) | 6698
+- `Maddix` → top=['Maddix Live @ Tomorrowland 2026 [Mainstage] | 26107 plays | 309/day | 84d → -1.00', 'Tell Me Why (Maddix Remix) | 2271115 plays | 1626/day | 1396d → -1.00', '
+- `Marlon Hoffstadt` → top=['Disparate Youth (Marlon Hoffstadt Edit) | 1666966 plays | 5538/day | 301d → 10.80', 'KI/KI & Marlon Hoffstadt - Losing Control | 1114055 plays | 2539/day | 43
+- `KI/KI` → top=['KI/KI & Marlon Hoffstadt - Losing Control | 1114055 plays | 2539/day | 438d → 8.97', 'bye x circus (slowed + reverb) | 278267 plays | 3364/day | 82d → 8.87', 
+- `Bl3ss` → top=['R 2 ME | 529743 plays | 924/day | 573d → 9.31', 'Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (fea | 694882 plays | 1262/day | 550d → 9.08', 'skinny lov
+- `The Rocketman` → top=['Loca | 337097 plays | 631/day | 533d → 8.95', 'Una Hora Más | 311757 plays | 488/day | 638d → 8.75', 'The Rocketman | All Day Long B2B Joyhauser @ Boomerang 
+- `Eli Brown` → top=['Electrify | 32943 plays | 316/day | 103d → 7.96', 'Eli Brown LIVE @ EDC Las Vegas 15.05.2026 | 100559 plays | 661/day | 151d → -1.00', 'Eli Brown & Dimension 
+- `Mha Iri` → top=['Fury | 240264 plays | 691/day | 347d → 8.94', 'Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) | 86298 plays | 470/day | 183d → 8.45', 'ATK205 - T78, Mha Iri "The
+- `Kettama` → top=['KETTAMA - Comes and Goes (Extended Mix) | 1764162 plays | 11482/day | 153d → 11.32', 'KETTAMA - It Gets Better (Forever Mix) (Steel City Danc | 4091412 plays 
+- `Ben Hemsley` → top=['Gaskin x Ben Hemsley - If your girl only knew | 971369 plays | 2097/day | 463d → 10.01', 'Ben Hemsley & LD50 - SUNSHINE | 43493 plays | 3368/day | 12d → 9.66'
+- `DART` → top=['Rollercoaster - Ewan McVicar and DART (Unreleased- As P | 151036 plays | 3664/day | 41d → 9.99', 'Ewan McVicar & DART - Rollercoaster (FULL Unreleased) | 6698
+- `Kyle Starkey` → top=['The Way It Is (ft. Lisa Moorish) | 41833 plays | 2067/day | 20d → 9.32', 'Kyle Starkey - Tryting [Agrio Tracks] | 295615 plays | 812/day | 363d → 9.09', 'Kyle
+- `Malugi` → top=['Drop The Pressure (Malugi Edit) | 723649 plays | 1089/day | 664d → 9.49', 'Want My Love | 508569 plays | 779/day | 652d → 9.18', 'Into You (MALUGI Edit) | 395
+- `Sam Alfred` → top=['Make Up Your Mind | 40032 plays | 415/day | 96d → 8.19', 'Shine II | 1414895 plays | 1406/day | 1005d → -1.00', 'BBC Radio One Residency EP. 1 US House | 3967
+- `Fionn Curran` → top=['Fionn Curran - Make it Better | 249175 plays | 1487/day | 167d → 8.97', 'SKEPTA X FIONN CURRAN | 122922 plays | 277/day | 443d → 8.16', 'Fionn Curran - Dream 
+- `Datsko` → top=['DATSKO - Where Have You Been (Remix) | 773560 plays | 1119/day | 690d → 9.52', 'DATSKO - The Color Violet (Remix) [FREE DL] | 4949672 plays | 3579/day | 1382d
+- `Interplanetary Criminal` → top=['KETTAMA & Interplanetary Criminal - Yosemite (Steel Cit | 4223090 plays | 6242/day | 676d → 11.09', 'Slow Burner | 1275679 plays | 2509/day | 508d → 10.19', '
+- `Partiboi69` → top=['Partiboi69 x KETTAMA - Pumpin (Extended) | 164103 plays | 1420/day | 115d → 8.85', 'Live G House set | 876487 plays | 296/day | 2959d → -1.00', 'Partiboi69 Vs
+- `DJ Gigola` → top=['DJ Gigola - La Batteria (Extended Version) | 700480 plays | 796/day | 879d → -1.00', "DJ Gigola - BBC Radio 1's Essential Mix (2025) | 67849 plays | 111/day |
+- `Kia` → top=['Dù Có Cách Xa - NVT Remix - Nếu Mây Kia Mang Người Yêu  | 206853 plays | 1645/day | 125d → 9.50', 'Kia-호미들 | 584775 plays | 838/day | 697d → 9.26', 'QUÁ K
+- `CLOUDY` → top=['CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] | 89086 plays | 860/day | 103d → 8.87', 'MIRA PA YA | 41312 plays | 577/day | 71d → 8.43', 'Cloudy f2f Nikolina Allei
+- `Lilly Palmer` → top=['Lilly Palmer pres. Spannung Radio Show #078 | 3134 plays | 727/day | 4d → -1.00', 'Lilly Palmer pres. Spannung Radio Show #077 | 5792 plays | 513/day | 11d → 
+- `Gonzi` → top=['Gonzi & Creeds - FULL POWER (Extended Mix) | 192783 plays | 512/day | 376d → 8.68', 'GONZI - BASSKILLER | 561985 plays | 540/day | 1039d → -1.00', 'Gonzi, Hor
+- `Billx` → top=[]
+- `Trym` → top=[]
+- `Dimitri K` → top=[]
