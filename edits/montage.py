@@ -949,12 +949,12 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                             "-c:v", "libxvid", "-q:v", "3", "-g", "9999", "-bf", "0", "-force_key_frames", kf, avi], stdin=subprocess.PIPE)
     series = MONT.get("series", {}); top = series.get("top", []); bottom = series.get("bottom", [])
     R = CP.recipes(r); names = list(R); r.shuffle(names); deck = []
-    CALM = ["raw", "raw", "rawpair", "peek", "scan", "collide", "glyphs", "tiles", "diff", "warp"]
+    CALM = ["space", "space", "vertigo", "raw", "rawpair", "peek", "topo", "collide", "glyphs", "trails"]   # photos as 3D space, light treatments
     def pick_graph(drop, inten=1.0):
         nonlocal deck
         if inten < .62 and r.random() < .85: return R[r.choice(CALM)](), "calm"     # the build-up: real photos, light treatments
         if inten >= .99 and r.random() < (.18 if drop else .08): return CP.random_graph(r, 2), "random"   # rare, shallow, after the drop only
-        if not deck: deck = [n_ for n_ in names if n_ not in ("stencil", "slit")] + ["raw", "raw", "raw", "rawpair", "collide", "peek"]; r.shuffle(deck)   # readable first
+        if not deck: deck = [n_ for n_ in names if n_ not in ("stencil", "slit", "scan", "diff", "warp")] + ["rutt", "rutt2", "cards", "cards", "space", "cloud", "trails", "raw"]; r.shuffle(deck)   # TouchDesigner-style first
         nm = deck.pop()
         if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
         return R[nm](), nm
@@ -994,7 +994,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                      "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.3, .75) * (1.3 if s.get("build") else 1),
                      "hud": (r.sample(["stream", "readout", "spectrum"], 1) + (["glyphs"] if r.random() < .4 else [])) if inten < .62 else
                             (r.sample(["readout", "spectrum", "glyphs", "sigil"], 2) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"]), r.choice(["stream", "spectrum"])]),
-                     "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random()})
+                     "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random(),
+                     "tm": (r.choice([1, 2, 3, 4, 5]) if r.random() < (.35 if inten >= .99 else .15) else 0),      # time displacement for some sections
+                     "cf": tuple(r.sample([0, 1, 2, 3], 2))})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
@@ -1006,7 +1008,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1)
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
@@ -1050,6 +1052,10 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         enc.stdin.write(img.tobytes())
     enc.stdin.close(); enc.wait()
     if enc.returncode: raise RuntimeError("frame encoder failed")
+    try:
+        import depth as DP
+        if DP._failed and "depth: model failed to load, used the luminance fallback" not in report["errors"]: report["errors"].append("depth: model failed to load, used the luminance fallback")
+    except Exception: pass
     return nfr
 NR3 = np.random.default_rng(7)
 

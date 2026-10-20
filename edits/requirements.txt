@@ -5,3 +5,5 @@ numpy<2
 fonttools
 brotli
 moderngl
+onnxruntime
+huggingface_hub
