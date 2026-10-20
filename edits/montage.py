@@ -1197,7 +1197,15 @@ def publish(mont, flags):
     ok = set(flags.get("mok", [])); items = []
     for it in mont["items"]:
         it = dict(it); it["ok"] = 1 if it["id"] in ok else 0; items.append(it)
-    fresh = [it for it in items if it.get("made", 0) > built - 60 and os.path.exists(os.path.join(WORK, it["id"] + ".mp4"))]
+    fresh = []
+    for it in items:                                                    # everything made since the last full bundle, not just this batch
+        if it.get("made", 0) <= built - 60: continue
+        for ext in ("mp4", "jpg"):
+            fp = os.path.join(WORK, f"{it['id']}.{ext}")
+            if not os.path.exists(fp):
+                data = obj_get(f"atlas/mont/{it['id']}.{ext}")
+                if data: open(fp, "wb").write(data)
+        if os.path.exists(os.path.join(WORK, it["id"] + ".mp4")) and os.path.exists(os.path.join(WORK, it["id"] + ".jpg")): fresh.append(it)
     files = [("mont.json", json.dumps({"items": items}).encode())]
     for it in fresh:
         files.append((f"mont/{it['id']}.mp4", open(os.path.join(WORK, it["id"] + ".mp4"), "rb").read()))
