@@ -250,32 +250,37 @@ def beats(x, sr, hop=512):
     ph = phases[int(np.argmax(score))]; bt = (ph + np.arange(0, len(env) - 1, period)) / fps
     return bt, float(bpm), env, fps
 
+FORMS = [("classic", 16, (24, 32), .40), ("short", 8, (24, 32), .25), ("cold", 0, (32, 40), .15), ("long", 32, (24, 24), .10), ("quick", 4, (28, 36), .10)]
 def pick_drop(bt, kenv, kfps, t, rms, total, dur, r):
-    """find a drop: the beat where the kick and loudness come back hard after a quieter stretch. The edit starts exactly
-    8 bars (32 beats) or 4 bars (16 beats) before it, and ends 2 to 4 bars into it, because people stay for the drop."""
+    """find the track's real drop (the biggest, most sustained return of kick + loudness after a quieter stretch) and frame
+    the edit around it with one of several forms. The drop always gets more time than the build-up: that's the payoff.
+    returns (start, drop_rel, length, form, drop_strength) or None"""
     bt = np.asarray(bt, np.float64)
-    if len(bt) < 48: return None
+    if len(bt) < 64: return None
     kt = np.arange(len(kenv)) / kfps
     def avg(xs, ys, a, b):
         m = (xs >= a) & (xs < b); return float(ys[m].mean()) if m.any() else 0.0
     Eb = np.array([.6 * avg(kt, kenv, bt[k], bt[k + 1]) + .4 * avg(t, rms, bt[k], bt[k + 1]) for k in range(len(bt) - 1)]); Eb /= Eb.max() + 1e-9
     cands = []
-    for k in range(16, len(Eb) - 8):                                    # beat k: the 16 beats before vs the 8 after
-        pre, post = float(Eb[k - 16:k].mean()), float(Eb[k:k + 8].mean())
-        if post > .45 and post - pre > .15 and Eb[k] > Eb[k - 1] + .05: cands.append((post - pre, k))
+    for k in range(16, len(Eb) - 16):                                   # the 16 beats before vs the 16 after: a drop has to hold
+        pre, post = float(Eb[k - 16:k].mean()), float(Eb[k:k + 16].mean()); hold = float(np.percentile(Eb[k:k + 16], 25))
+        if post > .5 and hold > .35 and post - pre > .15 and Eb[k] > Eb[k - 1] + .05: cands.append(((post - pre) * (.6 + .4 * post) * (.7 + .3 * hold), k))
     if not cands: return None
     cands.sort(reverse=True); best = []
-    for sc, k in cands:                                                 # distinct drops only (not neighbouring beats of the same one)
-        if all(abs(k - k2) > 8 for _, k2 in best): best.append((sc, k))
-        if len(best) == 3: break
-    best = [b_ for b_ in best if b_[0] >= best[0][0] * .8]              # only drops nearly as big as the biggest
-    _, k = r.choice(best); beat = float(np.median(np.diff(bt)))
-    for pre_beats in ([32, 16] if 32 * beat <= 15.5 else [16]):         # 32 beats of build-up when the tempo allows it
-        post_beats = r.choice([8, 12, 16]) if pre_beats == 16 else r.choice([12, 16])
+    for sc, k in cands:                                                 # distinct drops only
+        if all(abs(k - k2) > 16 for _, k2 in best): best.append((sc, k))
+        if len(best) == 2: break
+    sc, k = best[1] if len(best) > 1 and best[1][0] >= best[0][0] * .9 and r.random() < .3 else best[0]   # nearly always the main drop
+    beat = float(np.median(np.diff(bt)))
+    forms = list(FORMS); r.shuffle(forms); forms.sort(key=lambda f: -f[3] * r.random())
+    for name, pre_beats, post_rng, _ in forms:
+        post_beats = r.choice(list(range(post_rng[0], post_rng[1] + 1, 4)))
+        while post_beats > 16 and (pre_beats + post_beats) * beat > 24.5: post_beats -= 4      # keep it under ~24 s
+        if post_beats < pre_beats or (pre_beats + post_beats) * beat > 24.5: continue
         if k - pre_beats < 0 or k + post_beats >= len(bt): continue
         start, end = float(bt[k - pre_beats]), float(bt[k + post_beats])
         if end > total - .5: continue
-        return start, float(bt[k]) - start, end - start
+        return start, float(bt[k]) - start, end - start, name, round(sc, 3)
     return None
 
 def pick_section(t, flux, rms, peaks, total, dur, r):
@@ -295,10 +300,13 @@ def grid_cuts(bt, start, dur, fam, r, strength_at):
     b = [x - start for x in bt if start - 1e-3 <= x <= start + dur - .25]
     if len(b) < 8: return None
     per = float(np.median(np.diff(b))); cuts = [0.0]; i = 0; hold = {"crt": [2, 2, 4], "dark": [2, 4, 4], "rave": [1, 2, 2, 2, 4]}.get(fam, [2])
+    pace = r.choice([None, None, [1, 1, 2], [2, 2, 4], [4, 4, 8], [4, 8, 8], [1, 2, 4, 8]])   # each edit its own pacing: frantic, steady, or long holds
+    if pace: hold = pace
+    rush = r.choice([8, 8, 4, 0, 16])                                   # how many opening beats cut on every beat
     while i < len(b) - 1:
         bar_pos = i % 4
-        step = 1 if i < 8 else r.choice(hold)
-        if step > 1 and bar_pos + step > 4: step = 4 - bar_pos            # land on the bar line
+        step = 1 if i < rush else r.choice(hold)
+        if step > 1 and bar_pos + step > 4 and not (bar_pos == 0 and step % 4 == 0): step = 4 - bar_pos   # land on the bar line
         if i >= 8 and bar_pos == 3 and r.random() < .25 and fam == "rave": cuts.append(b[i] + per / 2)   # stutter into the bar
         i += max(1, step)
         if i < len(b): cuts.append(b[i])
@@ -1066,7 +1074,7 @@ TREATMENTS = {
     "attractor":  {"build": ["attractor"], "drop": ["attractor2"], "srcs": "single", "mono": "never", "glow": True, "inv": "drop"},
 }
 
-def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=(), spec=None, bpm=0.0, title="", treat=None):
+def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=(), spec=None, bpm=0.0, title="", treat=None, treat_drop=None):
     """every section is a compositor graph over real material: atlas photos, cut-outs, the meme, static, noise, a point cloud.
     Graphs come from the recipes (generalised from what reads well) or are fully random; dull or near-black graphs are re-rolled."""
     import comp as CP
@@ -1097,7 +1105,8 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         try: cut_ims.append(C.load(f, 1200))
         except Exception: pass
     # plan per shot, driven by the edit's one treatment
-    TR = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
+    TR0 = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
+    TRd = TREATMENTS.get(treat_drop) or TR0                             # some edits switch art direction at the drop
     good = sorted([im for im in cut_ims if iconic(im) > 0], key=iconic, reverse=True)     # chunky, compact silhouettes; no thin banners or text strips
     emblems = [e_ for e_ in (emblem_of(im) for im in (good[:2] + ref_ims[:2] + ([meme_im] if meme_im is not None else []))[:2]) if e_ is not None]
     clip = None
@@ -1108,7 +1117,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     ref0 = ref_ims[0] if ref_ims else (meme_im or hero)
     plan = []
     for i, s in enumerate(shots):
-        post = s.get("post", s.get("inten", 1.0) >= .99); ph = "drop" if post else "build"
+        post = s.get("post", s.get("inten", 1.0) >= .99); ph = "drop" if post else "build"; TR = TRd if post else TR0
         nm = r.choice(TR[ph])
         if TR.get("journey"): nm = journey_stage(shots, i, r)
         g = R[nm]() if nm in R else ("contrast", .25, ("scale", 1.2, .03, ("tex", 0, 0)))
@@ -1128,7 +1137,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                      "an": r.choice(lay("analog", [0])), "ak": .5, "hud": lay("hud", []), "shape": 1 if nm == "cloudsph" else 0, "pa": 0, "seed": r.random(),
                      "tm": r.choice(lay("tm", [0])), "cf": tuple(r.sample([0, 1, 2, 3], 2)), "paste": lay("paste", 0), "bold": lay("bold", None),
                      "force": (TR.get("force") or (.6, 1.0))[1 if post else 0], "sd": SPLAT_DIS.get(nm, (0, 0)), "smove": r.randrange(3), "sslot": 2 if nm == "j_shatter" else 0, "glow": TR.get("glow"), "dither": TR.get("dither"), "zine": TR.get("zine"), "center": TR.get("paste_center")})
-    report.setdefault("treatments", []).append(treat or "?")
+    report.setdefault("treatments", []).append((treat or "?") + (f">{treat_drop}" if treat_drop else ""))
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
@@ -1281,16 +1290,20 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     if len(figs) < 3: report["skipped"].append(f"{style}: too few elements"); return None
     walls = kept_images(man, style); r.shuffle(walls); walls = walls[:14]
     if os.environ.get("MONTAGE_AUDIO"): track, tries = {"ok": True, "title": "local test", "dur": 0, "id": "local", "url": "", "path": os.environ["MONTAGE_AUDIO"], "src": "local"}, []
-    else: track, tries = find_track(style, r, used_tracks)
-    if not track: report["skipped"].append(f"{style}: no track ({'; '.join(f'{a}:{c}' for a, b, c in tries[:4])})"); return None
-    log(f"{style}: track {track['src']} {track['title']!r} {track['dur']:.0f}s")
-    x, sr = pcm(track["path"]); t, flux, rms, peaks = onsets(x, sr); total = len(x) / sr
+    else: track, tries = None, []
+    for attempt in range(3):                                            # a track without a real drop is skipped for one that has one
+        if not os.environ.get("MONTAGE_AUDIO"): track, tries = find_track(style, r, used_tracks)
+        if not track: report["skipped"].append(f"{style}: no track ({'; '.join(f'{a}:{c}' for a, b, c in tries[:4])})"); return None
+        log(f"{style}: track {track['src']} {track['title']!r} {track['dur']:.0f}s")
+        x, sr = pcm(track["path"]); t, flux, rms, peaks = onsets(x, sr); total = len(x) / sr
+        bt, bpm, kenv, kfps = beats(x, sr)
+        dp = pick_drop(bt, kenv, kfps, t, rms, total, DUR_MAX, r) if len(bt) else None
+        if dp or attempt == 2 or os.environ.get("MONTAGE_AUDIO"): break
+        log(f"{style}: no real drop in {track['title']!r}, next track"); used_tracks = set(used_tracks) | {track["id"]}
     dur = r.uniform(DUR_MIN, min(DUR_MAX, max(DUR_MIN, total - 2))); start = pick_section(t, flux, rms, peaks, total, dur, r)
-    bt, bpm, kenv, kfps = beats(x, sr)
     if len(bt): start = float(bt[int(np.argmin(np.abs(bt - start)))])      # section starts on a beat
-    drop_rel = None
-    dp = pick_drop(bt, kenv, kfps, t, rms, total, dur, r) if len(bt) else None
-    if dp: start, drop_rel, dur = dp; log(f"{style}: build-up from {start:.1f}s, drop at +{drop_rel:.1f}s, {dur:.1f}s long")
+    drop_rel = None; form = "nodrop"
+    if dp: start, drop_rel, dur, form, dstr = dp; log(f"{style}: {form}: build-up from {start:.1f}s, drop at +{drop_rel:.1f}s (strength {dstr}), {dur:.1f}s long")
     strength_at = lambda tt: float(np.interp(tt, np.arange(len(kenv)) / kfps, kenv / (kenv.max() + 1e-9)))
     g = grid_cuts(bt, start, dur, fam, r, strength_at)
     if g:
@@ -1346,15 +1359,19 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         for s2 in r.sample([x for x in CFG if not x.startswith("_") and x not in ("meme",)], 3): photos += kept_images(man, s2)[:4]   # a few images from elsewhere
         refs = r.sample(kept_images(man, "meme"), min(3, len(kept_images(man, "meme")))) + r.sample(kept_images(man, "pop"), min(3, len(kept_images(man, "pop"))))
         spec = spectrum(x, sr, start, dur)
-        treat = os.environ.get("TREAT") or pick_treatment(r, mont, flags)
-        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs, spec, bpm, clean_title(track["title"]), treat)
+        treat = os.environ.get("TREAT") or pick_treatment(r, mont, flags); treat_drop = None
+        if not os.environ.get("TREAT") and r.random() < .4:
+            for _ in range(4):
+                td = pick_treatment(r, mont, flags)
+                if td != treat: treat_drop = td; break
+        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs, spec, bpm, clean_title(track["title"]), treat, treat_drop)
     elif v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
     poster = os.path.join(WORK, mid + ".jpg"); subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(dur - .2, cuts[1] if len(cuts) > 1 else 0.5) + 0.08:.3f}", "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
     item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"], "uploader": track.get("uploader", "")}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
-            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "opener": (shots[0].get("opener") or {}).get("img", {}).get("id") if v2 and shots[0].get("opener") else None, "treat": locals().get("treat"), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
+            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "opener": (shots[0].get("opener") or {}).get("img", {}).get("id") if v2 and shots[0].get("opener") else None, "treat": locals().get("treat"), "treat_drop": locals().get("treat_drop"), "form": locals().get("form"), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
     if not os.environ.get("MONTAGE_LAB"): obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
     if not v2:
         for f in os.listdir(d): os.remove(os.path.join(d, f))
