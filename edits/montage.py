@@ -940,7 +940,21 @@ def spectrum(x, sr, start, dur, bands=28):
     for k in range(1, len(out)): out[k] = np.maximum(out[k], out[k - 1] * .75)   # bars fall slowly, like a real analyser
     return out
 
-def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=(), spec=None, bpm=0.0, title=""):
+# One art direction per edit. Each treatment says what the build-up and the drop are made of, where the sources come
+# from, and which of the extra layers (pixel shapes, collage, glyphs, analog, time displacement) it may use. Nothing else
+# appears. Variety comes from edit to edit, not from frame to frame.
+TREATMENTS = {
+    "monolith":   {"build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
+    "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "inv": "drop", "force": (.25, 1.2), "paste": {"build": 0, "drop": 0}},
+    "shrine":     {"build": ["hyper"], "drop": ["hyperref"], "srcs": "ref", "mono": "build", "inv": "drop", "paste": {"build": 1, "drop": 1}, "paste_center": True},
+    "depthflight":{"build": ["space", "vertigo"], "drop": ["cards"], "srcs": "pool", "swap": "bar", "mono": "build", "analog": {"build": [3], "drop": [3]}, "hud": {"drop": ["target"]}},
+    "specimen":   {"build": ["raw"], "drop": ["raw"], "srcs": "pool", "mono": "never", "dither": True, "bold": {"build": "sprite", "drop": "invader"}, "tm": {"drop": [2]}},
+    "zine":       {"build": ["dark"], "drop": ["dark"], "srcs": "pool", "mono": "never", "zine": True, "inv": "drop"},
+    "slime":      {"build": ["slime"], "drop": ["slime"], "srcs": "single", "mono": "never", "tm": {"drop": [4]}, "glow": True},
+    "attractor":  {"build": ["attractor"], "drop": ["attractor2"], "srcs": "single", "mono": "never", "glow": True, "inv": "drop"},
+}
+
+def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=(), spec=None, bpm=0.0, title="", treat=None):
     """every section is a compositor graph over real material: atlas photos, cut-outs, the meme, static, noise, a point cloud.
     Graphs come from the recipes (generalised from what reads well) or are fully random; dull or near-black graphs are re-rolled."""
     import comp as CP
@@ -970,37 +984,27 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     for f in cuts_png[:10]:
         try: cut_ims.append(C.load(f, 1200))
         except Exception: pass
-    # plan per shot: graph, sources, analog, point-cloud shape
+    # plan per shot, driven by the edit's one treatment
+    TR = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
+    hero = photo(pool[0]) if pool else None                               # "single": one strong photo carries the whole edit
+    ref0 = ref_ims[0] if ref_ims else (meme_im or hero)
     plan = []
     for i, s in enumerate(shots):
-        tries = 0
-        while True:
-            g, nm = pick_graph(s.get("drop"), s.get("inten", 1.0)); tries += 1
-            ps = [photo(pool[(i * 2 + k + tries) % len(pool)]) if pool else None for k in range(3)]
-            ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
-            cut = (meme_im if (meme_im is not None and r.random() < .15) else (r.choice(cut_ims) if cut_ims else ps[2]))
-            srcs = [ps[0], ps[1], cut, ps[2]]
-            if ref_ims and r.random() < .65:                            # a reference in most sections, juxtaposed with the scene's own photos
-                srcs[2] = r.choice(ref_ims)
-                if r.random() < .35: srcs[r.choice([1, 3])] = r.choice(ref_ims)
-            if tries > 6 or nm != "random": break
-            Cx.compile(g); [Cx.set_source(k, im) for k, im in enumerate(srcs)]
-            test = np.asarray(Cx.frame(1.0, .5, .5, .3).resize((108, 192)), np.float32) / 255
-            if .07 < test.mean() < .93 and test.std() > .07: break      # not black, not blown out, not flat
-        if r.random() < .75:                                            # the whole picture breathes: slow turn + a push on the kick
-            g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
-        inten = s.get("inten", 1.0)
-        colour = s.get("drop") or nm in ("fight", "fluid", "fluidmix", "slime", "attractor", "attractor2", "hyper", "hyperref") or r.random() < (.08 if inten < .9 else .3)   # simulations keep their colour
-        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": inten >= .99 and r.random() < .35, "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
-                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.3, .75) * (1.3 if s.get("build") else 1),
-                     "hud": ([r.choice(["stream", "glyphs", "target"])] if r.random() < .6 else []) if inten < .62 else
-                            (r.sample(["glyphs", "sigil", "stream", "target"], 1) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"])]),
-                     "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random(),
-                     "tm": (r.choice([1, 2, 3, 4, 5]) if r.random() < (.35 if inten >= .99 else .15) else 0),      # time displacement for some sections
-                     "cf": tuple(r.sample([0, 1, 2, 3], 2)),
-                     "paste": (1 if r.random() < .55 else 0) if inten < .62 else r.choices([0, 1, 2], [3, 4, 2])[0],   # a little collage: 0-2 recognisable things
-                     "bold": (r.choice(["sprite", "window", "pglyph", "dither"]) if r.random() < .4 else None) if inten < .62 else
-                             (r.choice(["sprite", "sprite", "invader", "pglyph", "dither", "band", "window"]) if (s.get("drop") or r.random() < .7) else None)})
+        post = s.get("post", s.get("inten", 1.0) >= .99); ph = "drop" if post else "build"
+        nm = r.choice(TR[ph]); g = R[nm]() if nm in R else ("contrast", .25, ("scale", 1.2, .03, ("tex", 0, 0)))
+        ps = [photo(pool[(i * 2 + k) % len(pool)]) if pool else None for k in range(3)]
+        ps = [p_ if p_ is not None else (meme_im or (cut_ims[0] if cut_ims else None)) for p_ in ps]
+        cut = r.choice(cut_ims) if cut_ims else ps[2]
+        if TR["srcs"] == "single": srcs = [hero or ps[0], ps[1], cut, hero or ps[2]]
+        elif TR["srcs"] == "ref": srcs = [ref0 or ps[0], ps[1], ref0 or cut, ps[2]]
+        else: srcs = [ps[0], ps[1], cut, ps[2]]
+        lay = lambda key, default: (TR.get(key) or {}).get(ph, default) if isinstance(TR.get(key), dict) else default
+        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": TR.get("swap") == "bar", "mono": TR["mono"] == "always" or (TR["mono"] == "build" and not post),
+                     "inv": TR.get("inv") == "drop" and post, "bal": .25 if post else -.2, "scheme": None,
+                     "an": r.choice(lay("analog", [0])), "ak": .5, "hud": lay("hud", []), "shape": 1 if nm == "cloudsph" else 0, "pa": 0, "seed": r.random(),
+                     "tm": r.choice(lay("tm", [0])), "cf": tuple(r.sample([0, 1, 2, 3], 2)), "paste": lay("paste", 0), "bold": lay("bold", None),
+                     "force": (TR.get("force") or (.6, 1.0))[1 if post else 0], "glow": TR.get("glow"), "dither": TR.get("dither"), "zine": TR.get("zine"), "center": TR.get("paste_center")})
+    report.setdefault("treatments", []).append(treat or "?")
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
@@ -1017,7 +1021,8 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
             Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"], cut_ims + ref_ims + ([meme_im] if meme_im is not None else [])); scraps = ref_ims + [p_ for p_ in (photo(x_) for x_ in r.sample(pool, min(2, len(pool)))) if p_ is not None]
-            PS.plan(r.sample(cut_ims, min(2, len(cut_ims))), r.sample(scraps, min(2, len(scraps))), P["paste"])
+            PS.plan(r.sample(cut_ims, min(2, len(cut_ims))), r.sample(scraps, min(2, len(scraps))), P["paste"], center=P.get("center"))
+            Cx.fluid_force = P.get("force", 1.0)
             Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
@@ -1042,7 +1047,15 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                 img = Image.fromarray(np.where(inner, np.asarray(img), np.where(ring, static_tex(NR3, P["seed"] + n_in * .2), np.asarray(last))).astype(np.uint8))
             mf = s.get("meme_flash")
             if mf and meme_im is not None and 0 <= t - mf["t"] < 2.5 / FPS: img = cover(meme_im, zoom=1.15)
-        if abs(t - lastp) < .5 / FPS: kicks += 1
+        if abs(t - lastp) < .5 / FPS:
+            kicks += 1
+            if P.get("zine"):                                            # zine: a new arrangement of real things on every kick (every other in the build-up)
+                if s.get("post") or kicks % 2 == 0:
+                    PS.plan(r.sample(cut_ims, min(2, len(cut_ims))), r.sample(ref_ims + [hero] if hero is not None else ref_ims, min(1, len(ref_ims) + (hero is not None))), 3 if s.get("post") else 2)
+                    Cx.set_source(0, photo(r.choice(pool)) if pool else hero)
+        if P.get("glow"):                                                # soft bloom: lines and points glow instead of sitting flat
+            from PIL import ImageFilter as _IF
+            img = ImageChops.screen(img, ImageEnhance.Brightness(img.resize((W // 4, H // 4), Image.BILINEAR).filter(_IF.GaussianBlur(6)).resize((W, H), Image.BILINEAR)).enhance(.85))
         if P["mono"]:                                                    # hard black and white; a single accent colour sometimes survives in the highlights
             a_ = np.asarray(img, np.float32); L_ = a_ @ np.array([.299, .587, .114], np.float32); g_ = np.clip((L_ - 118) * 2.3 + 128, 0, 255)
             if P["scheme"] is not None:
@@ -1054,6 +1067,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         strobe = .6 if any(abs(b - t) < 1.2 / FPS for b in barset) and s.get("drop") else 0.0
         if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)
         img = Cx.analog(img, P["an"], t, beat, P["ak"])
+        if P.get("dither"):                                              # specimen: the whole world is dithered pixels in the edit's colours
+            import pixel as PXM
+            img = PXM.up(PXM.quantize_to(img.resize((W // 6, H // 6), Image.BOX), [(0, 0, 0), BD.cols[0], (235, 235, 235)] + ([BD.cols[1]] if s.get("post") else [])), 6).resize((W, H), Image.NEAREST)
         img = BD.apply(img, t, beat, u)                                  # bold colour cutting through the black and white
         img = PS.apply(img, t, beat, u)                                  # and a couple of real things people recognise
         sp = spec[min(k, len(spec) - 1)] if spec is not None and len(spec) else None
@@ -1113,6 +1129,14 @@ def clean_title(t):
     t = re.split(r"\s[|•]\s|\s\|\s?|#", t)[0]
     t = re.sub(r"[\U0001F000-\U0001FFFF\u2600-\u27BF]", "", t); t = re.sub(r"\s{2,}", " ", t).strip(" -–")
     return t[:48] + ("…" if len(t) > 48 else "")
+
+def pick_treatment(r, mont, flags):
+    """weighted by your keeps and deletes on earlier edits of each treatment; new ones start equal"""
+    w = {k: 1.0 for k in TREATMENTS}; ok = set(flags.get("mok", [])) | set(flags.get("mdl", [])); dead = set(flags.get("mdead", []))
+    for it in mont.get("items", []) + mont.get("taste", []):
+        k = it.get("treat")
+        if k in w: w[k] += (.6 if it["id"] in ok or it.get("v", 0) > 0 else 0) - (.35 if it["id"] in dead or it.get("v", 0) < 0 else 0)
+    keys = list(w); return r.choices(keys, [max(.15, w[k]) for k in keys])[0]
 
 def make_one(style, els, man, flags, mont, used_tracks, seed):
     r = random.Random(seed); fam = fam_of(style)
@@ -1191,15 +1215,16 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         for s2 in r.sample([x for x in CFG if not x.startswith("_") and x not in ("meme",)], 3): photos += kept_images(man, s2)[:4]   # a few images from elsewhere
         refs = r.sample(kept_images(man, "meme"), min(3, len(kept_images(man, "meme")))) + r.sample(kept_images(man, "pop"), min(3, len(kept_images(man, "pop"))))
         spec = spectrum(x, sr, start, dur)
-        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs, spec, bpm, clean_title(track["title"]))
+        treat = os.environ.get("TREAT") or pick_treatment(r, mont, flags)
+        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs, spec, bpm, clean_title(track["title"]), treat)
     elif v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
     encode_moshed(d, nfr, cuts, mosh_cuts, mp4, track["path"], start, dur, fam)
     poster = os.path.join(WORK, mid + ".jpg"); subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(dur - .2, cuts[1] if len(cuts) > 1 else 0.5) + 0.08:.3f}", "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
     item = {"id": mid, "style": style, "fam": fam, "track": {"title": track["title"], "src": track["src"], "id": track["id"], "url": track["url"], "uploader": track.get("uploader", "")}, "start": round(start, 2), "dur": round(dur, 2), "cuts": len(cuts), "moshed": len(mosh_cuts),
-            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "opener": (shots[0].get("opener") or {}).get("img", {}).get("id") if v2 and shots[0].get("opener") else None, "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
-    obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
+            "line": next((s["line"] for s in shots if s.get("type") == "text"), None), "bpm": round(bpm, 1), "heroes": sorted({(h[0] + ":" + (h[1] if h[0] == "sym" else os.path.basename(h[1]))) for h in (heroes if v2 else [])}), "walls": sorted({s_["wall"]["id"] for s_ in shots if s_.get("wall")}) if v2 else [], "els": sorted({os.path.basename(s["fig"]) for s in shots if s.get("fig")} | {os.path.basename(e) for s in shots for e in s.get("extra", [])}), "opener": (shots[0].get("opener") or {}).get("img", {}).get("id") if v2 and shots[0].get("opener") else None, "treat": locals().get("treat"), "made": int(time.time()), "bytes": os.path.getsize(mp4), "mp4": f"/atlas/mont/{mid}.mp4", "poster": f"/atlas/mont/{mid}.jpg"}
+    if not os.environ.get("MONTAGE_LAB"): obj_put(f"atlas/mont/{mid}.mp4", open(mp4, "rb").read(), "video/mp4"); obj_put(f"atlas/mont/{mid}.jpg", open(poster, "rb").read(), "image/jpeg")
     if not v2:
         for f in os.listdir(d): os.remove(os.path.join(d, f))
     return item
@@ -1251,7 +1276,7 @@ def finish(mont, flags):
     led = mont.setdefault("taste", []); have = {t["id"] for t in led}
     for it in before:                                                   # remember the verdict before the edit itself is gone
         v = 1 if it["id"] in ok else (-1 if it["id"] in dead else 0)
-        if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "why": (flags.get("mwhy") or {}).get(it["id"]), "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "track": (it.get("track") or {}).get("id"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
+        if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "why": (flags.get("mwhy") or {}).get(it["id"]), "style": it.get("style"), "fam": it.get("fam"), "treat": it.get("treat"), "src": (it.get("track") or {}).get("src"), "track": (it.get("track") or {}).get("id"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
     mont["taste"] = led[-800:]
     gone = {it["id"] for it in before} - {it["id"] for it in keep}
     done = archive([it for it in before if it["id"] in gone and it["id"] not in dead], flags)   # seen ones go to the archive, small

@@ -26,12 +26,13 @@ class Paste:
     def __init__(self, w, h, rng):
         self.w, self.h, self.r = w, h, rng; self.items = []
 
-    def plan(self, cutouts, scraps, count):
+    def plan(self, cutouts, scraps, count, center=False):
         r = self.r; self.items = []; spots = r.sample(SPOTS, len(SPOTS))
+        if center: spots.append((.5, .44))                                 # the first item takes the centre (shrine)
         pool = [("cut", c) for c in cutouts if c is not None] + [("scrap", s) for s in scraps if s is not None]
         r.shuffle(pool)
         for kind, im in pool[:count]:
-            w = self.w * r.uniform(.28, .44)
+            w = self.w * (r.uniform(.5, .62) if center and not self.items else r.uniform(.28, .44))
             if kind == "cut":
                 im = im.convert("RGBA"); bb = im.split()[3].getbbox()
                 if bb: im = im.crop(bb)

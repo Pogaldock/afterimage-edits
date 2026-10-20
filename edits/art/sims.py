@@ -61,7 +61,7 @@ class Fluid:
         TX = (1 / self.w, 1 / self.h); DT = 1 / 24; ctx = self.ctx
         if beat > .9 or self.rng.random() < .08:                                # a kick throws a few force splats
             for _ in range(int(2 + 3 * beat)):
-                pt = (float(self.rng.uniform(.15, .85)), float(self.rng.uniform(.2, .8))); ang = self.rng.uniform(0, 6.283); f = 900 * (.4 + beat)
+                pt = (float(self.rng.uniform(.15, .85)), float(self.rng.uniform(.2, .8))); ang = self.rng.uniform(0, 6.283); f = 900 * (.4 + beat) * getattr(self, "force", 1.0)
                 p, vao = self.splat; self.vel[self.cv].use(0); _set(p, Q=0, PT=pt, AS=(self.w / self.h, 1.0), C=(math.cos(ang) * f, math.sin(ang) * f, 0.0), RAD=.0016); self.fvel[1 - self.cv].use(); vao.render(mode=5); self.cv = 1 - self.cv
         # vorticity confinement keeps the small swirls alive
         p, vao = self.curlp; self.vel[self.cv].use(0); _set(p, V=0, TX=TX); self.fcurl.use(); vao.render(mode=5)
@@ -90,14 +90,14 @@ class Physarum:
         self.move = _prog(ctx, quad, COVER + """uniform sampler2D A, TR, F; uniform vec2 RS, FS; uniform float T, B, SA, SD, RA, SPD, SEED;
 float h(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 float sense(vec2 p, float a, float off){ vec2 q = p + vec2(cos(a+off), sin(a+off))*SD/RS; q = fract(q);
-  return texture(TR, q).r + 5.5*pow(dot(texture(F, cover(q, FS, RS)).rgb, vec3(.3,.59,.11)), 1.5); }
+  return texture(TR, q).r + 2.0*pow(dot(texture(F, cover(q, FS, RS)).rgb, vec3(.3,.59,.11)), 2.); }
 void main(){ vec4 s = texture(A, vuv); vec2 p = s.xy; float a = s.z;
   float f = sense(p,a,0.), l = sense(p,a,SA), r = sense(p,a,-SA), rnd = h(vuv*91.+T);
   if (f > l && f > r) {} else if (f < l && f < r) a += (rnd-.5)*2.*RA; else if (l > r) a += RA; else a -= RA;
   p += vec2(cos(a), sin(a))*SPD*(1.+1.5*B)/RS; p = fract(p); o = vec4(p, a, 1.); }""")
         self.depo_vs = ctx.program(vertex_shader="""#version 330
 uniform sampler2D A; uniform int SIDE; void main(){ ivec2 ij = ivec2(gl_VertexID % SIDE, gl_VertexID / SIDE); vec2 p = texelFetch(A, ij, 0).xy; gl_Position = vec4(p*2.-1., 0., 1.); gl_PointSize = 1.; }""",
-            fragment_shader="#version 330\nout vec4 o; void main(){ o = vec4(.05); }")
+            fragment_shader="#version 330\nout vec4 o; void main(){ o = vec4(.035); }")
         self.depo_vao = ctx.vertex_array(self.depo_vs, [])
         self.diff = _prog(ctx, quad, "uniform sampler2D TR; uniform vec2 TX; uniform float DEC; void main(){ float s=0.; for(int j=-1;j<=1;j++) for(int i=-1;i<=1;i++) s+=texture(TR, vuv+vec2(i,j)*TX).r; o = vec4(s/9.*DEC); }")
         self.showp = _prog(ctx, quad, COVER + """uniform sampler2D TR, F; uniform vec2 FS, RS; uniform vec3 C1, C2; uniform float B;
@@ -112,15 +112,15 @@ void main(){ float t = texture(TR, vuv).r; float k = 1.-exp(-t*3.); vec3 ph = te
         a[..., :2] %= 1.0; self.ag[self.ca].write(a.tobytes())
         for f in self.ftr: f.use(); self.ctx.clear(0, 0, 0, 0)
 
-    def step(self, t, beat, food, fsize, c1, c2, n=2):
+    def step(self, t, beat, food, fsize, c1, c2, n=3):
         ctx = self.ctx
         for _ in range(n):
             p, vao = self.move; self.ag[self.ca].use(0); self.tr[self.ct].use(1); food.use(2)
-            _set(p, A=0, TR=1, F=2, RS=(float(self.w), float(self.h)), FS=tuple(map(float, fsize)), T=float(t), B=float(beat), SA=.4, SD=9.0, RA=.78, SPD=1.2)
+            _set(p, A=0, TR=1, F=2, RS=(float(self.w), float(self.h)), FS=tuple(map(float, fsize)), T=float(t), B=float(beat), SA=.5, SD=7.0, RA=.6, SPD=1.0)
             self.fag[1 - self.ca].use(); vao.render(mode=5); self.ca = 1 - self.ca
             self.ftr[self.ct].use(); ctx.enable(ctx.BLEND | ctx.PROGRAM_POINT_SIZE); ctx.blend_func = (ctx.ONE, ctx.ONE)
             self.ag[self.ca].use(0); self.depo_vs["A"].value = 0; self.depo_vs["SIDE"].value = self.side; self.depo_vao.render(mode=ctx.POINTS, vertices=self.n); ctx.disable(ctx.BLEND)
-            p, vao = self.diff; self.tr[self.ct].use(0); _set(p, TR=0, TX=(1 / self.w, 1 / self.h), DEC=.93); self.ftr[1 - self.ct].use(); vao.render(mode=5); self.ct = 1 - self.ct
+            p, vao = self.diff; self.tr[self.ct].use(0); _set(p, TR=0, TX=(1 / self.w, 1 / self.h), DEC=.95); self.ftr[1 - self.ct].use(); vao.render(mode=5); self.ct = 1 - self.ct
         p, vao = self.showp; self.tr[self.ct].use(0); food.use(1)
         _set(p, TR=0, F=1, FS=tuple(map(float, fsize)), RS=(float(self.w), float(self.h)), C1=tuple(c / 255 for c in c1), C2=tuple(c / 255 for c in c2), B=float(beat)); self.fshow.use(); vao.render(mode=5)
         return self.show

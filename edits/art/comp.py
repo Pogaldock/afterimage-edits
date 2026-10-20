@@ -243,6 +243,8 @@ def recipes(r):
         "vertigo": lambda: ("dzoom", r.choice([0, 1]), r.uniform(.25, .6)),
         "rutt": lambda: ("add", r.uniform(.15, .35), ("rutt",), ("contrast", .35, ("parallax", 0, .05))),
         "rutt2": lambda: ("rutt",),
+        "cloudsph": lambda: ("add", 1.0, ("pc",), ("contrast", .15, ("tex", 0, 0))),
+        "dark": lambda: ("contrast", .3, ("scale", 1.15, .03, ("tex", 0, 0))),
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
         "cards": lambda: ("add", 1.0, ("cards",), ("contrast", .3, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
         "trails": lambda: ("feedback", r.uniform(.6, .8), r.uniform(1.01, 1.03), r.uniform(-.01, .01), r.uniform(-.01, .01), ("add", 1.0, ("tint", (0, 0, 0), (.4, 1, .9), ("edges", 0)), ("contrast", .35, P(0)))),
@@ -306,7 +308,7 @@ void main(){
   col = mix(ca, cb, m) * (1.15 + .8*B);
 }"""
 PC_FS = """#version 330
-in vec3 col; out vec4 o; void main(){ vec2 c = gl_PointCoord-.5; if (dot(c,c) > .25) discard; o = vec4(col*.55, 1.); }"""
+in vec3 col; out vec4 o; void main(){ vec2 c = gl_PointCoord-.5; if (dot(c,c) > .25) discard; o = vec4(col*.28, 1.); }"""
 
 # ------------------------------------------------------------------ analog pass
 ANALOG_FS = """#version 330
@@ -496,7 +498,7 @@ class Comp:
         if "FLUID" in body:
             if self.fluid is None: self.fluid = SM.Fluid(self.ctx, self.quad); self.fluid.reset(self.src[0], self.size[0]); self._fluid_src = id(self.src[0])
             if self._fluid_src != id(self.src[0]): self.fluid.load(self.src[0], self.size[0], .6); self._fluid_src = id(self.src[0])
-            self._fluid_tex = self.fluid.step(t, beat, self.src[0], self.size[0], seed)
+            self.fluid.force = getattr(self, "fluid_force", 1.0); self._fluid_tex = self.fluid.step(t, beat, self.src[0], self.size[0], seed)
         if "SLIME" in body:
             if self.slime is None: self.slime = SM.Physarum(self.ctx, self.quad)
             self._slime_tex = self.slime.step(t, beat, self.src[0], self.size[0], *self.sim_cols)
