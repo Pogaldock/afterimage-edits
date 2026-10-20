@@ -1,24 +1,24 @@
-# montage — 2026-10-20 10:32 UTC
+# montage — 2026-10-20 10:53 UTC
 
 
-## made (20, 141 on the site)
-- robot · Ø [Phase] - Burden Of Proof [TOKEN42] (soundcloud) · 131.0 bpm · 20.15s · 19 cuts/4 moshed · 18133 KB
-- psych · PLAYBOI CARTI - EVIL J0RDAN (GESES Hard Techno Remix) *IHATEMODELS, BUNT, RESTRICTED, KAYZO* (soundcloud) · 159.2 bpm · 15.07s · 19 cuts/4 moshed · 13682 KB
-- factory · KETTAMA - String Theory (Dub) (soundcloud) · 145.8 bpm · 13.17s · 16 cuts/3 moshed · 11923 KB
-- digital · KETTAMA - Skyline Summer 98' (Part 2) (soundcloud) · 134.2 bpm · 12.51s · 11 cuts/3 moshed · 11547 KB
-- free · Knurft - The Fate of Ophelia (Hard Techno Remix) (soundcloud) · 159.2 bpm · 16.58s · 16 cuts/5 moshed · 15117 KB
-- punk · ATK205 - T78, Mha Iri "The Ultimate Acid Track" (Preview) (Autektone Records) (Out Now) (soundcloud) · 154.5 bpm · 17.09s · 20 cuts/3 moshed · 15456 KB
-- mound · BIERTORNADO (LIVE TECHNO BOOTLEG) (soundcloud) · 150.0 bpm · 16.0s · 14 cuts/2 moshed · 14380 KB
-- free · Tame Impala, JENNIE - Dracula (Trym Remix) (soundcloud) · 147.8 bpm · 16.24s · 19 cuts/4 moshed · 14853 KB
-- punk · La Batteria (soundcloud) · 150.0 bpm · 17.6s · 19 cuts/4 moshed · 15967 KB
-- hyper · Acid (soundcloud) · 150.0 bpm · 17.6s · 22 cuts/4 moshed · 15977 KB
-- free · 𝙀𝙥𝙞𝙡𝙚𝙥𝙩𝙞𝙘 𝙏𝙚𝙘𝙝𝙣𝙤 𝙏𝙞𝙠-𝙏𝙤𝙠 𝙍𝙚𝙢𝙞𝙭 (𝙨𝙪𝙥𝙚𝙧 𝙨𝙡𝙤𝙬𝙚𝙙+𝙧𝙚𝙫𝙚𝙧𝙗) (soundcloud) · 142.8 bpm · 15.13s · 14 cuts/4 moshed · 13818 KB
-- witch · mischluft &  t e s t p r e s s - BOUNCE N BREAK (Radio Edit) (soundcloud) · 150.0 bpm · 17.6s · 21 cuts/3 moshed · 15998 KB
-- alien · Ben Hemsley & LD50 - SUNSHINE (soundcloud) · 138.0 bpm · 17.39s · 15 cuts/2 moshed · 15873 KB
-- war · Amelie Lens - our frequency (soundcloud) · 142.8 bpm · 18.49s · 13 cuts/1 moshed · 16730 KB
-- robot · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 8.59s · 10 cuts/3 moshed · 8078 KB
-- goth · DIE ZUKUNFT - COMPUTERLIEBE (LIVE TECHNO BOOTLEG) (soundcloud) · 151.0 bpm · 15.89s · 17 cuts/4 moshed · 14434 KB
-- crt · Fury (soundcloud) · 150.0 bpm · 14.4s · 13 cuts/2 moshed · 12877 KB
-- psych · Nina Chuba - Fata Morgana (Techno Remix) TIKTOK HYPERTECHNO VERSION (soundcloud) · 159.2 bpm · 16.58s · 18 cuts/0 moshed · 15141 KB
-- opium · Gut genug (Luca Version) [Hard Techno Bootleg] Kitschkrieg x Blumengarten (soundcloud) · 144.8 bpm · 11.61s · 15 cuts/2 moshed · 10833 KB
-- drone · ICH WEISS NICHT WEITER (MICHEL.KMK TECHNO BOOTLEG) (soundcloud) · 154.5 bpm · 9.32s · 11 cuts/1 moshed · 7890 KB
+## made (20, 146 on the site)
+- hyper · DJ Gigola - La Batteria (Extended Version) (soundcloud) · 150.0 bpm · 16.0s · 18 cuts/1 moshed · 14362 KB
+- sigil · [FREE DL] All The Things She Said (Hard Techno Edit) - Roncero x Gewoonraves (soundcloud) · 169.5 bpm · 15.58s · 22 cuts/3 moshed · 14178 KB
+- free · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 16894 KB
+- robot · Siente (el Ritmo) (soundcloud) · 144.8 bpm · 18.24s · 22 cuts/6 moshed · 16544 KB
+- digi · Innerbloom x Vielleicht Vielleicht Hardtechno Bootleg by DJDEN!AL (soundcloud) · 150.0 bpm · 14.4s · 19 cuts/2 moshed · 13181 KB
+- robot · LAING - MORGENS IMMER MÜDE (LIVE TECHNO BOOTLEG) (soundcloud) · 150.0 bpm · 16.0s · 20 cuts/0 moshed · 14517 KB
+- aero · Harry Potter vs Abracadabra Hard Techno [TikTok] (soundcloud) · 154.5 bpm · 15.53s · 24 cuts/3 moshed · 14272 KB
+- analog · [TIKTOK] Rihanna - Where Have You Been - Techno Edit (Nic Johnston) (soundcloud) · 150.0 bpm · 17.6s · 18 cuts/3 moshed · 15871 KB
+- drain · Indira Paganotto - Blackbird SR-71 (soundcloud) · 145.8 bpm · 18.11s · 23 cuts/3 moshed · 16229 KB
+- death · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 19.13s · 16 cuts/4 moshed · 17318 KB
+- death · Cheffy Bb & Yungster Jack - Trym Leaders (soundcloud) · 145.8 bpm · 16.47s · 15 cuts/3 moshed · 14918 KB
+- scene · Me gustas tu (Funk Tribu Edit) (soundcloud) · 145.8 bpm · 16.47s · 19 cuts/3 moshed · 15010 KB
+- punk · DESIRE (soundcloud) · 158.0 bpm · 13.67s · 16 cuts/3 moshed · 12597 KB
+- witch · Hard Techno 8 (soundcloud) · 154.5 bpm · 15.53s · 18 cuts/1 moshed · 14232 KB
+- mound · ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) (soundcloud) · 154.5 bpm · 15.53s · 18 cuts/3 moshed · 14154 KB
+- alien · Leader Of The Pack (soundcloud) · 139.8 bpm · 10.3s · 9 cuts/4 moshed · 9597 KB
+- punk · Bisschen Liebe (Mischluft Edit) (soundcloud) · 154.5 bpm · 17.09s · 21 cuts/4 moshed · 15542 KB
+- black · DAS WAS DU BIST..  BKST HARD TECHNO (soundcloud) · 166.8 bpm · 14.39s · 21 cuts/3 moshed · 12987 KB
+- free · PREMIERE | Airod & Ctrl - Rave Trax [FREE DL] (soundcloud) · 151.0 bpm · 15.89s · 21 cuts/1 moshed · 14442 KB
+- free · ACIDUS - PLAY THAT BEAT [RCKLSS016] (soundcloud) · 159.2 bpm · 16.58s · 23 cuts/2 moshed · 15076 KB
