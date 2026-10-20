@@ -1,8 +1,6 @@
 # Nightly edits on free GitHub minutes: the batch is split across parallel runners (shards), then one merge job publishes to the atlas.
 name: edits
 on:
-  schedule:
-    - cron: "25 */3 * * *"   # a batch every 3 hours
   workflow_dispatch:
     inputs:
       cap:
