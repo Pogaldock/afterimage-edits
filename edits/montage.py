@@ -954,9 +954,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         nonlocal deck
         if inten < .62 and r.random() < .85: return R[r.choice(CALM)](), "calm"     # the build-up: real photos, light treatments
         if inten >= .99 and r.random() < (.18 if drop else .08): return CP.random_graph(r, 2), "random"   # rare, shallow, after the drop only
-        if not deck: deck = [n_ for n_ in names if n_ not in ("stencil", "slit", "scan", "diff", "warp")] + ["rutt", "rutt2", "cards", "cards", "space", "cloud", "trails", "raw"]; r.shuffle(deck)   # TouchDesigner-style first
+        if not deck: deck = [n_ for n_ in names if n_ not in ("stencil", "slit", "scan", "diff", "warp")] + ["rutt", "rutt2", "cards", "space", "cloud", "trails", "fluid", "fluid", "slime", "attractor", "attractor2", "hyper", "hyper", "hyperref"]; r.shuffle(deck)   # simulations and TouchDesigner-style first
         nm = deck.pop()
-        if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
+        if drop and r.random() < .6: nm = r.choice(["hyper", "fluid", "attractor", "cards", "rutt", "slime"])     # the drop gets a showpiece
         return R[nm](), nm
     imgs = {}
     def photo(it):
@@ -989,7 +989,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if r.random() < .75:                                            # the whole picture breathes: slow turn + a push on the kick
             g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
         inten = s.get("inten", 1.0)
-        colour = s.get("drop") or nm in ("fight",) or r.random() < (.08 if inten < .9 else .3)
+        colour = s.get("drop") or nm in ("fight", "fluid", "fluidmix", "slime", "attractor", "attractor2", "hyper", "hyperref") or r.random() < (.08 if inten < .9 else .3)   # simulations keep their colour
         plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": inten >= .99 and r.random() < .35, "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
                      "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.3, .75) * (1.3 if s.get("build") else 1),
                      "hud": (r.sample(["stream", "readout", "spectrum"], 1) + (["glyphs"] if r.random() < .4 else [])) if inten < .62 else
@@ -1012,7 +1012,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"])
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"]); Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in

@@ -22,7 +22,7 @@ from PIL import Image
 
 HEAD = """#version 330
 uniform vec2 R; uniform float T, B, E, SEED, MIX;
-uniform sampler2D S0, S1, S2, S3, PREV, PC, SIM, RE, CARDS, D0, D1, D3;
+uniform sampler2D S0, S1, S2, S3, PREV, PC, SIM, RE, CARDS, D0, D1, D3, FLUID, SLIME, ATTR;
 uniform vec2 A0, A1, A2, A3;        // source sizes (for cover-fit)
 in vec2 vuv; out vec4 o;
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
@@ -75,6 +75,20 @@ def emit(g, node, uv):
         sl, = a; dn = {0: "D0", 1: "D1", 3: "D3"}[sl]; dd = new(f"texture({dn}, cover({uv}, A{sl})).r", "float")
         return new(f"vec4(vec3(smoothstep(.0,.08,abs(fract({dd}*14.-T*.4)-.5)-.38)), 1.)")
     if op == "rutt":   return new(f"texture(RE, {uv})")
+    if op == "fluid":  return new(f"texture(FLUID, {uv})")
+    if op == "slime":  return new(f"texture(SLIME, {uv})")
+    if op == "attractor": return new(f"texture(ATTR, {uv})")
+    if op == "hyper":                     # Poincaré disk {p,q} tiling of a source, flowing under a Möbius transformation
+        P_, Q_, sl = a; v = g.var(); cnt = g.var()
+        L.append(f"vec2 {v}; float {cnt} = 0.; {{ vec2 z = ({uv}-.5)*vec2(R.x/R.y,1.)*2.05; float rr = dot(z,z);"
+                 f" vec2 m = .55*vec2(cos(T*.21+SEED*6.), sin(T*.17)); vec2 num = z - m; vec2 den = vec2(1.,0.) - vec2(m.x*z.x+m.y*z.y, m.x*z.y-m.y*z.x);"
+                 f" z = vec2(num.x*den.x+num.y*den.y, num.y*den.x-num.x*den.y)/dot(den,den); z = rot(T*.12)*z;"
+                 f" float pp = 3.14159265/{_f(P_)}, qq = 3.14159265/{_f(Q_)}; float cr = 1./sqrt(cos(qq)*cos(qq)/(sin(pp)*sin(pp))-1.); vec2 C = vec2(sqrt(1.+cr*cr), 0.); vec2 n = vec2(-sin(pp), cos(pp));"
+                 f" for(int i=0;i<40;i++){{ bool f = false; if (z.y < 0.) {{ z.y = -z.y; {cnt} += 1.; f = true; }} float dn = dot(z,n); if (dn > 0.) {{ z -= 2.*dn*n; {cnt} += 1.; f = true; }}"
+                 f" vec2 w = z - C; float ww = dot(w,w); if (ww < cr*cr) {{ z = C + cr*cr*w/ww; {cnt} += 1.; f = true; }} if (!f) break; }}"
+                 f" {v} = rr < 1. ? z*1.6 + .5 : vec2(-9.); }}")
+        c = new(f"{v}.x < -1. ? vec4(0.,0.,0.,1.) : tx(S{sl}, {v}, A{sl})")
+        return new(f"vec4({c}.rgb * (mod({cnt}, 2.) < .5 ? 1. : .55 + .45*B), 1.)")
     if op == "cards":  return new(f"texture(CARDS, {uv})")
     if op == "prev":   return new(f"texture(PREV, {uv})")
     if op == "pc":     return new(f"texture(PC, {uv})")
@@ -232,6 +246,14 @@ def recipes(r):
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
         "cards": lambda: ("add", 1.0, ("cards",), ("contrast", .3, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
         "trails": lambda: ("feedback", r.uniform(.6, .8), r.uniform(1.01, 1.03), r.uniform(-.01, .01), r.uniform(-.01, .01), ("add", 1.0, ("tint", (0, 0, 0), (.4, 1, .9), ("edges", 0)), ("contrast", .35, P(0)))),
+        # simulations from the literature, all fed by the photos
+        "fluid": lambda: ("contrast", 1.7, ("fluid",)),
+        "fluidmix": lambda: ("layer", ("lumakey", .55, .2, 0, ("fluid",)), ("contrast", .4, P(1))),
+        "slime": lambda: ("slime",),
+        "attractor": lambda: ("add", 1.0, ("attractor",), ("contrast", .22, P(r.choice([0, 1])))),
+        "attractor2": lambda: ("attractor",),
+        "hyper": lambda: ("hyper", r.choice([7, 5, 8, 6]), r.choice([3, 4]), r.choice([0, 2])),
+        "hyperref": lambda: ("colorama", r.uniform(.1, .4), ("hyper", r.choice([7, 8]), 3, 2)),
         "rawpair": lambda: ("mask", P(0), P(1), ("osc", r.uniform(2, 6), r.uniform(.5, 2), 0.)),
         # the photo eaten by the labyrinth: shown only where the chemistry has grown
         "erode": lambda: ("mask", ("modulate", r.uniform(.02, .08), P(r.choice([0, 3])), ("sim",)), ("invert", ("sim",)), ("sim",)),
@@ -421,6 +443,7 @@ class Comp:
         self.cprog = ctx.program(vertex_shader=CARD_VS, fragment_shader=CARD_FS); self.cbuf = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
         self.cvao = ctx.vertex_array(self.cprog, [(self.cbuf, "2f", "v")]); self.cfb = ctx.framebuffer(color_attachments=[ctx.texture((w, h), 4)], depth_attachment=ctx.depth_renderbuffer((w, h)))
         self.cards_form = (0, 1); self.cards_n = 64
+        self.fluid = self.slime = self.attr = None; self.sim_cols = ((0, 255, 170), (255, 40, 40)); self.attr_kind = (0, 0)
         # time displacement history (half resolution, 36 frames ≈ 1.5 s)
         self.tw, self.th, self.tn = w // 2, h // 2, 36; self.hist = ctx.texture_array((self.tw, self.th, self.tn), 3); self.head = 0; self.tmode = 0
         self.tprog = ctx.program(vertex_shader=VERT, fragment_shader=TIME_FS); self.tvao = ctx.simple_vertex_array(self.tprog, self.quad, "v")
@@ -469,6 +492,18 @@ class Comp:
         if pc is not None and self.uses_pc: self.cloud(t, beat, pc[0], seed, pc[1], pc[2], pc[3])
         if "RE" in body: self.rutt(t, beat, seed)
         if "CARDS" in body: self.cards(t, beat, pc[0] if pc else .5, seed)
+        import sims as SM
+        if "FLUID" in body:
+            if self.fluid is None: self.fluid = SM.Fluid(self.ctx, self.quad); self.fluid.reset(self.src[0], self.size[0]); self._fluid_src = id(self.src[0])
+            if self._fluid_src != id(self.src[0]): self.fluid.load(self.src[0], self.size[0], .6); self._fluid_src = id(self.src[0])
+            self._fluid_tex = self.fluid.step(t, beat, self.src[0], self.size[0], seed)
+        if "SLIME" in body:
+            if self.slime is None: self.slime = SM.Physarum(self.ctx, self.quad)
+            self._slime_tex = self.slime.step(t, beat, self.src[0], self.size[0], *self.sim_cols)
+        if "ATTR" in body:
+            if self.attr is None: self.attr = SM.Attractor(self.ctx, self.w, self.h)
+            k, i = self.attr_kind; k = k if k in (0, 1) else 0; params = (SM.CLIFFORD if k == 0 else SM.DEJONG)[i % 5]
+            self._attr_tex = self.attr.render(t, beat, k, params, *self.sim_cols)
         prev = self.fb[self.cur].color_attachments[0]; dst = self.fb[1 - self.cur]
         dst.use(); p = self.prog
         for i in range(4):
@@ -478,8 +513,8 @@ class Comp:
         prev.use(4)
         if "PREV" in p: p["PREV"].value = 4
         if "PC" in p: self.pcfb.color_attachments[0].use(7); p["PC"].value = 7
-        for nm, unit, tex in (("D0", 9, self.dep[0]), ("D1", 10, self.dep[1]), ("D3", 11, self.dep[3]), ("RE", 12, self.refb.color_attachments[0]), ("CARDS", 13, self.cfb.color_attachments[0])):
-            if nm in p: tex.use(unit); p[nm].value = unit
+        for nm, unit, tex in (("FLUID", 14, getattr(self, "_fluid_tex", None)), ("SLIME", 15, getattr(self, "_slime_tex", None)), ("ATTR", 16, getattr(self, "_attr_tex", None)), ("D0", 9, self.dep[0]), ("D1", 10, self.dep[1]), ("D3", 11, self.dep[3]), ("RE", 12, self.refb.color_attachments[0]), ("CARDS", 13, self.cfb.color_attachments[0])):
+            if nm in p and tex is not None: tex.use(unit); p[nm].value = unit
         if "SIM" in p and self.sim is not None:
             st = self.sim.step(t, beat, self.src[0], self.size[0], self.sim_seed, self.sim_bal, 10); self.sim_seed *= .6
             dst.use(); st.use(8); p["SIM"].value = 8
