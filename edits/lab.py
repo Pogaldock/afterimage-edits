@@ -6,17 +6,19 @@ Writes edits/_work/lab/<treatment>.mp4 (720p) and <treatment>.jpg (a contact she
 """
 import os, sys, json, random, subprocess, shutil, traceback
 os.environ["MONTAGE_LAB"] = "1"
+NAME = os.environ.get("TREAT", "monolith")                    # "emblem" or "emblem.free" (treatment, forced style)
+os.environ["TREAT"], _, FORCE_STYLE = NAME.partition(".")
 sys.argv = [sys.argv[0]]
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import montage as M
 
-treat = os.environ.get("TREAT", "monolith"); seed = int(os.environ.get("SEED", "4242"))
+treat = NAME; seed = int(os.environ.get("SEED", "4242"))
 out = os.path.join(M.HERE, "_work", "lab"); os.makedirs(out, exist_ok=True)
 els, man, flags, mont = M.sync_library()
 styles = [s for s in M.CFG if not s.startswith("_") and len(man["styles"].get(s, [])) >= 20 and len(M.C.pool(s)) >= 3]
 r = random.Random(seed); note = {"treat": treat}
 for attempt in range(4):
-    style = r.choice(styles)
+    style = FORCE_STYLE or r.choice(styles)
     try:
         it = M.make_one(style, els, man, flags, mont, set(), seed + attempt)
     except Exception:

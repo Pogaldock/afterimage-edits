@@ -5,7 +5,7 @@ on:
     inputs:
       treatments:
         description: "comma list"
-        default: "monolith,fluidicon,shrine,depthflight,specimen,zine,slime,attractor"
+        default: "emblem,shrine,fluidicon,slime,attractor,monolith"
       seed:
         default: "4242"
 permissions:
@@ -19,7 +19,7 @@ jobs:
       - id: s
         env:
           T: ${{ github.event.inputs.treatments }}
-        run: echo "list=$(python3 -c "import json,os,re;print(json.dumps([t for t in os.environ['T'].split(',') if re.fullmatch('[a-z]+',t)]))")" >> "$GITHUB_OUTPUT"
+        run: echo "list=$(python3 -c "import json,os,re;print(json.dumps([t for t in os.environ['T'].split(',') if re.fullmatch('[a-z]+([.][a-z]+)?',t)]))")" >> "$GITHUB_OUTPUT"
   render:
     needs: plan
     runs-on: ubuntu-latest

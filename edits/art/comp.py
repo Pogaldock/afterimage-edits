@@ -252,7 +252,7 @@ def recipes(r):
         "rutt2": lambda: ("rutt",),
         "cloudsph": lambda: ("add", 1.0, ("pc",), ("add", .6, ("dim", .1, ("tex", 0, 0)), ("rutt",))),
         # one bold recognisable thing, big and centred, lens fringe and bloom: the look of the edits that actually got likes
-        "emblem": lambda: ("chroma", r.uniform(.006, .012), ("layer", ("cut", 2, r.uniform(.78, .95), .07, 0), ("dim", .3, ("scale", 1.2, .02, P(1))))),
+        "emblem": lambda: ("chroma", r.uniform(.006, .012), ("layer", ("rotate", 0, r.choice([-1, 1]) * r.uniform(.04, .1), ("cut", 2, r.uniform(.8, .98), .16, r.uniform(-.12, .12))), ("dim", .3, ("scale", 1.2, .05, P(1))))),
         "emblemk": lambda: ("chroma", r.uniform(.014, .026), ("kaleid", r.choice([2, 4, 4, 6]), ("layer", ("cut", 2, r.uniform(.85, 1.05), .12, r.uniform(-.15, .15)), ("dim", .35, ("scale", 1.2, .04, P(1)))))),
         "emblemfb": lambda: ("chroma", r.uniform(.01, .02), ("feedback", r.uniform(.5, .62), r.uniform(1.02, 1.045), r.uniform(-.02, .02), r.uniform(-.015, .015), ("layer", ("cut", 2, r.uniform(.7, .9), .12, 0), ("dim", .1, P(1))))),
         "dark": lambda: ("dim", .22, ("scale", 1.15, .03, ("tex", 0, 0))),

@@ -956,6 +956,14 @@ def greyed(im):
     from PIL import ImageOps
     return ImageOps.autocontrast(im.convert("L"), cutoff=2).convert("RGB") if im is not None else None
 
+def iconic(im):
+    """how well a cut-out reads as one bold thing at thumbnail size: compact, solid, not a sliver; 0 = unusable"""
+    a = np.asarray(im.convert("RGBA").split()[3]) > 100
+    if a.mean() > .97 or not a.any(): return 0.0
+    ys, xs = np.nonzero(a); h, w = ys.ptp() + 1, xs.ptp() + 1; aspect = min(h, w) / max(h, w); fill = a.sum() / (h * w)
+    if aspect < .42 or fill < .3 or max(h, w) < 160: return 0.0
+    return aspect * fill * min(1.0, max(h, w) / 500)
+
 def emblem_of(im):
     """a cut-out made poster-bold: thick black outline round its silhouette, punchier colour; opaque images (memes) kept as they are"""
     if im is None: return None
@@ -969,7 +977,7 @@ def emblem_of(im):
     out.alpha_composite(rgb); return out
 
 TREATMENTS = {
-    "emblem":     {"build": ["emblem", "emblem", "emblemfb"], "drop": ["emblemk", "emblemfb", "emblem"], "srcs": "emblem", "mono": "never", "inv": "drop", "glow": True},
+    "emblem":     {"build": ["emblem", "emblemfb", "emblemfb"], "drop": ["emblemk", "emblemk", "emblemfb"], "srcs": "emblem", "mono": "never", "inv": "drop", "glow": True},
     "monolith":   {"lift": True, "build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
     "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "force": (.25, .8), "paste": {"build": 0, "drop": 0}},
     "shrine":     {"build": ["hyper"], "drop": ["hyperref"], "srcs": "ref", "mono": "build", "inv": "drop", "paste": {"build": 1, "drop": 1}, "paste_center": True},
@@ -1009,8 +1017,8 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         except Exception: pass
     # plan per shot, driven by the edit's one treatment
     TR = TREATMENTS[treat] if treat in TREATMENTS else TREATMENTS[r.choice(list(TREATMENTS))]
-    emblems = [emblem_of(im) for im in (cut_ims[:2] if cut_ims else []) + ([ref0_ for ref0_ in ref_ims[:1]] if len(cut_ims) < 2 else [])]
-    emblems = [e_ for e_ in emblems if e_ is not None]
+    good = sorted([im for im in cut_ims if iconic(im) > 0], key=iconic, reverse=True)     # chunky, compact silhouettes; no thin banners or text strips
+    emblems = [e_ for e_ in (emblem_of(im) for im in (good[:2] + ref_ims[:2] + ([meme_im] if meme_im is not None else []))[:2]) if e_ is not None]
     hero = photo(pool[0]) if pool else None                               # "single": one strong photo carries the whole edit
     ref0 = ref_ims[0] if ref_ims else (meme_im or hero)
     plan = []
