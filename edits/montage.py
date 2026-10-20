@@ -940,7 +940,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             if .07 < test.mean() < .93 and test.std() > .07: break      # not black, not blown out, not flat
         if r.random() < .75:                                            # the whole picture breathes: slow turn + a push on the kick
             g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
-        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < .55, "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2),
+        colour = s.get("drop") or r.random() < .22 or nm in ("fight",)
+        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < .55, "mono": not colour, "inv": r.random() < (.5 if s.get("drop") else .18),
+                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2),
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random()})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None
     for k in range(nfr):
@@ -950,7 +952,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            k0 = k
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and abs(t - lastp) < .5 / FPS and t - s["t0"] > .1 and r.random() < .5:   # on a kick, a new photo drops into the graph
@@ -969,6 +971,14 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                 img = Image.fromarray(np.where(inner, np.asarray(img), np.where(ring, static_tex(NR3, P["seed"] + n_in * .2), np.asarray(last))).astype(np.uint8))
             mf = s.get("meme_flash")
             if mf and meme_im is not None and 0 <= t - mf["t"] < 2.5 / FPS: img = cover(meme_im, zoom=1.15)
+        if abs(t - lastp) < .5 / FPS: kicks += 1
+        if P["mono"]:                                                    # hard black and white; a single accent colour sometimes survives in the highlights
+            a_ = np.asarray(img, np.float32); L_ = a_ @ np.array([.299, .587, .114], np.float32); g_ = np.clip((L_ - 118) * 2.3 + 128, 0, 255)
+            if P["scheme"] is not None:
+                sat = a_.max(2) - a_.min(2); m_ = np.clip((sat - 90) / 60, 0, 1)[..., None]
+                img = Image.fromarray((g_[..., None] * (1 - m_) + np.array(P["scheme"], np.float32) * (g_[..., None] / 255) * m_).astype(np.uint8))
+            else: img = Image.fromarray(g_.astype(np.uint8)).convert("RGB")
+        if P["inv"] and kicks % 2 == 1 and t - lastp < 2.5 / FPS: img = ImageOps.invert(img)   # negative on every other kick
         last = img
         strobe = .6 if any(abs(b - t) < 1.2 / FPS for b in barset) and s.get("drop") else 0.0
         if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)

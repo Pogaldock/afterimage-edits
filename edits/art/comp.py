@@ -22,7 +22,7 @@ from PIL import Image
 
 HEAD = """#version 330
 uniform vec2 R; uniform float T, B, E, SEED, MIX;
-uniform sampler2D S0, S1, S2, S3, PREV, PC;
+uniform sampler2D S0, S1, S2, S3, PREV, PC, SIM;
 uniform vec2 A0, A1, A2, A3;        // source sizes (for cover-fit)
 in vec2 vuv; out vec4 o;
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
@@ -64,6 +64,7 @@ def emit(g, node, uv):
         return new(f"(all(greaterThanEqual({q},vec2(0.)))&&all(lessThanEqual({q},vec2(1.)))) ? texture(S{s}, {q}) : vec4(0.)")
     if op == "prev":   return new(f"texture(PREV, {uv})")
     if op == "pc":     return new(f"texture(PC, {uv})")
+    if op == "sim":    return new(f"texture(SIM, {uv})")
     if op == "static":                    # ("static", px, colour)
         px, col = a; q = new(f"floor({uv}*R/{_f(px)}) + floor(T*24.)*vec2(17.3,9.1)", "vec2")
         if col: return new(f"vec4(hash({q}), hash({q}+3.1), hash({q}+7.7), 1.)")
@@ -199,6 +200,11 @@ def recipes(r):
         # HUD scan: edges of a photo on a grid, the photo dim behind
         "scan": lambda: ("add", 1.0, ("tint", (0, 0, 0), (.3, 1, .9), ("edges", 0)), ("add", .35, ("contrast", .5, P(0)), ("grid", r.choice([6, 9, 12]), .04))),
         # slit-scan: columns of the clip offset in time-ish, through the other photo's light
+        # the fight: black/white chemistry vs colour spirals, the photo dissolving into it
+        "fight": lambda: ("add", .9, ("modulate", .015, ("sim",), nz()), ("edges", r.choice([0, 1]))),
+        # the photo eaten by the labyrinth: shown only where the chemistry has grown
+        "erode": lambda: ("mask", ("modulate", r.uniform(.02, .08), P(r.choice([0, 3])), ("sim",)), ("invert", ("sim",)), ("sim",)),
+        # the photo pushed around by the systems like a fluid
         "slit": lambda: ("mask", ("stretch", 3, r.uniform(.3, 1.), P(3)), ("stretch", 3, r.uniform(.3, 1.), P(0)), ("lumakey", .5, .2, r.random() < .5, P(1))),
     }
     return R
@@ -309,6 +315,7 @@ class Comp:
         gx, gy = np.meshgrid(np.linspace(0, 1, n), np.linspace(0, 1, int(n * 16 / 9)))
         self.pcbuf = ctx.buffer(np.stack([gx.ravel(), gy.ravel()], 1).astype("f4").tobytes()); self.pcvao = ctx.vertex_array(self.pcprog, [(self.pcbuf, "2f", "g")])
         self.anprog = ctx.program(vertex_shader=VERT, fragment_shader=ANALOG_FS); self.anvao = ctx.simple_vertex_array(self.anprog, self.quad, "v")
+        self.sim = Sim(ctx, self.quad); self.sim_seed = 0.0; self.sim_bal = 0.0
 
     def set_source(self, i, im):
         """upload a PIL image into slot i (RGBA kept, so cut-outs carry their alpha)"""
@@ -324,6 +331,7 @@ class Comp:
         if code not in self._cache:
             p = self.ctx.program(vertex_shader=VERT, fragment_shader=code); self._cache[code] = (p, self.ctx.simple_vertex_array(p, self.quad, "v"))
         self.prog, self.vao = self._cache[code]; self.uses_pc = "PC" in code.split("void main")[1]
+        if "SIM" in code.split("void main")[1]: self.sim_seed = 1.0             # a new section throws its photo into the chemistry
         return code
 
     def _u(self, p, k, v):
@@ -350,6 +358,9 @@ class Comp:
         prev.use(4)
         if "PREV" in p: p["PREV"].value = 4
         if "PC" in p: self.pcfb.color_attachments[0].use(7); p["PC"].value = 7
+        if "SIM" in p and self.sim is not None:
+            st = self.sim.step(t, beat, self.src[0], self.size[0], self.sim_seed, self.sim_bal, 10); self.sim_seed *= .6
+            dst.use(); st.use(8); p["SIM"].value = 8
         for k, v in (("R", (float(self.w), float(self.h))), ("T", float(t)), ("B", float(beat)), ("E", float(energy)), ("SEED", float(seed % 1.0)), ("MIX", float(mix))): self._u(p, k, v)
         self.vao.render(mode=5); self.cur = 1 - self.cur
         raw = dst.read(components=3)
@@ -364,3 +375,80 @@ class Comp:
         p["MODE"].value = int(mode); self.anvao.render(mode=5)
         return Image.frombytes("RGB", (self.w, self.h), self.anfb.read(components=3)).transpose(Image.FLIP_TOP_BOTTOM)
 
+
+# ------------------------------------------------------------------ dynamical systems: a black/white reaction-diffusion
+# and a colour cyclic cellular automaton fighting over the frame. Photos are thrown into it (their edges seed the chemistry),
+# kicks inject rings, drops shift the balance of power. Rendered at half resolution, many steps per frame.
+SIM_STEP = """#version 330
+uniform sampler2D ST, SEEDT; uniform vec2 RS; uniform float F, KK, T, B, SEEDAMT, BAL, NS, TH; uniform vec2 SA;
+in vec2 vuv; out vec4 o;
+float hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f); return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
+vec2 cover(vec2 uv, vec2 sz){ float ra=(RS.x/RS.y)/(sz.x/sz.y); vec2 c=uv-.5; if(ra<1.) c.x*=ra; else c.y/=ra; return c+.5; }
+void main(){
+  vec2 px = 1./RS, uv = vuv; vec4 s = texture(ST, uv);
+  vec2 L = -s.xy;
+  L += .2*(texture(ST,uv+vec2(px.x,0.)).xy + texture(ST,uv-vec2(px.x,0.)).xy + texture(ST,uv+vec2(0.,px.y)).xy + texture(ST,uv-vec2(0.,px.y)).xy);
+  L += .05*(texture(ST,uv+px).xy + texture(ST,uv-px).xy + texture(ST,uv+vec2(px.x,-px.y)).xy + texture(ST,uv+vec2(-px.x,px.y)).xy);
+  float a = s.x, b = s.y, r = a*b*b;
+  float na = a + (1.0*L.x - r + F*(1.-a)), nb = b + (.5*L.y + r - (KK+F)*b);
+  // the photo's edges seed the chemistry
+  vec2 q = cover(uv, SA); float l0 = dot(texture(SEEDT, q).rgb, vec3(.3,.59,.11)), l1 = dot(texture(SEEDT, q+vec2(.002,0.)).rgb, vec3(.3,.59,.11));
+  nb = max(nb, SEEDAMT*smoothstep(.05,.15,abs(l0-l1)));
+  // a kick drops a ring of catalyst somewhere
+  vec2 cpos = vec2(hash(vec2(floor(T*2.),1.)), hash(vec2(floor(T*2.),2.)));
+  float d = length((uv-cpos)*vec2(RS.x/RS.y,1.)); nb = max(nb, B*.9*smoothstep(.012,0.,abs(d-.06-.1*(1.-B))));
+  // cyclic CA: each cell advances when enough neighbours are one state ahead → colour spirals
+  float st = floor(s.z*NS+.5), nx = mod(st+1., NS); float c = 0.;
+  for (int j=-1;j<=1;j++) for (int i=-1;i<=1;i++) { if (i==0&&j==0) continue; float n = floor(texture(ST, uv+vec2(i,j)*px).z*NS+.5); c += step(abs(n-nx), .5); }
+  if (c >= TH) st = nx;
+  // territory: slow noise front, pushed by the balance of power
+  float w = smoothstep(.45, .55, vn(uv*vec2(3.,5.) + vec2(T*.15, -T*.1)) + BAL);
+  o = vec4(clamp(na,0.,1.), clamp(nb,0.,1.), st/NS, mix(s.w, w, .08));
+}"""
+SIM_SHOW = """#version 330
+uniform sampler2D ST; uniform vec2 RS; uniform float T, B, NS, HUE; in vec2 vuv; out vec4 o;
+vec3 hsv(float h, float s, float v){ vec3 k=clamp(abs(fract(h+vec3(0.,2./3.,1./3.))*6.-3.)-1.,0.,1.); return v*mix(vec3(1.),k,s); }
+void main(){
+  vec4 s = texture(ST, vuv); vec2 px = 1./RS;
+  float rd = smoothstep(.18, .28, s.y);                                      // black/white labyrinth
+  float st = s.z; float e = abs(texture(ST, vuv+vec2(px.x,0.)).z - st) + abs(texture(ST, vuv+vec2(0.,px.y)).z - st);
+  vec3 col = hsv(st + HUE + T*.03, .9, 1.) * (1. - smoothstep(.0, .2, e)*.8);   // colour spirals with dark seams
+  float w = s.w; float edge = smoothstep(.06, 0., abs(w-.5));
+  vec3 c = mix(vec3(rd), col, smoothstep(.4, .6, w)) + edge*(.6+B)*vec3(1.);   // the front between them burns white
+  o = vec4(c, 1.);
+}"""
+
+class Sim:
+    def __init__(self, ctx, quad, w=540, h=960):
+        self.ctx, self.w, self.h = ctx, w, h
+        self.tex = [ctx.texture((w, h), 4, dtype="f4") for _ in range(2)]
+        for t in self.tex: t.repeat_x = t.repeat_y = True
+        self.fb = [ctx.framebuffer(color_attachments=[t]) for t in self.tex]; self.cur = 0
+        self.show_tex = ctx.texture((w, h), 4); self.show_fb = ctx.framebuffer(color_attachments=[self.show_tex])
+        self.step_p = ctx.program(vertex_shader=VERT, fragment_shader=SIM_STEP); self.step_v = ctx.simple_vertex_array(self.step_p, quad, "v")
+        self.show_p = ctx.program(vertex_shader=VERT, fragment_shader=SIM_SHOW); self.show_v = ctx.simple_vertex_array(self.show_p, quad, "v")
+        self.reset(0)
+    def reset(self, seed):
+        rng = np.random.default_rng(int(seed * 1e6) % 2**31); st = np.zeros((self.h, self.w, 4), "f4"); st[..., 0] = 1
+        for _ in range(40):
+            y, x = rng.integers(0, self.h - 12), rng.integers(0, self.w - 12); st[y:y + 10, x:x + 10, 1] = 1
+        self.ns, self.th = [(4., 3.), (5., 3.), (4., 3.)][int(seed * 31) % 3]
+        st[..., 2] = rng.integers(0, int(self.ns), (self.h, self.w)) / self.ns; st[..., 3] = .5
+        self.tex[self.cur].write(st.tobytes()); self.params = [(.037, .06), (.03, .062), (.025, .06), (.039, .058), (.022, .051)][int(seed * 97) % 5]
+        self.step(0., 0., None, (1, 1), 0., 0., 360, show=False)      # pre-grow: spirals and labyrinths already formed when it first appears
+    def step(self, t, beat, seed_tex, seed_size, seed_amt, bal, n=10, show=True):
+        p = self.step_p
+        for i in range(n):
+            src = self.tex[self.cur]; dst = self.fb[1 - self.cur]; dst.use(); src.use(0); p["ST"].value = 0
+            if seed_tex is not None and "SEEDT" in p: seed_tex.use(1); p["SEEDT"].value = 1
+            for k, v in (("RS", (float(self.w), float(self.h))), ("F", self.params[0]), ("KK", self.params[1]), ("T", float(t)), ("B", float(beat) if i == 0 else 0.),
+                         ("SEEDAMT", float(seed_amt) if i == 0 else 0.), ("BAL", float(bal)), ("NS", self.ns), ("TH", self.th), ("SA", tuple(map(float, seed_size)))):
+                if k in p: p[k].value = v
+            self.step_v.render(mode=5); self.cur = 1 - self.cur
+        if not show: return None
+        self.show_fb.use(); self.tex[self.cur].use(0); q = self.show_p; q["ST"].value = 0
+        for k, v in (("RS", (float(self.w), float(self.h))), ("T", float(t)), ("B", float(beat)), ("NS", self.ns), ("HUE", float((t * .01) % 1))):
+            if k in q: q[k].value = v
+        self.show_v.render(mode=5)
+        return self.show_tex
