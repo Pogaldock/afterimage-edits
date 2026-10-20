@@ -1506,7 +1506,8 @@ def publish(mont, flags):
     """Put tonight's edits on the site without waiting for the curator: tar parts atlas/static-9NN.tar appended to atlas/static.json.
     The atlas deploy (triggered by this job's deploy hook) unpacks them; the curator's next bundle folds them in and drops these parts."""
     import tarfile
-    idx = json.loads(obj_get("atlas/static.json") or '{"parts":[]}'); built = idx.get("built", 0)
+    idx = json.loads(obj_get("atlas/static.json") or '{"parts":[]}')
+    built = idx.get("mont_at") or (idx.get("built", 0) - 1800)        # when the last bundle read the edit list (older bundles: a 30 min margin)
     ok = set(flags.get("mok", [])); items = []
     for it in mont["items"]:
         it = dict(it); it["ok"] = 1 if it["id"] in ok else 0; items.append(it)
