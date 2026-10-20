@@ -89,6 +89,7 @@ def score_viral(c, q, want, cfg):
     artist = q in cfg.get("artists", []) and all(f" {w} " in txt for w in re.findall(r"[a-z0-9]+", q.lower().replace(" techno", "").replace(" x ", " ")))
     base = score_candidate(c, q, [] if artist else want, min_plays=int(cfg.get("min_plays", 0)))
     if base < 0 or c.get("age") is None or c["age"] > float(cfg.get("max_age_days", 540)): return -1
+    if c["plays"] / c["age"] < float(cfg.get("min_per_day", 0)): return -1          # only things that are moving right now
     return base - math.log10(1 + c["plays"]) * 1.1 + math.log10(1 + c["plays"]) * .5 + math.log10(1 + c["plays"] / c["age"]) * 1.6
 
 def score_candidate(c, q, want, min_plays=None):
@@ -997,13 +998,16 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random(),
                      "tm": (r.choice([1, 2, 3, 4, 5]) if r.random() < (.35 if inten >= .99 else .15) else 0),      # time displacement for some sections
                      "cf": tuple(r.sample([0, 1, 2, 3], 2)),
+                     "paste": (1 if r.random() < .55 else 0) if inten < .62 else r.choices([0, 1, 2], [3, 4, 2])[0],   # a little collage: 0-2 recognisable things
                      "bold": (r.choice(["sprite", "window", "pglyph", "dither"]) if r.random() < .4 else None) if inten < .62 else
                              (r.choice(["sprite", "sprite", "invader", "pglyph", "dither", "band", "window"]) if (s.get("drop") or r.random() < .7) else None)})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
     HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
     import bold as BOLDM
-    BD = BOLDM.Bold(W, H, r); HD.acc = BD.cols[0]                        # the edit's two bold colours; the data layer shares one
+    BD = BOLDM.Bold(W, H, r); HD.acc = BD.cols[0]
+    import paste as PASTEM
+    PS = PASTEM.Paste(W, H, r)                        # the edit's two bold colours; the data layer shares one
     drop_plan = next((plan[k_] for k_, s_ in enumerate(shots) if s_.get("drop") and s_.get("post")), None)
     for k in range(nfr):
         t = k / FPS
@@ -1012,7 +1016,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"], cut_ims + ref_ims + ([meme_im] if meme_im is not None else [])); Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1); Cx.tmode = P["tm"]; Cx.cards_form = P["cf"]; BD.plan(P["bold"], cut_ims + ref_ims + ([meme_im] if meme_im is not None else [])); scraps = ref_ims + [p_ for p_ in (photo(x_) for x_ in r.sample(pool, min(2, len(pool)))) if p_ is not None]
+            PS.plan(r.sample(cut_ims, min(2, len(cut_ims))), r.sample(scraps, min(2, len(scraps))), P["paste"])
+            Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
@@ -1049,6 +1055,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)
         img = Cx.analog(img, P["an"], t, beat, P["ak"])
         img = BD.apply(img, t, beat, u)                                  # bold colour cutting through the black and white
+        img = PS.apply(img, t, beat, u)                                  # and a couple of real things people recognise
         sp = spec[min(k, len(spec) - 1)] if spec is not None and len(spec) else None
         img = img.convert("RGBA"); img.alpha_composite(HD.frame(t, beat, sp, img)); img = img.convert("RGB")   # the meaning layer, crisp on top
         if top: img = overlay_text(img, top, H * .085, 66)

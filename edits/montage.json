@@ -928,8 +928,8 @@
   },
   "_viral": {
    "_": "tracks going viral right now: playful, popular hard techno / bounce / remixes people actually know. Artist queries count as on-genre when the artist is in the title or uploader.",
-   "share": 0.9,
-   "max_age_days": 900,
+   "share": 0.95,
+   "max_age_days": 730,
    "min_plays": 30000,
    "sc": [
     "Gonzi",
@@ -958,7 +958,17 @@
     "techno bootleg",
     "hard techno bootleg",
     "hard techno remix tiktok",
-    "bounce techno remix"
+    "bounce techno remix",
+    "hard techno remix 2026",
+    "tiktok techno remix",
+    "viral hard techno remix",
+    "techno remix viral",
+    "hard techno version",
+    "techno version tiktok",
+    "hardstyle techno remix",
+    "bounce hard techno remix",
+    "hard techno cover",
+    "schranz remix viral"
    ],
    "artists": [
     "Gonzi",
@@ -979,7 +989,8 @@
     "Restricted techno",
     "Ben Hemsley",
     "Kettama x Partiboi69"
-   ]
+   ],
+   "min_per_day": 250
   }
  },
  "_lines": "lines: '_' are the owner's own lines (every style), family lines go to all styles in that family, style lines are scene vocabulary/slogans (researched) + lines in the scene's voice. No song lyrics. Currently unused: edits use the abstract bank.",
