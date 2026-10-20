@@ -8,8 +8,11 @@ on:
       cap:
         description: "edits to make this run"
         default: "20"
+      before:
+        description: "cleanup only: unix time; edits made before it go (kept/downloaded stay)"
+        default: "0"
       mode:
-        description: "make | probe (only list the tracks it would pick)"
+        description: "make | probe | cleanup (remove edits made before the 'before' time)"
         default: "make"
 permissions:
   contents: write
@@ -36,8 +39,29 @@ jobs:
           git config user.name "atlas bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           cp edits/last-montage.md edits/last-probe.md && git add edits/last-probe.md && git commit -q -m "edits: probe report" && git push -q origin HEAD:main
+  cleanup:
+    if: ${{ github.event.inputs.mode == 'cleanup' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q -r edits/requirements.txt
+      - name: remove old edits
+        env:
+          ATLAS_TOKEN: ${{ secrets.ATLAS_TOKEN }}
+          BEFORE: ${{ github.event.inputs.before }}
+        run: '[[ "$BEFORE" =~ ^[0-9]{10}$ ]] && python edits/montage.py --cleanup "$BEFORE" && cat edits/last-montage.md'
+      - name: redeploy the atlas
+        env:
+          DEPLOY_HOOK: ${{ secrets.DEPLOY_HOOK }}
+        run: if [ -n "$DEPLOY_HOOK" ]; then curl -fsS -o /dev/null -X POST "$DEPLOY_HOOK" && echo "atlas build triggered"; fi
   render:
-    if: ${{ github.event.inputs.mode != 'probe' }}
+    if: ${{ github.event.inputs.mode != 'probe' && github.event.inputs.mode != 'cleanup' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -75,7 +99,7 @@ jobs:
           if-no-files-found: ignore
   merge:
     needs: render
-    if: ${{ always() && github.event.inputs.mode != 'probe' }}
+    if: ${{ always() && github.event.inputs.mode != 'probe' && github.event.inputs.mode != 'cleanup' && needs.render.result != 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

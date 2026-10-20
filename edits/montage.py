@@ -1255,6 +1255,18 @@ def archive(items, flags):
     idx["items"] = keep; obj_put("atlas/arch.json", json.dumps(idx).encode(), "application/json")
     report["archived"] = f"{added} added, {len(keep)} in the archive ({total / 1e9:.2f} GB)"
 
+def cleanup(before):
+    """one-off: remove every edit made before `before` (unix time) unless you kept or downloaded it; files deleted, list republished"""
+    flags = json.loads(obj_get("atlas/flags.json") or "{}"); mont = json.loads(obj_get("atlas/mont.json") or '{"items":[]}')
+    keep_ids = set(flags.get("mok", [])) | set(flags.get("mdl", []))
+    gone = [it for it in mont["items"] if it.get("made", 0) < before and it["id"] not in keep_ids]
+    for it in gone:
+        for ext in ("mp4", "jpg"): obj_del(f"atlas/mont/{it['id']}.{ext}")
+    mont["items"] = [it for it in mont["items"] if it not in gone]
+    obj_put("atlas/mont.json", json.dumps(mont).encode(), "application/json"); report["total"] = len(mont["items"])
+    report["made"].append(f"cleanup: removed {len(gone)} old edits, {len(mont['items'])} left")
+    publish(mont, flags)
+
 def merge(dirs):
     """after the shards: collect their edits (mp4/jpg already in R2 and in the artifact dirs), update mont.json once, publish once"""
     import shutil
@@ -1329,9 +1341,10 @@ def write_report():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--probe", action="store_true"); ap.add_argument("--cap", type=int, default=6)
-    ap.add_argument("--shard", type=int, default=0); ap.add_argument("--of", type=int, default=1); ap.add_argument("--merge", nargs="*"); a = ap.parse_args()
+    ap.add_argument("--shard", type=int, default=0); ap.add_argument("--of", type=int, default=1); ap.add_argument("--merge", nargs="*"); ap.add_argument("--cleanup", type=int, default=0); a = ap.parse_args()
     try:
-        if a.probe: probe()
+        if a.cleanup: cleanup(a.cleanup)
+        elif a.probe: probe()
         elif a.merge is not None: merge(a.merge)
         else: make(a.cap, a.shard, a.of)
     except Exception: report["errors"].append(traceback.format_exc()[-900:])
