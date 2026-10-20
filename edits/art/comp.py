@@ -176,11 +176,11 @@ def recipes(r):
     st = lambda: ("static", r.choice([1.5, 2, 3, 5]), r.random() < .35)
     nz = lambda: ("noise", r.uniform(2, 7), r.uniform(.1, .5))
     w = lambda: r.choice([nz(), ("osc", r.uniform(4, 30), r.uniform(.2, 2), r.uniform(.2, 1.5)), ("voronoi", r.uniform(4, 12), r.uniform(.5, 2)), P(1), P(3)])
-    fb = lambda ch: ("feedback", r.uniform(.55, .9), r.uniform(1.005, 1.04), r.uniform(-.03, .03), r.uniform(-.02, .02), ch)
+    fb = lambda ch: ("feedback", r.uniform(.35, .65), r.uniform(1.005, 1.04), r.uniform(-.03, .03), r.uniform(-.02, .02), ch)
     stretch = lambda ch: ("stretch", r.randrange(4), r.uniform(.3, 1.2), ch)
     R = {
         # a photo peeking through static, the window shaped by another photo's light, the cut-out on top
-        "peek": lambda: ("layer", ("cut", 2, r.uniform(.55, .85), .08, r.uniform(-.1, .1)), ("mask", ("modulate", .08, P(0), nz()), st(), ("lumakey", r.uniform(.35, .6), .15, r.random() < .5, P(1)))),
+        "peek": lambda: ("layer", ("cut", 2, r.uniform(.55, .85), .08, r.uniform(-.1, .1)), ("mask", ("modulate", .08, P(0), nz()), (st() if r.random() < .3 else ("contrast", .45, ("scale", 1.3, .04, P(1)))), ("lumakey", r.uniform(.35, .6), .15, r.random() < .5, P(1)))),
         # one photo bent by another, stretched non-linearly, fed back into itself
         "bend": lambda: fb(stretch(("modulate", r.uniform(.15, .5), P(0), P(1)))),
         # the clip kaleidoscoped, warped by a photo, keyed over the other photo's edges

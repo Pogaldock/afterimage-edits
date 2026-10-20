@@ -84,7 +84,7 @@ jobs:
             edits/_work/montage/img
           key: edits-lib-${{ matrix.shard }}-${{ github.run_id }}
           restore-keys: edits-lib-
-      - run: sudo apt-get update -q >/dev/null && sudo apt-get install -y -q ffmpeg libegl1 libgl1-mesa-dri fonts-dejavu-core >/dev/null && pip install -q -r edits/requirements.txt
+      - run: sudo apt-get update -q >/dev/null && sudo apt-get install -y -q ffmpeg libegl1 libgl1-mesa-dri fonts-dejavu-core fonts-noto-core fonts-freefont-ttf >/dev/null && pip install -q -r edits/requirements.txt
       - name: render this shard
         env:
           ATLAS_TOKEN: ${{ secrets.ATLAS_TOKEN }}

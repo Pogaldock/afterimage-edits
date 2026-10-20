@@ -927,7 +927,19 @@ def comp_ctx():
     return _COMP
 
 ANALOG = {0: 3, 1: 2, 2: 1.2, 3: 2, 4: .8}                              # none, VHS, composite, film, CRT
-def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=()):
+def spectrum(x, sr, start, dur, bands=28):
+    """the clip's real spectrum, one row of log-spaced band levels per video frame (0..1)"""
+    n = 2048; nfr = int(round(dur * FPS)); f = np.fft.rfftfreq(n, 1 / sr); edges = np.geomspace(40, min(14000, sr / 2 - 1), bands + 1); win = np.hanning(n).astype(np.float32)
+    idx = [np.where((f >= edges[b]) & (f < edges[b + 1]))[0] for b in range(bands)]; out = np.zeros((nfr, bands), np.float32)
+    for k in range(nfr):
+        a = int((start + k / FPS) * sr); seg = x[a:a + n]
+        if len(seg) < n: break
+        m = np.abs(np.fft.rfft(seg * win)); out[k] = [np.log1p(m[i].mean() * 4) if len(i) else 0 for i in idx]
+    hi = np.percentile(out, 97, axis=0) + 1e-6; out = np.clip(out / hi, 0, 1)
+    for k in range(1, len(out)): out[k] = np.maximum(out[k], out[k - 1] * .75)   # bars fall slowly, like a real analyser
+    return out
+
+def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song, photos, cuts_png, opener, refs=(), spec=None, bpm=0.0, title=""):
     """every section is a compositor graph over real material: atlas photos, cut-outs, the meme, static, noise, a point cloud.
     Graphs come from the recipes (generalised from what reads well) or are fully random; dull or near-black graphs are re-rolled."""
     import comp as CP
@@ -940,9 +952,9 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
     CALM = ["raw", "raw", "rawpair", "peek", "scan", "collide", "glyphs", "tiles", "diff", "warp"]
     def pick_graph(drop, inten=1.0):
         nonlocal deck
-        if inten < .62 and r.random() < .8: return R[r.choice(CALM)](), "calm"      # the build-up: real photos, light treatments
-        if r.random() < (.35 if drop else .22): return CP.random_graph(r, r.choice([2, 3, 3, 4])), "random"
-        if not deck: deck = names[:] + ["raw", "raw", "rawpair", "glyphs", "collide"]; r.shuffle(deck)   # raw photo moments and references come up often
+        if inten < .62 and r.random() < .85: return R[r.choice(CALM)](), "calm"     # the build-up: real photos, light treatments
+        if inten >= .99 and r.random() < (.18 if drop else .08): return CP.random_graph(r, 2), "random"   # rare, shallow, after the drop only
+        if not deck: deck = [n_ for n_ in names if n_ not in ("stencil", "slit")] + ["raw", "raw", "raw", "rawpair", "collide", "peek"]; r.shuffle(deck)   # readable first
         nm = deck.pop()
         if drop and nm in ("scan", "diff") and r.random() < .6: nm = r.choice(["cloud", "kaleid", "bend", "tunnel"])
         return R[nm](), nm
@@ -978,10 +990,14 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             g = ("scale", r.uniform(.92, 1.08), r.uniform(.04, .14), ("rotate", r.uniform(-.1, .1), r.uniform(-.18, .18), g))
         inten = s.get("inten", 1.0)
         colour = s.get("drop") or nm in ("fight",) or r.random() < (.08 if inten < .9 else .3)
-        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": r.random() < (.3 + .4 * inten), "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
-                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.5, 1.2) * (1.3 if s.get("build") else 1),
+        plan.append({"g": g, "nm": nm, "srcs": srcs, "swap": inten >= .99 and r.random() < .35, "mono": not colour, "inv": (inten >= .99) and r.random() < (.55 if s.get("drop") else .25),
+                     "bal": (.25 if s.get("drop") else r.uniform(-.3, .2)), "scheme": (r.choice(ACCENTS) if (not colour and r.random() < .2) else None), "an": r.choices(list(ANALOG), list(ANALOG.values()))[0], "ak": r.uniform(.3, .75) * (1.3 if s.get("build") else 1),
+                     "hud": (r.sample(["stream", "readout", "spectrum"], 1) + (["glyphs"] if r.random() < .4 else [])) if inten < .62 else
+                            (r.sample(["readout", "spectrum", "glyphs", "sigil"], 2) if not s.get("drop") else ["sigil", r.choice(["geometry", "target", "glyphs"]), r.choice(["stream", "spectrum"])]),
                      "shape": r.choice([0, 0, 1, 2]), "pa": r.randrange(2), "seed": r.random()})
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
+    import hud as HUDM
+    HD = HUDM.HUD(W, H, r, title=title or (song or ""), bpm=bpm, accent=r.choice(ACCENTS))
     drop_plan = next((plan[k_] for k_, s_ in enumerate(shots) if s_.get("drop") and s_.get("post")), None)
     for k in range(nfr):
         t = k / FPS
@@ -990,10 +1006,10 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         if ni != si:                                                     # new section: new graph, new sources
             si = ni; s = shots[si]; P = plan[si]; Cx.compile(P["g"])
             for kk, im in enumerate(P["srcs"]): Cx.set_source(kk, im)
-            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0
+            Cx.sim_bal = P["bal"]; k0 = k; kicks = 0; HD.plan(P["hud"], si + 1)
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
-        if P.get("swap") and pool and abs(t - lastp) < .5 / FPS and t - s["t0"] > .1 and r.random() < .5:   # on a kick, a new photo drops into the graph
+        if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
             nxt = photo(r.choice(pool))
             if nxt is not None: Cx.set_source(r.choice([0, 0, 1, 3]), nxt)
         energy = float(np.interp(t, env_t, env_v)) if len(env_t) else .5
@@ -1026,6 +1042,8 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
         strobe = .6 if any(abs(b - t) < 1.2 / FPS for b in barset) and s.get("drop") else 0.0
         if strobe: img = ImageEnhance.Brightness(img).enhance(1 + strobe)
         img = Cx.analog(img, P["an"], t, beat, P["ak"])
+        sp = spec[min(k, len(spec) - 1)] if spec is not None and len(spec) else None
+        img = img.convert("RGBA"); img.alpha_composite(HD.frame(t, beat, sp, img)); img = img.convert("RGB")   # the meaning layer, crisp on top
         if top: img = overlay_text(img, top, H * .085, 66)
         if bottom: img = overlay_text(img, bottom, H * .725, 60)
         if song: img = overlay_text(img, [song], H * .805, 40)
@@ -1154,7 +1172,8 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
         photos = list(walls)
         for s2 in r.sample([x for x in CFG if not x.startswith("_") and x not in ("meme",)], 3): photos += kept_images(man, s2)[:4]   # a few images from elsewhere
         refs = r.sample(kept_images(man, "meme"), min(3, len(kept_images(man, "meme")))) + r.sample(kept_images(man, "pop"), min(3, len(kept_images(man, "pop"))))
-        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs)
+        spec = spectrum(x, sr, start, dur)
+        d = FR; nfr = render3(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, photos[:16], figs, opener, refs, spec, bpm, clean_title(track["title"]))
     elif v2: d = FR; nfr = render2(shots, dur, fam, style, seed, r, punches, bars, env, cuts, song, (walls, [opener] if opener else []), per)
     else: d, nfr = render(shots, dur, fam, style, set(cuts), strengths, seed, r, lines, punches, hook, env, bars, keyframes=cuts)
     mid = hashlib.sha1(f"{style}{track['id']}{seed}".encode()).hexdigest()[:20]; mp4 = os.path.join(WORK, mid + ".mp4")
