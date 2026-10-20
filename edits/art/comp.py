@@ -22,7 +22,7 @@ from PIL import Image
 
 HEAD = """#version 330
 uniform vec2 R; uniform float T, B, E, SEED, MIX;
-uniform sampler2D S0, S1, S2, S3, PREV, PC, SIM, RE, CARDS, D0, D1, D3, FLUID, SLIME, ATTR;
+uniform sampler2D S0, S1, S2, S3, PREV, PC, SIM, RE, CARDS, D0, D1, D3, FLUID, SLIME, ATTR, SPLAT;
 uniform vec2 A0, A1, A2, A3;        // source sizes (for cover-fit)
 in vec2 vuv; out vec4 o;
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
@@ -78,6 +78,7 @@ def emit(g, node, uv):
     if op == "fluid":  return new(f"texture(FLUID, {uv})")
     if op == "slime":  return new(f"texture(SLIME, {uv})")
     if op == "attractor": return new(f"texture(ATTR, {uv})")
+    if op == "splat":  return new(f"texture(SPLAT, {uv})")         # the photo as Gaussian splats in 3D (splat.py)
     if op == "hyper":                     # Poincaré disk {p,q} tiling of a source, flowing under a Möbius transformation
         P_, Q_, sl = a; v = g.var(); cnt = g.var()
         L.append(f"vec2 {v}; float {cnt} = 0.; {{ vec2 z = ({uv}-.5)*vec2(R.x/R.y,1.)*2.05; float rr = dot(z,z);"
@@ -278,12 +279,13 @@ def recipes(r):
         "emblemfb": lambda: ("chroma", r.uniform(.01, .02), ("feedback", r.uniform(.5, .62), r.uniform(1.02, 1.045), r.uniform(-.02, .02), r.uniform(-.015, .015), ("layer", ("cut", 2, r.uniform(.7, .9), .12, 0), ("dim", .1, P(1))))),
         # the journey (Siegel 1977; Lawrence et al. 2022): the thing breathes, geometry crystallises out of it, a tunnel with light at
         # the end, hyperspace (kaleidoscopic, chrysanthemum, hyperbolic, neon), then back to the thing
-        "j_hook": lambda: ("chroma", .005, ("breathe", .003, 4, .5, SUBJ())),
+        "j_hook": lambda: ("chroma", .005, ("breathe", .003, 4, .5, ("layer", ("rotate", 0, r.choice([-1, 1]) * r.uniform(.03, .07), ("cut", 2, r.uniform(.8, .92), .14, 0)), ("dim", .55, ("splat",))))),
+        "j_shatter": lambda: ("chroma", .02, ("layer", ("splat",), ("dim", .45, ("colorama", r.uniform(.25, .45), ("hyper", r.choice([7, 8]), 3, 0))))),
         "j_comeup": lambda: ("chroma", .009, ("breathe", .009, 5, .9, ("add", .6, ("tint", (0, 0, 0), NEON(), ("formconst", r.choice([3, 3, 4, 0]), r.uniform(2.5, 4), r.choice([8, 10, 12, 14]), .12)), SUBJ()))),
         "j_tunnel": lambda: ("chroma", .014, ("add", .45, ("tint", (0, 0, 0), NEON(), ("formconst", 2, 4, r.choice([8, 10]), .6)), ("logpolar", r.choice([1, 2, 3]), r.uniform(.8, 1.3), r.uniform(.35, .6), r.choice([0, 0, .5]), ("layer", ("cut", 2, .85, .1, 0), P(0))))),
         "j_bloom": lambda: ("chroma", .02, ("colorama", r.uniform(.15, .3), ("kaleid", r.choice([6, 8]), ("logpolar", r.choice([4, 6]), r.uniform(1, 1.5), r.uniform(.5, .9), r.uniform(.3, .7), ("layer", ("cut", 2, .9, .15, 0), P(0)))))),
         "j_hyper": lambda: ("chroma", .02, ("add", .35, ("tint", (0, 0, 0), NEON(), ("formconst", 3, 3, 12, .4)), ("colorama", r.uniform(.25, .45), ("hyper", r.choice([7, 8]), 3, 2)))),
-        "j_return": lambda: ("chroma", .01, ("feedback", .45, 1.025, 0, 0, ("breathe", .006, 4, .6, SUBJ()))),
+        "j_return": lambda: ("chroma", .01, ("feedback", .45, 1.025, 0, 0, ("breathe", .006, 4, .6, ("layer", ("cut", 2, .88, .14, 0), ("dim", .5, ("splat",)))))),
         "dark": lambda: ("dim", .22, ("scale", 1.15, .03, ("tex", 0, 0))),
         "topo": lambda: ("mask", ("parallax", 0, .06), ("tint", (0, 0, 0), (1, 1, 1), ("depth", 0)), ("lumakey", .5, .3, 0, ("depth", 0))),
         "cards": lambda: ("add", 1.0, ("cards",), ("dim", .18, ("scale", 1.25, .03, P(r.choice([0, 1]))))),
@@ -542,6 +544,15 @@ class Comp:
         if "SLIME" in body:
             if self.slime is None: self.slime = SM.Physarum(self.ctx, self.quad)
             self._slime_tex = self.slime.step(t, beat, self.src[0], self.size[0], *self.sim_cols)
+        if "SPLAT" in body:
+            import splat as SPL
+            if getattr(self, "splats", None) is None: self.splats = SPL.Splats(self.ctx, self.w, self.h)
+            i = getattr(self, "splat_slot", 0)                           # which source becomes splats (0 the photo, 2 the subject)
+            if self.pil[i] is not None:
+                from depth import depth_of
+                self.splats.load(self.pil[i], depth_of(self.pil[i], key=id(self.pil[i])), id(self.pil[i]))
+            self.splats.dissolve = getattr(self, "splat_dis", 0.0); self.splats.move = getattr(self, "splat_move", 0)
+            self._splat_tex = self.splats.render(t, beat)
         if "ATTR" in body:
             if self.attr is None: self.attr = SM.Attractor(self.ctx, self.w, self.h)
             k, i = self.attr_kind; k = k if k in (0, 1) else 0; params = (SM.CLIFFORD if k == 0 else SM.DEJONG)[i % 5]
@@ -555,7 +566,7 @@ class Comp:
         prev.use(4)
         if "PREV" in p: p["PREV"].value = 4
         if "PC" in p: self.pcfb.color_attachments[0].use(7); p["PC"].value = 7
-        for nm, unit, tex in (("FLUID", 14, getattr(self, "_fluid_tex", None)), ("SLIME", 15, getattr(self, "_slime_tex", None)), ("ATTR", 16, getattr(self, "_attr_tex", None)), ("D0", 9, self.dep[0]), ("D1", 10, self.dep[1]), ("D3", 11, self.dep[3]), ("RE", 12, self.refb.color_attachments[0]), ("CARDS", 13, self.cfb.color_attachments[0])):
+        for nm, unit, tex in (("SPLAT", 17, getattr(self, "_splat_tex", None)), ("FLUID", 14, getattr(self, "_fluid_tex", None)), ("SLIME", 15, getattr(self, "_slime_tex", None)), ("ATTR", 16, getattr(self, "_attr_tex", None)), ("D0", 9, self.dep[0]), ("D1", 10, self.dep[1]), ("D3", 11, self.dep[3]), ("RE", 12, self.refb.color_attachments[0]), ("CARDS", 13, self.cfb.color_attachments[0])):
             if nm in p and tex is not None: tex.use(unit); p[nm].value = unit
         if "SIM" in p and self.sim is not None:
             st = self.sim.step(t, beat, self.src[0], self.size[0], self.sim_seed, self.sim_bal, 10); self.sim_seed *= .6

@@ -952,13 +952,15 @@ def lift(im):
     if a is not None: g.putalpha(a)
     return g
 
+SPLAT_DIS = {"j_hook": (0, .08), "j_shatter": (0.0, .8), "j_return": (.5, 0)}   # how far the splat world comes apart across the section
+
 def journey_stage(shots, i, r):
     """where this section sits on the trip: hook → come-up → tunnel (into the drop) → bloom/hyperspace → return"""
     s = shots[i]; post = [k for k, x in enumerate(shots) if x.get("post", x.get("inten", 1) >= .99)]
     if i in post:
         j = post.index(i)
         if len(post) >= 3 and j == len(post) - 1: return "j_return"
-        return "j_bloom" if j == 0 else r.choice(["j_hyper", "j_bloom"])
+        return r.choice(["j_shatter", "j_bloom"]) if j == 0 else r.choice(["j_hyper", "j_bloom", "j_shatter"])
     inten = s.get("inten", .5); last_pre = max((k for k in range(len(shots)) if k not in post), default=-1)
     if i == last_pre or inten >= .64: return "j_tunnel"
     return "j_hook" if inten < .45 or i == 0 else "j_comeup"
@@ -1056,7 +1058,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
                      "inv": TR.get("inv") == "drop" and post, "bal": .25 if post else -.2, "scheme": None,
                      "an": r.choice(lay("analog", [0])), "ak": .5, "hud": lay("hud", []), "shape": 1 if nm == "cloudsph" else 0, "pa": 0, "seed": r.random(),
                      "tm": r.choice(lay("tm", [0])), "cf": tuple(r.sample([0, 1, 2, 3], 2)), "paste": lay("paste", 0), "bold": lay("bold", None),
-                     "force": (TR.get("force") or (.6, 1.0))[1 if post else 0], "glow": TR.get("glow"), "dither": TR.get("dither"), "zine": TR.get("zine"), "center": TR.get("paste_center")})
+                     "force": (TR.get("force") or (.6, 1.0))[1 if post else 0], "sd": SPLAT_DIS.get(nm, (0, 0)), "smove": r.randrange(3), "sslot": 2 if nm == "j_shatter" else 0, "glow": TR.get("glow"), "dither": TR.get("dither"), "zine": TR.get("zine"), "center": TR.get("paste_center")})
     report.setdefault("treatments", []).append(treat or "?")
     si = -1; nfr = int(round(dur * FPS)); barset = list(bars); last = None; teasing = False
     import hud as HUDM
@@ -1078,6 +1080,7 @@ def render3(shots, dur, fam, style, seed, r, punches, bars, env, keyframes, song
             Cx.fluid_force = P.get("force", 1.0)
             Cx.attr_kind = (r.randrange(2), r.randrange(5)); Cx.sim_cols = (BD.cols[0], BD.cols[-1])
         s = shots[si]; P = plan[si]; u = (t - s["t0"]) / max(1e-3, s["t1"] - s["t0"])
+        Cx.splat_dis = P["sd"][0] + (P["sd"][1] - P["sd"][0]) * u; Cx.splat_move = P["smove"]; Cx.splat_slot = P["sslot"]
         lastp = max((p_ for p_ in punches if p_ <= t + 1e-6), default=-9); beat = math.exp(-(t - lastp) * 8)
         if P.get("swap") and pool and any(abs(t - b_) < .5 / FPS for b_ in barset) and t - s["t0"] > .1:   # on a bar line (not every kick), a new photo drops in
             nxt = photo(r.choice(pool))
