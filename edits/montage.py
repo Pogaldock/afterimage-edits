@@ -187,22 +187,32 @@ def beats(x, sr, hop=512):
     return bt, float(bpm), env, fps
 
 def pick_drop(bt, kenv, kfps, t, rms, total, dur, r):
-    """find a drop: bars where the kick and loudness come back hard after a quieter stretch. The edit starts in the build-up
-    (about 55% of it before the drop) and ends a few bars into the drop, because people stay for the drop."""
+    """find a drop: the beat where the kick and loudness come back hard after a quieter stretch. The edit starts exactly
+    8 bars (32 beats) or 4 bars (16 beats) before it, and ends 2 to 4 bars into it, because people stay for the drop."""
+    bt = np.asarray(bt, np.float64)
     if len(bt) < 48: return None
-    bars = np.asarray(bt[::4], np.float64); kt = np.arange(len(kenv)) / kfps; km = kenv.max() + 1e-9; rm = rms.max() + 1e-9
+    kt = np.arange(len(kenv)) / kfps
     def avg(xs, ys, a, b):
         m = (xs >= a) & (xs < b); return float(ys[m].mean()) if m.any() else 0.0
-    E = [.6 * avg(kt, kenv, bars[i], bars[i + 1]) / km + .4 * avg(t, rms, bars[i], bars[i + 1]) / rm for i in range(len(bars) - 1)]
+    Eb = np.array([.6 * avg(kt, kenv, bt[k], bt[k + 1]) + .4 * avg(t, rms, bt[k], bt[k + 1]) for k in range(len(bt) - 1)]); Eb /= Eb.max() + 1e-9
     cands = []
-    for i in range(4, len(E) - 2):
-        pre, post = float(np.mean(E[i - 4:i])), float(np.mean(E[i:i + 2]))
-        if post > .5 and post - pre > .12 and E[i] > E[i - 1]: cands.append((post - pre, i))
+    for k in range(16, len(Eb) - 8):                                    # beat k: the 16 beats before vs the 8 after
+        pre, post = float(Eb[k - 16:k].mean()), float(Eb[k:k + 8].mean())
+        if post > .45 and post - pre > .15 and Eb[k] > Eb[k - 1] + .05: cands.append((post - pre, k))
     if not cands: return None
-    cands.sort(reverse=True); _, i = r.choice(cands[:3]); drop_t = float(bars[i])
-    want = drop_t - dur * r.uniform(.5, .62); j = int(np.argmin(np.abs(bars - want))); start = float(bars[j])
-    if start < 0 or start + dur > total - .5 or drop_t - start < 4: return None
-    return start, drop_t - start
+    cands.sort(reverse=True); best = []
+    for sc, k in cands:                                                 # distinct drops only (not neighbouring beats of the same one)
+        if all(abs(k - k2) > 8 for _, k2 in best): best.append((sc, k))
+        if len(best) == 3: break
+    best = [b_ for b_ in best if b_[0] >= best[0][0] * .8]              # only drops nearly as big as the biggest
+    _, k = r.choice(best); beat = float(np.median(np.diff(bt)))
+    for pre_beats in ([32, 16] if 32 * beat <= 15.5 else [16]):         # 32 beats of build-up when the tempo allows it
+        post_beats = r.choice([8, 12, 16]) if pre_beats == 16 else r.choice([12, 16])
+        if k - pre_beats < 0 or k + post_beats >= len(bt): continue
+        start, end = float(bt[k - pre_beats]), float(bt[k + post_beats])
+        if end > total - .5: continue
+        return start, float(bt[k]) - start, end - start
+    return None
 
 def pick_section(t, flux, rms, peaks, total, dur, r):
     """loudest, busiest window well inside the track; start snapped to a strong onset"""
@@ -1089,7 +1099,7 @@ def make_one(style, els, man, flags, mont, used_tracks, seed):
     if len(bt): start = float(bt[int(np.argmin(np.abs(bt - start)))])      # section starts on a beat
     drop_rel = None
     dp = pick_drop(bt, kenv, kfps, t, rms, total, dur, r) if len(bt) else None
-    if dp: start, drop_rel = dp; log(f"{style}: build-up from {start:.1f}s, drop at +{drop_rel:.1f}s")
+    if dp: start, drop_rel, dur = dp; log(f"{style}: build-up from {start:.1f}s, drop at +{drop_rel:.1f}s, {dur:.1f}s long")
     strength_at = lambda tt: float(np.interp(tt, np.arange(len(kenv)) / kfps, kenv / (kenv.max() + 1e-9)))
     g = grid_cuts(bt, start, dur, fam, r, strength_at)
     if g:
