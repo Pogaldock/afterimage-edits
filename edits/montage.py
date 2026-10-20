@@ -1247,7 +1247,9 @@ def finish(mont, flags):
         if v and it["id"] not in have: led.append({"id": it["id"], "v": v, "why": (flags.get("mwhy") or {}).get(it["id"]), "style": it.get("style"), "fam": it.get("fam"), "src": (it.get("track") or {}).get("src"), "track": (it.get("track") or {}).get("id"), "uploader": (it.get("track") or {}).get("uploader", ""), "t": int(t)})
     mont["taste"] = led[-800:]
     gone = {it["id"] for it in before} - {it["id"] for it in keep}
-    archive([it for it in before if it["id"] in gone and it["id"] not in dead], flags)   # seen ones go to the archive, small
+    done = archive([it for it in before if it["id"] in gone and it["id"] not in dead], flags)   # seen ones go to the archive, small
+    failed = {i for i in gone if i not in dead and i not in done}
+    if failed: keep += [it for it in before if it["id"] in failed]; gone -= failed   # never delete an edit whose archive copy failed
     for i in gone:                                                          # free the full-size copy
         for ext in ("mp4", "jpg"): obj_del(f"atlas/mont/{i}.{ext}")
     report["pruned"] = len(gone); mont["items"] = keep
@@ -1260,8 +1262,8 @@ def finish(mont, flags):
 ARCH_MAX = float(MONT.get("archive_gb", 2.5)) * 1e9       # with the image library and live edits this keeps storage under ~9 of the free 10 GB
 def archive(items, flags):
     """keep every seen edit as a 720p copy (~2-4 MB) with its recipe, track and timing, for later use; oldest go past ARCH_MAX"""
-    if not items: return
-    idx = json.loads(obj_get("atlas/arch.json") or '{"items":[]}'); have = {a["id"] for a in idx["items"]}; added = 0
+    if not items: return set()
+    idx = json.loads(obj_get("atlas/arch.json") or '{"items":[]}'); have = {a["id"] for a in idx["items"]}; added = 0; done = set(i for i in have)
     for it in items:
         if it["id"] in have: continue
         data = obj_get(f"atlas/mont/{it['id']}.mp4")
@@ -1274,7 +1276,7 @@ def archive(items, flags):
             if jp: obj_put(f"atlas/arch/{it['id']}.jpg", jp, "image/jpeg")
             meta = {k: it.get(k) for k in ("id", "style", "fam", "track", "bpm", "dur", "start", "heroes", "walls", "made", "opener")}
             meta.update(bytes=os.path.getsize(dst), seen=(flags.get("mseen") or {}).get(it["id"]), why=(flags.get("mwhy") or {}).get(it["id"]), mp4=f"/api/atlas/arch/{it['id']}.mp4", poster=f"/api/atlas/arch/{it['id']}.jpg")
-            idx["items"].insert(0, meta); added += 1
+            idx["items"].insert(0, meta); added += 1; done.add(it["id"])
         except Exception as e: err("archive " + it["id"], e)
     total = 0; keep = []
     for a in idx["items"]:                                              # newest first; past the cap the oldest leave
@@ -1284,6 +1286,7 @@ def archive(items, flags):
             for ext in ("mp4", "jpg"): obj_del(f"atlas/arch/{a['id']}.{ext}")
     idx["items"] = keep; obj_put("atlas/arch.json", json.dumps(idx).encode(), "application/json")
     report["archived"] = f"{added} added, {len(keep)} in the archive ({total / 1e9:.2f} GB)"
+    return done
 
 def cleanup(before):
     """one-off: remove every edit made before `before` (unix time) unless you kept or downloaded it; files deleted, list republished"""
