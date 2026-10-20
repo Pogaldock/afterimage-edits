@@ -945,11 +945,8 @@ def spectrum(x, sr, start, dur, bands=28):
 # appears. Variety comes from edit to edit, not from frame to frame.
 TREATMENTS = {
     "monolith":   {"build": ["rutt2"], "drop": ["cloudsph"], "srcs": "single", "mono": "build", "glow": True, "inv": "drop", "analog": {"drop": [3]}, "hud": {"drop": ["glyphs"]}},
-    "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "inv": "drop", "force": (.25, 1.2), "paste": {"build": 0, "drop": 0}},
+    "fluidicon":  {"build": ["fluid"], "drop": ["fluid"], "srcs": "ref", "mono": "never", "force": (.25, .8), "paste": {"build": 0, "drop": 0}},
     "shrine":     {"build": ["hyper"], "drop": ["hyperref"], "srcs": "ref", "mono": "build", "inv": "drop", "paste": {"build": 1, "drop": 1}, "paste_center": True},
-    "depthflight":{"build": ["space", "vertigo"], "drop": ["cards"], "srcs": "pool", "swap": "bar", "mono": "build", "analog": {"build": [3], "drop": [3]}, "hud": {"drop": ["target"]}},
-    "specimen":   {"build": ["raw"], "drop": ["raw"], "srcs": "pool", "mono": "never", "dither": True, "bold": {"build": "sprite", "drop": "invader"}, "tm": {"drop": [2]}},
-    "zine":       {"build": ["dark"], "drop": ["dark"], "srcs": "pool", "mono": "never", "zine": True, "inv": "drop"},
     "slime":      {"build": ["slime"], "drop": ["slime"], "srcs": "single", "mono": "never", "tm": {"drop": [4]}, "glow": True},
     "attractor":  {"build": ["attractor"], "drop": ["attractor2"], "srcs": "single", "mono": "never", "glow": True, "inv": "drop"},
 }
