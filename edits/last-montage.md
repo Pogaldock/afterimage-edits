@@ -1,26 +1,26 @@
-# montage — 2026-10-21 17:34 UTC
+# montage — 2026-10-21 22:00 UTC
 
 
-## made (14, 165 on the site)
-- drain · K.luis-Tribe lesson (tekno tribe) (soundcloud) · 180.0 bpm · 16.0s · 23 cuts/3 moshed · 14394 KB
-- aero · Party People (Extended Mix) (soundcloud) · 144.8 bpm · 18.24s · 16 cuts/3 moshed · 12671 KB
-- crt · skinny love (soundcloud) · 127.8 bpm · 16.91s · 13 cuts/3 moshed · 15351 KB
-- death · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 19.13s · 15 cuts/3 moshed · 17311 KB
-- punk · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 17.48s · 18 cuts/2 moshed · 15899 KB
-- mound · Make Up Your Mind (soundcloud) · 128.5 bpm · 18.68s · 14 cuts/2 moshed · 16956 KB
-- riot · ♫ Ketamane - Sanitatek ♫ -> ♪ Tribecore ♪ (soundcloud) · 173.8 bpm · 13.81s · 19 cuts/2 moshed · 6083 KB
-- free · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 10.31s · 14 cuts/4 moshed · 5432 KB
-- y2k · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/2 moshed · 13014 KB
-- free · Dune - Hardcore Vibes (Dimitri K & D Fence Remix) (soundcloud) · 126.2 bpm · 15.21s · 13 cuts/0 moshed · 13658 KB
-- free · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 12.02s · 11 cuts/0 moshed · 10836 KB
-- alien · SPFDJ - The Hot In Psychotic (soundcloud) · 146.8 bpm · 14.72s · 19 cuts/2 moshed · 13426 KB
-- analog · Disparate Youth - Marlon Hoffstadt Edit (soundcloud) · 151.0 bpm · 15.89s · 19 cuts/1 moshed · 14389 KB
-- free · Gallow Dance - Hardtek (Slowed) (soundcloud) · 127.8 bpm · 15.03s · 11 cuts/2 moshed · 13781 KB
+## made (11, 174 on the site)
+- punk · Phase Fatale - Desecrating Vows (BITE025) (soundcloud) · 132.8 bpm · 16.27s · 13 cuts/2 moshed · 14827 KB
+- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 17.87s · 23 cuts/5 moshed · 16164 KB
+- drone · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/2 moshed · 13468 KB
+- free · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 15.46s · 10 cuts/3 moshed · 13984 KB
+- robot · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 18.49s · 14 cuts/5 moshed · 16201 KB
+- drone · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 14.72s · 17 cuts/2 moshed · 10735 KB
+- techno · mischluft &  t e s t p r e s s - BOUNCE N BREAK (Radio Edit) (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/5 moshed · 13112 KB
+- hyper · Nico Moreno x Warface - 2 Be High (Holy Priest Remix) (soundcloud) · 159.2 bpm · 15.07s · 21 cuts/2 moshed · 13881 KB
+- death · Black Out Days (Stay Away) – INSIDIA Hard Techno Remix [FREE DL] (soundcloud) · 158.0 bpm · 13.67s · 12 cuts/2 moshed · 12628 KB
+- punk · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 18.49s · 20 cuts/3 moshed · 16579 KB
+- robot · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 16.81s · 14 cuts/4 moshed · 15304 KB
 
 ## skipped
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - scene: no track (soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:ERROR: [soundcloud] nachtigaller_techno/where-you-are-ht-rework: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- weird: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
