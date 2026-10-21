@@ -1,26 +1,26 @@
-# montage — 2026-10-20 22:07 UTC
+# montage — 2026-10-21 05:11 UTC
 
 
-## made (10, 146 on the site)
-- punk · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 16.24s · 14 cuts/6 moshed · 11153 KB
-- death · Ø [Phase] - Burden Of Proof [TOKEN42] (soundcloud) · 131.0 bpm · 14.66s · 13 cuts/4 moshed · 13235 KB
-- y2k · Funk Tribu feat. LUCY DYE - All Of It (extended version) (soundcloud) · 153.2 bpm · 14.1s · 17 cuts/2 moshed · 12777 KB
-- crt · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 19.52s · 17 cuts/3 moshed · 15608 KB
-- mound · R 2 ME (soundcloud) · 183.0 bpm · 14.43s · 19 cuts/4 moshed · 12283 KB
-- punk · HEATBOVEN | HARD TECHNO BIG ROOM TECHNO MASHUP PACK | AMSTERDAM DANCE EVENT 2025 [FREE DOWNLOAD] (soundcloud) · 159.2 bpm · 12.06s · 16 cuts/0 moshed · 11106 KB
-- war · Drums & tribecore (soundcloud) · 126.2 bpm · 17.11s · 13 cuts/2 moshed · 15156 KB
-- free · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 19.66s · 14 cuts/3 moshed · 17786 KB
-- psych · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 11.45s · 15 cuts/3 moshed · 10650 KB
-- opium · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 17.09s · 27 cuts/1 moshed · 15484 KB
+## made (13, 146 on the site)
+- scene · Phase Fatale - Desecrating Vows (BITE025) (soundcloud) · 132.8 bpm · 16.27s · 12 cuts/2 moshed · 14829 KB
+- free · Charlotte de Witte feat. Conduit - A Prayer for the Dancefloor (Original Mix) (soundcloud) · 139.8 bpm · 17.17s · 16 cuts/7 moshed · 15624 KB
+- drone · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 17.17s · 18 cuts/1 moshed · 14896 KB
+- digital · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 15.07s · 14 cuts/2 moshed · 13767 KB
+- hyper · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 12.72s · 8 cuts/2 moshed · 11771 KB
+- psych · Electrify (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/3 moshed · 13713 KB
+- free · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/1 moshed · 13168 KB
+- hyper · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 15.46s · 17 cuts/3 moshed · 13946 KB
+- alien · JET 2 HOLIDAY (Luca-Dante Spadafora Rave Edit) (Hard Techno x Hardtekk) (soundcloud) · 178.2 bpm · 10.77s · 12 cuts/3 moshed · 9785 KB
+- aero · DART & Kyle Starkey - Feel It [RT004] (soundcloud) · 141.8 bpm · 16.93s · 18 cuts/2 moshed · 15183 KB
+- free · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/5 moshed · 13880 KB
+- riot · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 20.54s · 14 cuts/4 moshed · 18360 KB
+- free · Klangkuenstler - Weltschmerz [OW006] (soundcloud) · 139.8 bpm · 15.46s · 16 cuts/1 moshed · 14011 KB
 
 ## skipped
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:ERROR: [soundcloud] kettamabro/partiboi69-x-kettama-pumpin: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates)
-- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- goth: no track ()
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
