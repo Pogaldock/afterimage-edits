@@ -1,26 +1,26 @@
-# montage — 2026-10-22 12:17 UTC
+# montage — 2026-10-22 22:29 UTC
 
 
-## made (13, 174 on the site)
-- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 11.37s · 10 cuts/3 moshed · 10603 KB
-- free · SLAVA FUNK (soundcloud) · 180.0 bpm · 10.67s · 12 cuts/2 moshed · 6863 KB
-- punk · Dimitri K & Lekkerfaces - Pressure Pleasure (soundcloud) · 183.0 bpm · 11.8s · 16 cuts/2 moshed · 10999 KB
-- drain · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 12.72s · 12 cuts/0 moshed · 11726 KB
-- vapor · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 15.07s · 15 cuts/1 moshed · 13759 KB
-- techno · SKEPTA X FIONN CURRAN (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/0 moshed · 9796 KB
-- death · FASHIONISTRIBE (55asky tribecore remix) (soundcloud) · 126.2 bpm · 11.41s · 9 cuts/1 moshed · 10539 KB
-- factory · Dimitri K & The Dark Horror & Lekkerfaces & Satirized - Sacrifice Day (Official 2025 Anthem) (soundcloud) · 169.5 bpm · 15.58s · 15 cuts/4 moshed · 14175 KB
-- sigil · ALARICO - SOLACE (soundcloud) · 146.8 bpm · 16.35s · 18 cuts/1 moshed · 13209 KB
-- free · BAD BOY SOUND *hardtek/tribe* (soundcloud) · 159.2 bpm · 15.07s · 22 cuts/3 moshed · 13804 KB
-- y2k · DART & Kyle Starkey - Feel It [RT004] (soundcloud) · 141.8 bpm · 16.93s · 18 cuts/1 moshed · 12373 KB
-- digi · "LA TÊTE DANS LES CAISSES" FAT TRIBECORE (soundcloud) · 154.5 bpm · 12.43s · 15 cuts/0 moshed · 11366 KB
-- tech · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 10.87s · 11 cuts/1 moshed · 10026 KB
+## made (14, 174 on the site)
+- free · Rack It Up [Premiered by Nico Moreno @ UMF Miami] (soundcloud) · 159.2 bpm · 12.06s · 13 cuts/1 moshed · 11093 KB
+- hyper · Basswell & Onlynumbers - Lunar (soundcloud) · 153.2 bpm · 17.23s · 19 cuts/0 moshed · 15649 KB
+- drain · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/4 moshed · 8435 KB
+- analog · skinny love (soundcloud) · 127.8 bpm · 18.79s · 14 cuts/2 moshed · 16998 KB
+- digital · Make Up Your Mind (soundcloud) · 128.5 bpm · 18.68s · 13 cuts/3 moshed · 16908 KB
+- riot · High Forever (Marlon Hoffstadt Remix) | Cyberpunk: Edgerunners 2 (10m,) (soundcloud) · 154.5 bpm · 13.98s · 12 cuts/3 moshed · 12780 KB
+- psych · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/4 moshed · 13970 KB
+- techno · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/2 moshed · 12686 KB
+- aero · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/1 moshed · 13144 KB
+- scene · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/0 moshed · 10432 KB
+- y2k · SPFDJ - The Hot In Psychotic (soundcloud) · 146.8 bpm · 14.72s · 20 cuts/1 moshed · 11522 KB
+- free · B1. Regal & Alien Rain - Acid Affair Pt2 (soundcloud) · 131.0 bpm · 18.32s · 17 cuts/0 moshed · 16569 KB
+- goth · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 16.27s · 12 cuts/2 moshed · 14844 KB
+- robot · INF104 - Fantasm, Activator "Sparta" (Fantasm Rmx) (Infamia Records) (Out Now) (soundcloud) · 150.0 bpm · 16.0s · 22 cuts/2 moshed · 14461 KB
 
 ## skipped
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
