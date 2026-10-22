@@ -1,26 +1,26 @@
-# montage — 2026-10-21 22:00 UTC
+# montage — 2026-10-22 05:12 UTC
 
 
-## made (11, 174 on the site)
-- punk · Phase Fatale - Desecrating Vows (BITE025) (soundcloud) · 132.8 bpm · 16.27s · 13 cuts/2 moshed · 14827 KB
-- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 17.87s · 23 cuts/5 moshed · 16164 KB
-- drone · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/2 moshed · 13468 KB
-- free · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 15.46s · 10 cuts/3 moshed · 13984 KB
-- robot · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 18.49s · 14 cuts/5 moshed · 16201 KB
-- drone · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 14.72s · 17 cuts/2 moshed · 10735 KB
-- techno · mischluft &  t e s t p r e s s - BOUNCE N BREAK (Radio Edit) (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/5 moshed · 13112 KB
-- hyper · Nico Moreno x Warface - 2 Be High (Holy Priest Remix) (soundcloud) · 159.2 bpm · 15.07s · 21 cuts/2 moshed · 13881 KB
-- death · Black Out Days (Stay Away) – INSIDIA Hard Techno Remix [FREE DL] (soundcloud) · 158.0 bpm · 13.67s · 12 cuts/2 moshed · 12628 KB
-- punk · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 18.49s · 20 cuts/3 moshed · 16579 KB
-- robot · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 16.81s · 14 cuts/4 moshed · 15304 KB
+## made (14, 174 on the site)
+- aero · Nico Moreno & Warface - 2 Be High (soundcloud) · 154.5 bpm · 12.43s · 13 cuts/2 moshed · 11362 KB
+- psych · Basswell & Onlynumbers - Lunar (soundcloud) · 153.2 bpm · 12.53s · 11 cuts/2 moshed · 11496 KB
+- punk · KETTAMA - Man With a Second Face (soundcloud) · 138.0 bpm · 15.65s · 14 cuts/4 moshed · 10635 KB
+- hyper · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 16.58s · 24 cuts/3 moshed · 15021 KB
+- scene · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 15.65s · 15 cuts/2 moshed · 14120 KB
+- opium · Basswell - Hear The Sound (Rave Mix) (soundcloud) · 150.0 bpm · 12.8s · 12 cuts/2 moshed · 11822 KB
+- psych · Acid (soundcloud) · 150.0 bpm · 11.2s · 10 cuts/0 moshed · 10420 KB
+- y2k · Don't Say A Word - Kander (SEMTEX Schranz EDIT) (soundcloud) · 154.5 bpm · 12.43s · 17 cuts/3 moshed · 11308 KB
+- mound · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/3 moshed · 12350 KB
+- mound · In Verruf - It All Ends [NTND017] (soundcloud) · 153.2 bpm · 12.53s · 12 cuts/1 moshed · 11535 KB
+- weird · Sullivan King x TRYM X GRAPHYT - RUMBLE (soundcloud) · 159.2 bpm · 12.06s · 13 cuts/2 moshed · 10229 KB
+- digi · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 14.72s · 13 cuts/2 moshed · 13491 KB
+- free · Knees Break (soundcloud) · 144.8 bpm · 18.24s · 17 cuts/3 moshed · 16485 KB
+- witch · Gallow Dance - Hardtek (Slowed) (soundcloud) · 127.8 bpm · 18.79s · 15 cuts/4 moshed · 16858 KB
 
 ## skipped
-- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- weird: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- war: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
