@@ -1,26 +1,26 @@
-# montage — 2026-10-22 22:29 UTC
+# montage — 2026-10-23 05:44 UTC
 
 
-## made (14, 174 on the site)
-- free · Rack It Up [Premiered by Nico Moreno @ UMF Miami] (soundcloud) · 159.2 bpm · 12.06s · 13 cuts/1 moshed · 11093 KB
-- hyper · Basswell & Onlynumbers - Lunar (soundcloud) · 153.2 bpm · 17.23s · 19 cuts/0 moshed · 15649 KB
-- drain · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/4 moshed · 8435 KB
-- analog · skinny love (soundcloud) · 127.8 bpm · 18.79s · 14 cuts/2 moshed · 16998 KB
-- digital · Make Up Your Mind (soundcloud) · 128.5 bpm · 18.68s · 13 cuts/3 moshed · 16908 KB
-- riot · High Forever (Marlon Hoffstadt Remix) | Cyberpunk: Edgerunners 2 (10m,) (soundcloud) · 154.5 bpm · 13.98s · 12 cuts/3 moshed · 12780 KB
-- psych · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/4 moshed · 13970 KB
-- techno · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/2 moshed · 12686 KB
-- aero · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/1 moshed · 13144 KB
-- scene · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/0 moshed · 10432 KB
-- y2k · SPFDJ - The Hot In Psychotic (soundcloud) · 146.8 bpm · 14.72s · 20 cuts/1 moshed · 11522 KB
-- free · B1. Regal & Alien Rain - Acid Affair Pt2 (soundcloud) · 131.0 bpm · 18.32s · 17 cuts/0 moshed · 16569 KB
-- goth · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 16.27s · 12 cuts/2 moshed · 14844 KB
-- robot · INF104 - Fantasm, Activator "Sparta" (Fantasm Rmx) (Infamia Records) (Out Now) (soundcloud) · 150.0 bpm · 16.0s · 22 cuts/2 moshed · 14461 KB
+## made (12, 174 on the site)
+- goth · Bel Mercy (BEAUZ Hard Techno Remix) feat. Nokia (soundcloud) · 159.2 bpm · 16.58s · 17 cuts/7 moshed · 15049 KB
+- black · Shlømo & Vortek's - Dam Dam Dam (soundcloud) · 158.0 bpm · 12.15s · 17 cuts/7 moshed · 10735 KB
+- death · Party People (Extended Mix) (soundcloud) · 144.8 bpm · 14.92s · 12 cuts/1 moshed · 13551 KB
+- punk · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 19.52s · 19 cuts/2 moshed · 17474 KB
+- hyper · Mischluft - New Funk (soundcloud) · 145.8 bpm · 14.82s · 18 cuts/3 moshed · 10094 KB
+- digital · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 18.11s · 15 cuts/4 moshed · 16411 KB
+- alien · Trotters Independant Traders - Sing For Unity (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 19.13s · 16 cuts/1 moshed · 17284 KB
+- mound · SLAVA FUNK (soundcloud) · 138.0 bpm · 15.65s · 13 cuts/1 moshed · 14207 KB
+- psych · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 16 cuts/4 moshed · 14132 KB
+- opium · Déjà Vu (soundcloud) · 150.0 bpm · 17.6s · 23 cuts/2 moshed · 14771 KB
+- vapor · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/3 moshed · 8973 KB
+- riot · Knees Break (soundcloud) · 144.8 bpm · 14.92s · 17 cuts/1 moshed · 12376 KB
 
 ## skipped
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:ERROR: [soundcloud] unreleaseduktech/ewan-mcvicar-dart: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
