@@ -1,26 +1,26 @@
-# montage — 2026-10-24 21:08 UTC
+# montage — 2026-10-24 23:35 UTC
 
 
 ## made (10, 174 on the site)
-- punk · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 13.0s · 19 cuts/3 moshed · 11987 KB
-- scene · If You Want Me - Nico Moreno remix (soundcloud) · 150.0 bpm · 16.0s · 14 cuts/3 moshed · 14534 KB
-- vapor · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/5 moshed · 14165 KB
-- techno · Ewan McVicar & DART - Rollercoaster (FULL Unreleased) (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/3 moshed · 15553 KB
-- sigil · Electrify (soundcloud) · 139.8 bpm · 15.46s · 16 cuts/1 moshed · 13306 KB
-- riot · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 12.06s · 18 cuts/2 moshed · 11089 KB
-- scene · Basswell - Bass Down Low (Rave Edit) (soundcloud) · 144.8 bpm · 16.58s · 18 cuts/2 moshed · 15308 KB
-- free · Vlace & KSN | Hurt You (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/5 moshed · 12477 KB
-- psych · Bloodhound Lil Jeff Lost My Gun x i walk this earth all by myself (soundcloud) · 153.2 bpm · 14.1s · 18 cuts/2 moshed · 12593 KB
-- alien · Funk Tribu - Blue Summer (Original Mix) (soundcloud) · 153.2 bpm · 15.66s · 18 cuts/1 moshed · 14148 KB
+- robot · skinny love (soundcloud) · 127.8 bpm · 15.03s · 11 cuts/1 moshed · 13612 KB
+- vapor · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/3 moshed · 13752 KB
+- free · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 15.65s · 14 cuts/1 moshed · 13490 KB
+- witch · Southstar - Miss You (AIROD Rave Remix) (soundcloud) · 144.8 bpm · 16.58s · 17 cuts/2 moshed · 15065 KB
+- opium · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 17.17s · 15 cuts/2 moshed · 15571 KB
+- punk · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 16 cuts/2 moshed · 15614 KB
+- free · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/3 moshed · 17093 KB
+- goth · Holy Priest x Lil Texas - Like A Boss (soundcloud) · 164.2 bpm · 14.61s · 13 cuts/2 moshed · 13373 KB
+- digi · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 16.09s · 16 cuts/0 moshed · 14703 KB
+- opium · Klangkuenstler - Weltschmerz [OW006] (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/2 moshed · 14088 KB
 
 ## skipped
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] nachtigaller_techno/3703a498-bb63-4054-87f0-25fdc5a16f05: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
