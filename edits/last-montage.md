@@ -1,26 +1,26 @@
-# montage — 2026-10-25 05:06 UTC
+# montage — 2026-10-25 11:57 UTC
 
 
-## made (12, 174 on the site)
-- vapor · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 14.62s · 13 cuts/4 moshed · 13231 KB
-- punk · HORA 2:40 (soundcloud) · 159.2 bpm · 15.07s · 18 cuts/3 moshed · 12762 KB
-- datamosh · Mha Iri - Give Me A Bass [WDYD008] (Out Now) (soundcloud) · 150.0 bpm · 11.2s · 10 cuts/1 moshed · 10255 KB
-- digital · Hannah Laing & Marlon Hoffstadt (with Caroline Roxy) - Stomp Your Feet (soundcloud) · 154.5 bpm · 12.43s · 12 cuts/3 moshed · 10039 KB
-- death · Tekno Tribe Old School 02 ITALY (soundcloud) · 159.2 bpm · 15.07s · 14 cuts/3 moshed · 13863 KB
-- alien · Acid (soundcloud) · 150.0 bpm · 17.6s · 15 cuts/4 moshed · 14478 KB
-- scene · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 17038 KB
-- punk · Funk Tribu - Hold On (Extended Mix) (soundcloud) · 144.8 bpm · 18.24s · 16 cuts/6 moshed · 16368 KB
-- psych · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/3 moshed · 14091 KB
-- digi · Slow Burner (soundcloud) · 135.2 bpm · 15.97s · 15 cuts/2 moshed · 14325 KB
-- techno · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 13.74s · 12 cuts/3 moshed · 12556 KB
-- aero · Rebekah - Black Seed (soundcloud) · 127.8 bpm · 13.15s · 12 cuts/3 moshed · 8346 KB
+## made (14, 174 on the site)
+- goth · M83 - My Tears Are Becoming a Sea (Summit & RYX Emotional Schranz Edit) (soundcloud) · 154.5 bpm · 13.98s · 13 cuts/3 moshed · 12781 KB
+- tech · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 11.77s · 11 cuts/1 moshed · 10900 KB
+- robot · tekno tribe mental 2013 (soundcloud) · 180.0 bpm · 13.33s · 20 cuts/2 moshed · 12100 KB
+- vapor · Electrify (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/5 moshed · 12564 KB
+- drain · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 11.77s · 11 cuts/0 moshed · 8933 KB
+- aero · Mischluft - Get It (soundcloud) · 145.8 bpm · 16.47s · 22 cuts/2 moshed · 14956 KB
+- free · SLAVA FUNK (soundcloud) · 138.0 bpm · 15.65s · 14 cuts/3 moshed · 14321 KB
+- scene · Ben Hemsley & LD50 - SUNSHINE (soundcloud) · 138.0 bpm · 15.65s · 13 cuts/5 moshed · 14279 KB
+- riot · Leader Of The Pack (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/0 moshed · 11295 KB
+- mound · ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) (soundcloud) · 154.5 bpm · 15.53s · 15 cuts/3 moshed · 14147 KB
+- punk · New Beat Order, Seeko, Robbe, KROMA - Secret (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/3 moshed · 12477 KB
+- sigil · John Summit - Where You Are (Nachtigaller & CØDEC HT Schranz Rework) (soundcloud) · 154.5 bpm · 12.43s · 13 cuts/1 moshed · 10507 KB
+- scene · Funk Tribu - Blue Summer (Original Mix) (soundcloud) · 153.2 bpm · 10.96s · 15 cuts/3 moshed · 10155 KB
+- crt · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 16.81s · 17 cuts/2 moshed · 15326 KB
 
 ## skipped
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
