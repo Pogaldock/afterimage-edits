@@ -1,26 +1,26 @@
-# montage — 2026-10-27 17:03 UTC
+# montage — 2026-10-27 22:37 UTC
 
 
-## made (12, 174 on the site)
-- aero · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 16.58s · 17 cuts/1 moshed · 13428 KB
-- sigil · skinny love (soundcloud) · 127.8 bpm · 18.79s · 14 cuts/4 moshed · 16105 KB
-- death · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 17.74s · 14 cuts/2 moshed · 15980 KB
-- witch · Make Up Your Mind (soundcloud) · 128.5 bpm · 20.54s · 15 cuts/1 moshed · 13180 KB
-- digi · PACK GONX EDIT MASHUP  ( PSY - TECHNO - VINA ) (soundcloud) · 139.8 bpm · 15.46s · 15 cuts/2 moshed · 12082 KB
-- vapor · Mischluft - Get It (soundcloud) · 145.8 bpm · 13.17s · 12 cuts/2 moshed · 12133 KB
-- y2k · Me gustas tu (Funk Tribu Edit) (soundcloud) · 145.8 bpm · 14.82s · 17 cuts/3 moshed · 13364 KB
-- digital · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 14.4s · 16 cuts/0 moshed · 13055 KB
-- robot · JET 2 HOLIDAY (Luca-Dante Spadafora Rave Edit) (Hard Techno x Hardtekk) (soundcloud) · 178.2 bpm · 9.43s · 11 cuts/1 moshed · 8584 KB
-- opium · Be My Lover (soundcloud) · 144.8 bpm · 14.92s · 12 cuts/2 moshed · 13693 KB
-- sigil · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 16.09s · 13 cuts/2 moshed · 13836 KB
-- death · Klangkuenstler - Weltschmerz [OW006] (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/4 moshed · 15065 KB
+## made (11, 174 on the site)
+- free · High Forever (Marlon Hoffstadt Remix) Cyberpunk Edgerunners 2 (soundcloud) · 142.8 bpm · 16.81s · 18 cuts/2 moshed · 14691 KB
+- tech · HORA 2:40 (soundcloud) · 159.2 bpm · 15.07s · 21 cuts/1 moshed · 13524 KB
+- scene · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/2 moshed · 17094 KB
+- goth · Kid Francescoli - Moon (Summit & RYX Emotional Schranz Edit) (soundcloud) · 154.5 bpm · 13.98s · 20 cuts/2 moshed · 11929 KB
+- robot · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/2 moshed · 13840 KB
+- riot · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 14.3s · 14 cuts/3 moshed · 12881 KB
+- free · Trotters Independant Traders - Sing For Unity (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 15.65s · 14 cuts/1 moshed · 14183 KB
+- techno · DATSKO - Where Have You Been (Remix) (soundcloud) · 158.0 bpm · 16.71s · 19 cuts/1 moshed · 15240 KB
+- alien · SPFDJ - The Hot In Psychotic (soundcloud) · 146.8 bpm · 14.72s · 12 cuts/4 moshed · 13470 KB
+- goth · La Mia Banda Fuma L'Oppio TEKNO TRIBE (soundcloud) · 159.2 bpm · 15.07s · 15 cuts/4 moshed · 13813 KB
+- weird · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 18.68s · 15 cuts/4 moshed · 13490 KB
 
 ## skipped
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates)
 - robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- tech: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
