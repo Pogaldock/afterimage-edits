@@ -1,26 +1,26 @@
-# montage — 2026-10-26 22:09 UTC
+# montage — 2026-10-27 10:03 UTC
 
 
-## made (15, 174 on the site)
-- alien · Into You (MALUGI Edit) (soundcloud) · 142.8 bpm · 11.77s · 12 cuts/2 moshed · 10533 KB
-- vapor · Fky Tapage Nocturne 09 D1 (soundcloud) · 159.2 bpm · 13.56s · 13 cuts/4 moshed · 12463 KB
-- robot · Indira Paganotto - Legend (Original Mix) (soundcloud) · 144.8 bpm · 16.58s · 18 cuts/0 moshed · 15248 KB
-- free · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 15.65s · 15 cuts/1 moshed · 14155 KB
-- digi · Make Up Your Mind (soundcloud) · 128.5 bpm · 14.94s · 13 cuts/3 moshed · 13512 KB
-- black · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 13.91s · 11 cuts/5 moshed · 11598 KB
-- scene · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 13.56s · 18 cuts/1 moshed · 12462 KB
-- aero · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 15 cuts/3 moshed · 16182 KB
-- alien · Slow Burner (soundcloud) · 135.2 bpm · 14.2s · 11 cuts/1 moshed · 12409 KB
-- tech · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 17.17s · 16 cuts/0 moshed · 13847 KB
-- digital · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 13.74s · 15 cuts/2 moshed · 12307 KB
-- death · SLAVA FUNK! (soundcloud) · 138.0 bpm · 12.17s · 11 cuts/1 moshed · 11251 KB
-- punk · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 12.66s · 11 cuts/4 moshed · 11651 KB
-- sigil · Funk Tribu - Blue Summer (Original Mix) (soundcloud) · 153.2 bpm · 14.1s · 14 cuts/2 moshed · 12957 KB
-- riot · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 15.13s · 14 cuts/3 moshed · 13592 KB
+## made (11, 174 on the site)
+- free · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 11.77s · 11 cuts/0 moshed · 10802 KB
+- punk · M83 - My Tears Are Becoming a Sea (Summit & RYX Emotional Schranz Edit) (soundcloud) · 154.5 bpm · 10.87s · 10 cuts/2 moshed · 10087 KB
+- free · Tame Impala, JENNIE - Dracula (Trym Remix) (soundcloud) · 147.8 bpm · 14.62s · 14 cuts/1 moshed · 13421 KB
+- alien · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 18.89s · 14 cuts/2 moshed · 15983 KB
+- sigil · Acidcore Track III (  on Acid & Mental 05  ) (soundcloud) · 150.0 bpm · 11.2s · 11 cuts/1 moshed · 9924 KB
+- witch · Basswell - Bass Down Low (Rave Edit) (soundcloud) · 144.8 bpm · 11.61s · 15 cuts/4 moshed · 9991 KB
+- psych · Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (feat. Grace Bridie) OUT NOW ON ALL PLATFORMS (soundcloud) · 144.8 bpm · 18.24s · 18 cuts/2 moshed · 15660 KB
+- free · Dimitri K & The Dark Horror & Lekkerfaces & Satirized - Sacrifice Day (Official 2025 Anthem) (soundcloud) · 169.5 bpm · 15.58s · 20 cuts/3 moshed · 14224 KB
+- scene · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 16 cuts/2 moshed · 16545 KB
+- y2k · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 14.72s · 17 cuts/1 moshed · 13407 KB
+- mound · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 11.85s · 10 cuts/1 moshed · 10749 KB
 
 ## skipped
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
