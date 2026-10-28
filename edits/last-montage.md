@@ -1,26 +1,26 @@
-# montage — 2026-10-27 22:37 UTC
+# montage — 2026-10-28 06:04 UTC
 
 
-## made (11, 174 on the site)
-- free · High Forever (Marlon Hoffstadt Remix) Cyberpunk Edgerunners 2 (soundcloud) · 142.8 bpm · 16.81s · 18 cuts/2 moshed · 14691 KB
-- tech · HORA 2:40 (soundcloud) · 159.2 bpm · 15.07s · 21 cuts/1 moshed · 13524 KB
-- scene · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/2 moshed · 17094 KB
-- goth · Kid Francescoli - Moon (Summit & RYX Emotional Schranz Edit) (soundcloud) · 154.5 bpm · 13.98s · 20 cuts/2 moshed · 11929 KB
-- robot · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/2 moshed · 13840 KB
-- riot · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 14.3s · 14 cuts/3 moshed · 12881 KB
-- free · Trotters Independant Traders - Sing For Unity (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 15.65s · 14 cuts/1 moshed · 14183 KB
-- techno · DATSKO - Where Have You Been (Remix) (soundcloud) · 158.0 bpm · 16.71s · 19 cuts/1 moshed · 15240 KB
-- alien · SPFDJ - The Hot In Psychotic (soundcloud) · 146.8 bpm · 14.72s · 12 cuts/4 moshed · 13470 KB
-- goth · La Mia Banda Fuma L'Oppio TEKNO TRIBE (soundcloud) · 159.2 bpm · 15.07s · 15 cuts/4 moshed · 13813 KB
-- weird · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 18.68s · 15 cuts/4 moshed · 13490 KB
+## made (14, 174 on the site)
+- analog · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 16.24s · 17 cuts/3 moshed · 14654 KB
+- mound · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 11.61s · 9 cuts/4 moshed · 10670 KB
+- punk · KETTAMA - Man With a Second Face (soundcloud) · 138.0 bpm · 15.65s · 16 cuts/2 moshed · 13572 KB
+- alien · Want My Love (soundcloud) · 142.8 bpm · 16.81s · 18 cuts/0 moshed · 15299 KB
+- drain · Una Hora Más (soundcloud) · 150.0 bpm · 11.2s · 12 cuts/2 moshed · 10200 KB
+- punk · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 18.11s · 17 cuts/2 moshed · 16382 KB
+- aero · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 16.0s · 14 cuts/1 moshed · 13561 KB
+- punk · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 18.89s · 17 cuts/5 moshed · 17139 KB
+- free · SLAVA FUNK (soundcloud) · 138.0 bpm · 19.13s · 16 cuts/2 moshed · 17381 KB
+- hyper · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/2 moshed · 15331 KB
+- sigil · BAD BOY SOUND *hardtek/tribe* (soundcloud) · 159.2 bpm · 15.07s · 21 cuts/2 moshed · 13601 KB
+- goth · Bloodhound Lil Jeff Lost My Gun x i walk this earth all by myself (soundcloud) · 153.2 bpm · 12.53s · 16 cuts/3 moshed · 11442 KB
+- robot · ARTBAT, KAS:ST & Losless - Pull Out (Original Mix) (soundcloud) · 127.8 bpm · 20.66s · 17 cuts/3 moshed · 18680 KB
+- black · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 13.54s · 14 cuts/1 moshed · 12399 KB
 
 ## skipped
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates)
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- war: no track (soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
