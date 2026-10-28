@@ -1,26 +1,26 @@
-# montage — 2026-10-28 13:25 UTC
+# montage — 2026-10-28 20:32 UTC
 
 
-## made (11, 174 on the site)
-- opium · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/1 moshed · 14154 KB
-- factory · Party People (Extended Mix) (soundcloud) · 144.8 bpm · 14.92s · 19 cuts/4 moshed · 13651 KB
-- mound · BAD BUNNY - CAFE CON RON (NO ROMEO SCHRANZ EDIT) [FREE DL] (soundcloud) · 159.2 bpm · 16.58s · 23 cuts/2 moshed · 13384 KB
-- scene · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 15.89s · 14 cuts/4 moshed · 14334 KB
-- vapor · Make Up Your Mind (soundcloud) · 128.5 bpm · 16.81s · 15 cuts/0 moshed · 13490 KB
-- free · Underground Bastard - tribe tekno 001 (Live Analog) (soundcloud) · 173.8 bpm · 13.81s · 17 cuts/2 moshed · 12585 KB
-- punk · OnlyNumbers - Euphoric Night (Nachtigaller Schranz Edit) (soundcloud) · 154.5 bpm · 13.98s · 12 cuts/2 moshed · 10638 KB
-- digi · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 15.46s · 16 cuts/1 moshed · 14008 KB
-- death · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 14.72s · 17 cuts/3 moshed · 12556 KB
-- techno · Gallow Dance - Hardtek (Slowed) (soundcloud) · 127.8 bpm · 16.91s · 10 cuts/1 moshed · 13978 KB
-- witch · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 20.54s · 18 cuts/3 moshed · 18436 KB
+## made (12, 174 on the site)
+- sigil · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 11.61s · 15 cuts/2 moshed · 10673 KB
+- death · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 13 cuts/1 moshed · 16747 KB
+- robot · High Forever (Marlon Hoffstadt Remix) | Cyberpunk: Edgerunners 2 (10m,) (soundcloud) · 154.5 bpm · 13.98s · 14 cuts/0 moshed · 12624 KB
+- free · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 12.06s · 12 cuts/4 moshed · 11072 KB
+- digi · Enrico Sangiuliano - The Techno Code (Charlotte de Witte's Acid Code) (soundcloud) · 139.8 bpm · 17.17s · 13 cuts/3 moshed · 15660 KB
+- psych · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/0 moshed · 13773 KB
+- crt · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 14.4s · 16 cuts/1 moshed · 12684 KB
+- goth · YN Jay X Rio Da Yung Og- Sneaky Beat (soundcloud) · 131.0 bpm · 12.82s · 13 cuts/2 moshed · 10857 KB
+- alien · SLAVA FUNK (soundcloud) · 138.0 bpm · 19.13s · 18 cuts/3 moshed · 12327 KB
+- drain · Bloodhound Lil Jeff Lost My Gun x i walk this earth all by myself (soundcloud) · 153.2 bpm · 14.1s · 16 cuts/2 moshed · 10453 KB
+- y2k · DART & Kyle Starkey - Feel It [RT004] (soundcloud) · 141.8 bpm · 18.62s · 14 cuts/2 moshed · 16950 KB
+- hyper · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 17.09s · 15 cuts/2 moshed · 15493 KB
 
 ## skipped
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- datamosh: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
