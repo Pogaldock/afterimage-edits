@@ -1,26 +1,26 @@
-# montage — 2026-10-29 10:23 UTC
+# montage — 2026-10-29 18:44 UTC
 
 
-## made (9, 174 on the site)
-- analog · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 18.89s · 20 cuts/4 moshed · 14888 KB
-- scene · DATSKO - Reason (Extended Mix) (soundcloud) · 144.8 bpm · 18.24s · 18 cuts/4 moshed · 15319 KB
-- vapor · Enrico Sangiuliano - The Techno Code (Charlotte de Witte's Acid Code) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/2 moshed · 16531 KB
-- witch · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 13.74s · 11 cuts/0 moshed · 11764 KB
-- drain · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/4 moshed · 13994 KB
-- mound · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 13.25s · 16 cuts/4 moshed · 12191 KB
-- free · Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (feat. Grace Bridie) OUT NOW ON ALL PLATFORMS (soundcloud) · 144.8 bpm · 18.24s · 19 cuts/2 moshed · 16547 KB
-- alien · Disparate Youth - Marlon Hoffstadt Edit (soundcloud) · 151.0 bpm · 17.48s · 20 cuts/1 moshed · 15811 KB
-- analog · MIRA PA YA (soundcloud) · 159.2 bpm · 10.55s · 10 cuts/2 moshed · 9874 KB
+## made (12, 174 on the site)
+- hyper · Nico Moreno & Warface - 2 Be High (soundcloud) · 154.5 bpm · 17.09s · 14 cuts/3 moshed · 15597 KB
+- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 17.87s · 23 cuts/4 moshed · 16055 KB
+- hyper · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 11.61s · 10 cuts/1 moshed · 10583 KB
+- alien · Tramples The Cops _TRIBECORE_190 (soundcloud) · 183.0 bpm · 11.8s · 17 cuts/3 moshed · 9291 KB
+- riot · Make Up Your Mind (soundcloud) · 128.5 bpm · 16.81s · 16 cuts/1 moshed · 14976 KB
+- opium · KETTAMA & Ewan McVicar - Take Me Away (Unreleased) (soundcloud) · 138.8 bpm · 19.03s · 18 cuts/2 moshed · 17204 KB
+- digital · Acid (soundcloud) · 150.0 bpm · 12.8s · 12 cuts/2 moshed · 11587 KB
+- black · Basswell - Bass Down Low (Rave Edit) (soundcloud) · 144.8 bpm · 11.61s · 15 cuts/0 moshed · 10110 KB
+- riot · SLAVA FUNK (soundcloud) · 138.0 bpm · 15.65s · 15 cuts/3 moshed · 14306 KB
+- drain · BAD BOY SOUND *hardtek/tribe* (soundcloud) · 159.2 bpm · 15.07s · 15 cuts/1 moshed · 13199 KB
+- datamosh · Chris Liberator & Sterling Moss - Scum Like Us Like Acid (soundcloud) · 145.8 bpm · 18.11s · 22 cuts/2 moshed · 16470 KB
+- goth · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 11.45s · 13 cuts/2 moshed · 10439 KB
 
 ## skipped
+- vapor: no track (soundcloud:ERROR: [soundcloud] summitde/m83-my-tears-are-becoming-a-sea-summit-ryx-emotional-schranz-edit: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- witch: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] ryxtrax/paula-hartmann-7-maedchen: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:ERROR: [soundcloud] holypriest_music/2behigh: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates)
 - digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- datamosh: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] ostgutton-official/phase-fatale-reverse-fall: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] 2195790239: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:ERROR: [soundcloud] entasiaaa/kyle-starkey-x-entasia-234-extended-1: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
