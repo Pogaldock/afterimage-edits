@@ -1,26 +1,26 @@
-# montage — 2026-10-31 13:01 UTC
+# montage — 2026-10-31 19:31 UTC
 
 
-## made (14, 174 on the site)
-- robot · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 18.49s · 14 cuts/2 moshed · 16771 KB
-- drone · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 17 cuts/3 moshed · 15615 KB
-- hyper · Make Up Your Mind (soundcloud) · 128.5 bpm · 20.54s · 17 cuts/5 moshed · 15484 KB
-- free · Electrify (soundcloud) · 139.8 bpm · 13.74s · 11 cuts/2 moshed · 12551 KB
-- riot · Krowdexx & Dimitri K - IN ANOTHER LIFE (soundcloud) · 132.8 bpm · 19.89s · 15 cuts/4 moshed · 17693 KB
-- free · Acid (soundcloud) · 150.0 bpm · 14.4s · 12 cuts/2 moshed · 13161 KB
-- alien · Me gustas tu (Funk Tribu Edit) (soundcloud) · 145.8 bpm · 18.11s · 21 cuts/1 moshed · 16115 KB
-- drain · Cheffy Bb & Yungster Jack - Trym Leaders (soundcloud) · 145.8 bpm · 11.53s · 10 cuts/3 moshed · 10681 KB
-- free · Slow Burner (soundcloud) · 135.2 bpm · 19.52s · 20 cuts/3 moshed · 17625 KB
-- aero · Rollercoaster - DART and Ewan McVicar (Unreleased) *BEST QUALITY* (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/1 moshed · 11491 KB
-- free · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 14949 KB
-- opium · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 16.35s · 21 cuts/2 moshed · 14735 KB
-- vapor · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 10.55s · 10 cuts/1 moshed · 9800 KB
-- datamosh · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 11.85s · 10 cuts/0 moshed · 9397 KB
+## made (13, 174 on the site)
+- drain · Phase Fatale - Desecrating Vows (BITE025) (soundcloud) · 132.8 bpm · 18.08s · 17 cuts/0 moshed · 16381 KB
+- punk · skinny love (soundcloud) · 127.8 bpm · 16.91s · 13 cuts/3 moshed · 15325 KB
+- crt · Phase Fatale |  Reverse Fall (soundcloud) · 128.5 bpm · 20.54s · 18 cuts/2 moshed · 18299 KB
+- riot · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 14.3s · 16 cuts/3 moshed · 12158 KB
+- free · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 13.56s · 16 cuts/3 moshed · 12195 KB
+- psych · SKEPTA X FIONN CURRAN (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/2 moshed · 13988 KB
+- punk · Mischluft - Get It (soundcloud) · 145.8 bpm · 16.47s · 22 cuts/3 moshed · 14872 KB
+- goth · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 15 cuts/2 moshed · 15505 KB
+- black · Sullivan King x TRYM X GRAPHYT - RUMBLE (soundcloud) · 159.2 bpm · 13.56s · 16 cuts/1 moshed · 12401 KB
+- psych · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 15.13s · 16 cuts/2 moshed · 13825 KB
+- vapor · MIRA PA YA (soundcloud) · 159.2 bpm · 13.56s · 15 cuts/4 moshed · 12469 KB
+- free · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 10.87s · 12 cuts/3 moshed · 7982 KB
+- mound · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 20.54s · 16 cuts/4 moshed · 17028 KB
 
 ## skipped
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] soukouniann/nikolina-no-more-lies: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
