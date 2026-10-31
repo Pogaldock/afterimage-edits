@@ -1,26 +1,26 @@
-# montage — 2026-10-30 22:40 UTC
+# montage — 2026-10-31 06:07 UTC
 
 
 ## made (14, 174 on the site)
-- mound · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/3 moshed · 11254 KB
-- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 14.62s · 17 cuts/2 moshed · 13318 KB
-- opium · Fky Tapage Nocturne 09 D1 (soundcloud) · 159.2 bpm · 12.06s · 18 cuts/0 moshed · 10956 KB
-- alien · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/3 moshed · 16099 KB
-- punk · Tramples The Cops _TRIBECORE_190 (soundcloud) · 183.0 bpm · 14.43s · 16 cuts/3 moshed · 11319 KB
-- vapor · KETTAMA & Ewan McVicar - Take Me Away (Unreleased) (soundcloud) · 138.8 bpm · 19.03s · 14 cuts/2 moshed · 15896 KB
-- datamosh · Enrico Sangiuliano - The Techno Code (Charlotte de Witte's Acid Code) (soundcloud) · 139.8 bpm · 13.74s · 13 cuts/0 moshed · 12525 KB
-- y2k · Nachtigaller, Njasti - Nie Mehr Zurück [TG41] (soundcloud) · 156.8 bpm · 12.25s · 14 cuts/2 moshed · 11276 KB
-- psych · SLAVA FUNK (soundcloud) · 138.0 bpm · 15.65s · 13 cuts/4 moshed · 14324 KB
-- robot · Rollercoaster - DART and Ewan McVicar (Unreleased) *BEST QUALITY* (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/2 moshed · 17084 KB
-- free · ❤️‍🔥🦖 MDEMIXXE 2025 ACID + HARD TECHNO MIX: YÅ - Come On Venoms (soundcloud) · 180.0 bpm · 14.67s · 17 cuts/3 moshed · 12908 KB
-- hyper · MIRA PA YA (soundcloud) · 159.2 bpm · 15.07s · 18 cuts/1 moshed · 12890 KB
-- witch · Disparate Youth - Marlon Hoffstadt Edit (soundcloud) · 151.0 bpm · 14.3s · 19 cuts/0 moshed · 12951 KB
-- aero · ARTBAT, KAS:ST & Losless - Pull Out (Original Mix) (soundcloud) · 127.8 bpm · 16.91s · 13 cuts/2 moshed · 10633 KB
+- black · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 17.17s · 13 cuts/3 moshed · 15662 KB
+- aero · Want My Love (soundcloud) · 142.8 bpm · 18.49s · 16 cuts/3 moshed · 16720 KB
+- y2k · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 15.07s · 17 cuts/5 moshed · 12017 KB
+- digi · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 16.81s · 13 cuts/0 moshed · 15313 KB
+- robot · Lola (soundcloud) · 133.5 bpm · 19.77s · 19 cuts/5 moshed · 17325 KB
+- sigil · Holy Priest & Manji - No Balance (soundcloud) · 159.2 bpm · 13.56s · 15 cuts/0 moshed · 12455 KB
+- drone · Ben Hemsley & LD50 - SUNSHINE (soundcloud) · 138.0 bpm · 17.39s · 15 cuts/1 moshed · 15030 KB
+- drain · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 17041 KB
+- robot · RYX - Alles Brennt (Nachtigaller Remix) (soundcloud) · 154.5 bpm · 12.43s · 12 cuts/3 moshed · 11481 KB
+- punk · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/1 moshed · 15650 KB
+- hyper · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 17.88s · 15 cuts/1 moshed · 15083 KB
+- weird · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 13.45s · 12 cuts/5 moshed · 11809 KB
+- psych · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 16.81s · 12 cuts/3 moshed · 15262 KB
+- techno · INF104 - Fantasm, Activator "Sparta" (Fantasm Rmx) (Infamia Records) (Out Now) (soundcloud) · 150.0 bpm · 16.0s · 16 cuts/2 moshed · 14603 KB
 
 ## skipped
 - mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
