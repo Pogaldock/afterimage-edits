@@ -1,26 +1,26 @@
-# montage — 2026-10-31 06:07 UTC
+# montage — 2026-10-31 13:01 UTC
 
 
 ## made (14, 174 on the site)
-- black · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 17.17s · 13 cuts/3 moshed · 15662 KB
-- aero · Want My Love (soundcloud) · 142.8 bpm · 18.49s · 16 cuts/3 moshed · 16720 KB
-- y2k · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 15.07s · 17 cuts/5 moshed · 12017 KB
-- digi · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 16.81s · 13 cuts/0 moshed · 15313 KB
-- robot · Lola (soundcloud) · 133.5 bpm · 19.77s · 19 cuts/5 moshed · 17325 KB
-- sigil · Holy Priest & Manji - No Balance (soundcloud) · 159.2 bpm · 13.56s · 15 cuts/0 moshed · 12455 KB
-- drone · Ben Hemsley & LD50 - SUNSHINE (soundcloud) · 138.0 bpm · 17.39s · 15 cuts/1 moshed · 15030 KB
-- drain · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 17041 KB
-- robot · RYX - Alles Brennt (Nachtigaller Remix) (soundcloud) · 154.5 bpm · 12.43s · 12 cuts/3 moshed · 11481 KB
-- punk · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/1 moshed · 15650 KB
-- hyper · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 17.88s · 15 cuts/1 moshed · 15083 KB
-- weird · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 13.45s · 12 cuts/5 moshed · 11809 KB
-- psych · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 16.81s · 12 cuts/3 moshed · 15262 KB
-- techno · INF104 - Fantasm, Activator "Sparta" (Fantasm Rmx) (Infamia Records) (Out Now) (soundcloud) · 150.0 bpm · 16.0s · 16 cuts/2 moshed · 14603 KB
+- robot · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 18.49s · 14 cuts/2 moshed · 16771 KB
+- drone · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 17 cuts/3 moshed · 15615 KB
+- hyper · Make Up Your Mind (soundcloud) · 128.5 bpm · 20.54s · 17 cuts/5 moshed · 15484 KB
+- free · Electrify (soundcloud) · 139.8 bpm · 13.74s · 11 cuts/2 moshed · 12551 KB
+- riot · Krowdexx & Dimitri K - IN ANOTHER LIFE (soundcloud) · 132.8 bpm · 19.89s · 15 cuts/4 moshed · 17693 KB
+- free · Acid (soundcloud) · 150.0 bpm · 14.4s · 12 cuts/2 moshed · 13161 KB
+- alien · Me gustas tu (Funk Tribu Edit) (soundcloud) · 145.8 bpm · 18.11s · 21 cuts/1 moshed · 16115 KB
+- drain · Cheffy Bb & Yungster Jack - Trym Leaders (soundcloud) · 145.8 bpm · 11.53s · 10 cuts/3 moshed · 10681 KB
+- free · Slow Burner (soundcloud) · 135.2 bpm · 19.52s · 20 cuts/3 moshed · 17625 KB
+- aero · Rollercoaster - DART and Ewan McVicar (Unreleased) *BEST QUALITY* (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/1 moshed · 11491 KB
+- free · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 14949 KB
+- opium · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 16.35s · 21 cuts/2 moshed · 14735 KB
+- vapor · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 10.55s · 10 cuts/1 moshed · 9800 KB
+- datamosh · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 11.85s · 10 cuts/0 moshed · 9397 KB
 
 ## skipped
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
