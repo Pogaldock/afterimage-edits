@@ -1,26 +1,26 @@
-# montage — 2026-11-01 16:19 UTC
+# montage — 2026-11-01 22:22 UTC
 
 
-## made (12, 174 on the site)
-- alien · SLAVA FUNK (soundcloud) · 180.0 bpm · 12.0s · 14 cuts/2 moshed · 9849 KB
-- robot · Party People (Extended Mix) (soundcloud) · 144.8 bpm · 16.58s · 20 cuts/4 moshed · 15100 KB
-- digi · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/2 moshed · 10491 KB
-- robot · Ewan McVicar & DART - Rollercoaster (FULL Unreleased) (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/3 moshed · 15515 KB
-- psych · SKEPTA X FIONN CURRAN (soundcloud) · 142.8 bpm · 16.81s · 15 cuts/1 moshed · 14915 KB
-- digi · Slow Burner (soundcloud) · 135.2 bpm · 17.74s · 14 cuts/1 moshed · 14641 KB
-- y2k · SLAVA FUNK! (soundcloud) · 138.0 bpm · 19.13s · 19 cuts/2 moshed · 17344 KB
-- opium · FANTASM - BURN THE FLOOR [RCKLSS017] (soundcloud) · 159.2 bpm · 16.58s · 15 cuts/1 moshed · 15088 KB
-- hyper · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 17.99s · 18 cuts/4 moshed · 16322 KB
-- y2k · KI/KI - What's a Girl to Do (KI/KI Remix) (soundcloud) · 145.8 bpm · 18.11s · 19 cuts/2 moshed · 16434 KB
-- aero · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 12.43s · 16 cuts/2 moshed · 11261 KB
-- digital · MentalCore (soundcloud) · 180.0 bpm · 12.0s · 20 cuts/1 moshed · 11152 KB
+## made (14, 174 on the site)
+- aero · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 17.87s · 23 cuts/1 moshed · 16158 KB
+- sigil · Nico Moreno & Warface - 2 Be High (soundcloud) · 154.5 bpm · 13.98s · 13 cuts/1 moshed · 12536 KB
+- goth · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 13.26s · 12 cuts/7 moshed · 12076 KB
+- sigil · KETTAMA - Man With a Second Face (soundcloud) · 138.0 bpm · 19.13s · 20 cuts/2 moshed · 17137 KB
+- digi · skinny love (soundcloud) · 127.8 bpm · 18.79s · 18 cuts/2 moshed · 17055 KB
+- analog · Una Hora Más (soundcloud) · 150.0 bpm · 17.6s · 18 cuts/2 moshed · 14551 KB
+- robot · Mischluft - Get It (soundcloud) · 145.8 bpm · 16.47s · 16 cuts/2 moshed · 13263 KB
+- digi · Nico Moreno - Insolent Rave (soundcloud) · 154.5 bpm · 10.87s · 10 cuts/2 moshed · 10086 KB
+- free · Kas:st - Hell On Earth(999999999 Remix)[ROAD6] (soundcloud) · 138.0 bpm · 15.65s · 12 cuts/5 moshed · 12441 KB
+- scene · Nico Moreno x Warface - 2 Be High (Holy Priest Remix) (soundcloud) · 159.2 bpm · 13.56s · 14 cuts/4 moshed · 12486 KB
+- alien · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 16.81s · 18 cuts/1 moshed · 11567 KB
+- vapor · Be My Lover (soundcloud) · 144.8 bpm · 16.58s · 14 cuts/3 moshed · 15032 KB
+- free · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 15.24s · 16 cuts/1 moshed · 13905 KB
+- aero · Dr. Rubinstein - 303 A.M. Eternal - UPPR 004 (soundcloud) · 139.8 bpm · 13.74s · 12 cuts/1 moshed · 12508 KB
 
 ## skipped
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - tech: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- hyper: no track (soundcloud:no candidates; soundcloud:no candidates)
+- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
