@@ -1,26 +1,37 @@
-# montage — 2026-11-02 19:47 UTC
+# montage — 2026-11-03 03:08 UTC
 
 
-## made (13, 174 on the site)
-- robot · Dead Prez - Hip Hop ( Acid Rats Hard Trance edit ) (soundcloud) · 158.0 bpm · 10.63s · 11 cuts/1 moshed · 9876 KB
-- riot · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 15.46s · 15 cuts/4 moshed · 13885 KB
-- sigil · tekno tribe mental 2013 (soundcloud) · 180.0 bpm · 14.67s · 20 cuts/2 moshed · 13352 KB
-- y2k · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 14 cuts/6 moshed · 15900 KB
-- scene · Electrify (soundcloud) · 139.8 bpm · 12.02s · 11 cuts/0 moshed · 10427 KB
-- techno · Acid (soundcloud) · 150.0 bpm · 17.6s · 16 cuts/1 moshed · 15197 KB
-- analog · KETTAMA & Ewan McVicar - Take Me Away (Unreleased) (soundcloud) · 138.8 bpm · 13.84s · 12 cuts/4 moshed · 12594 KB
-- mound · Drums & tribecore (soundcloud) · 126.2 bpm · 20.91s · 18 cuts/6 moshed · 18892 KB
-- drain · Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (feat. Grace Bridie) OUT NOW ON ALL PLATFORMS (soundcloud) · 144.8 bpm · 13.26s · 16 cuts/1 moshed · 8301 KB
-- free · 4am In A Rave feat. rhys from the sticks (soundcloud) · 146.8 bpm · 14.72s · 18 cuts/2 moshed · 13294 KB
-- punk · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 12.02s · 10 cuts/2 moshed · 11157 KB
-- free · New Beat Order, Seeko, Robbe, KROMA - Secret (soundcloud) · 159.2 bpm · 12.06s · 17 cuts/2 moshed · 10904 KB
-- aero · VTSS | SECTION - Disparate Youth Remix | August 2025 (soundcloud) · 147.8 bpm · 16.24s · 18 cuts/1 moshed · 14770 KB
+## made (11, 174 on the site)
+- factory · Nico Moreno & Warface - 2 Be High (soundcloud) · 154.5 bpm · 12.43s · 12 cuts/3 moshed · 11423 KB
+- riot · Ewan McVicar & DART - Rollercoaster (FULL Unreleased) (soundcloud) · 139.8 bpm · 15.46s · 14 cuts/2 moshed · 14054 KB
+- robot · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 11.13s · 15 cuts/2 moshed · 10364 KB
+- vapor · SLAVA SOUL! (soundcloud) · 138.0 bpm · 13.91s · 13 cuts/1 moshed · 12643 KB
+- death · Robbe, Seeko, New Beat Order, KROMA - Bubblegum Bitch (soundcloud) · 180.0 bpm · 9.33s · 11 cuts/4 moshed · 8635 KB
+- crt · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 12.02s · 12 cuts/1 moshed · 10653 KB
+- black · Leader Of The Pack (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/4 moshed · 12736 KB
+- digital · KI/KI - What's a Girl to Do (KI/KI Remix) (soundcloud) · 145.8 bpm · 14.82s · 18 cuts/2 moshed · 13490 KB
+- scene · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 10.55s · 12 cuts/2 moshed · 9890 KB
+- psych · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 16.81s · 17 cuts/1 moshed · 15239 KB
+- alien · Klangkuenstler - Weltschmerz [OW006] (soundcloud) · 139.8 bpm · 13.74s · 14 cuts/1 moshed · 12573 KB
 
 ## skipped
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track ()
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- tech: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+
+## errors
+- goth: ChunkedEncodingError: ('Connection broken: IncompleteRead(69765 bytes read, 59404 more expected)', IncompleteRead(69765 bytes read, 59404 more expected))
+- .content
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1042, in content
+    self._content = b"".join(self.iter_content(CONTENT_CHUNK_SIZE)) or b""
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 939, in generate
+    raise ChunkedEncodingError(e)
+requests.exceptions.ChunkedEncodingError: ('Connection broken: IncompleteRead(69765 bytes read, 59404 more expected)', IncompleteRead(69765 bytes read, 59404 more expected))
+
+- publish: ChunkedEncodingError: ('Connection broken: IncompleteRead(8536064 bytes read, 5136758 more expected)', IncompleteRead(8536064 bytes read, 5136758 more expected))
