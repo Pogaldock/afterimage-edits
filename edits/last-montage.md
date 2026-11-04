@@ -1,29 +1,29 @@
-# montage — 2026-11-03 19:51 UTC
+# montage — 2026-11-04 01:40 UTC
 
 
-## made (14, 174 on the site)
-- robot · Dilas -  174 milligrams of Tribe Tekno (soundcloud) · 173.8 bpm · 13.81s · 13 cuts/3 moshed · 7680 KB
-- y2k · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 12.02s · 11 cuts/2 moshed · 10251 KB
-- witch · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 12.02s · 11 cuts/2 moshed · 11000 KB
-- witch · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 15.97s · 12 cuts/2 moshed · 12599 KB
-- drain · Ewan McVicar & DART - Rollercoaster (FULL Unreleased) (soundcloud) · 139.8 bpm · 18.89s · 17 cuts/0 moshed · 17047 KB
-- hyper · R 2 ME (soundcloud) · 183.0 bpm · 13.12s · 16 cuts/4 moshed · 12183 KB
-- riot · Una Hora Más (soundcloud) · 150.0 bpm · 12.8s · 16 cuts/1 moshed · 8351 KB
-- mound · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 10.55s · 12 cuts/0 moshed · 9692 KB
-- aero · Enrico Sangiuliano - The Techno Code (Charlotte de Witte's Acid Code) (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/3 moshed · 14866 KB
-- punk · Robbe, Seeko, New Beat Order, KROMA - Bubblegum Bitch (soundcloud) · 180.0 bpm · 14.67s · 15 cuts/0 moshed · 13430 KB
-- psych · B2_Fky_The CB radio (soundcloud) · 159.2 bpm · 16.58s · 23 cuts/3 moshed · 14896 KB
-- aero · DATSKO - Where Have You Been (Remix) (soundcloud) · 158.0 bpm · 13.67s · 13 cuts/2 moshed · 12357 KB
-- punk · Rollercoaster - DART and Ewan McVicar (Unreleased) *BEST QUALITY* (soundcloud) · 139.8 bpm · 13.74s · 14 cuts/1 moshed · 12628 KB
-- black · 999999999, FLKN - No Limit (soundcloud) · 154.5 bpm · 13.98s · 13 cuts/1 moshed · 12882 KB
+## made (16, 174 on the site)
+- tech · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/0 moshed · 13730 KB
+- punk · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 17.87s · 18 cuts/1 moshed · 16198 KB
+- alien · SLAVA FUNK (soundcloud) · 180.0 bpm · 12.0s · 15 cuts/3 moshed · 10823 KB
+- techno · SLAVA FUNK! 2.0 (soundcloud) · 138.8 bpm · 15.57s · 13 cuts/2 moshed · 14059 KB
+- riot · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/1 moshed · 12481 KB
+- witch · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 15.97s · 12 cuts/1 moshed · 14624 KB
+- robot · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 11.77s · 12 cuts/1 moshed · 10619 KB
+- drain · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 13.91s · 12 cuts/2 moshed · 11271 KB
+- mound · SKEPTA X FIONN CURRAN (soundcloud) · 142.8 bpm · 11.77s · 10 cuts/3 moshed · 10830 KB
+- riot · Nico Moreno - Insolent Rave (soundcloud) · 154.5 bpm · 13.98s · 14 cuts/0 moshed · 11901 KB
+- free · Chrome thunder, sparks ignite ✅ by Dusty Strings  Rockabilly Industrial techno (soundcloud) · 127.8 bpm · 15.03s · 11 cuts/1 moshed · 11990 KB
+- free · SLAVA FUNK! (soundcloud) · 138.0 bpm · 12.17s · 11 cuts/3 moshed · 11065 KB
+- techno · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 17.88s · 16 cuts/2 moshed · 16124 KB
+- y2k · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 16.81s · 14 cuts/3 moshed · 15303 KB
+- opium · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 12.43s · 16 cuts/1 moshed · 10095 KB
+- sigil · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 13.54s · 12 cuts/1 moshed · 12291 KB
 
 ## skipped
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 
 ## errors
-- publish: HTTPError: 503 Server Error: Service Unavailable for url: https://atlas.symbiozefpv.com/api/atlas/cur/obj?o=atlas%2Fstatic-951.tar
+- publish: HTTPError: 503 Server Error: Service Unavailable for url: https://atlas.symbiozefpv.com/api/atlas/cur/obj?o=atlas%2Fstatic-942.tar
