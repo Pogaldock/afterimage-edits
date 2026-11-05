@@ -1,26 +1,26 @@
-# montage — 2026-11-05 11:28 UTC
+# montage — 2026-11-05 21:06 UTC
 
 
-## made (11, 174 on the site)
-- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 13.0s · 16 cuts/3 moshed · 11707 KB
-- black · PACK GONX EDIT MASHUP  ( PSY - TECHNO - VINA ) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/2 moshed · 16777 KB
-- war · R 2 ME (soundcloud) · 183.0 bpm · 11.8s · 19 cuts/2 moshed · 10350 KB
-- punk · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 13.56s · 12 cuts/0 moshed · 12465 KB
-- scene · SLAVA SOUL! (soundcloud) · 138.0 bpm · 13.91s · 12 cuts/2 moshed · 12789 KB
-- digi · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 11.78s · 9 cuts/1 moshed · 10920 KB
-- vapor · B2_Fky_The CB radio (soundcloud) · 159.2 bpm · 15.07s · 17 cuts/1 moshed · 13799 KB
-- y2k · Rollercoaster - DART and Ewan McVicar (Unreleased) *BEST QUALITY* (soundcloud) · 139.8 bpm · 18.89s · 15 cuts/4 moshed · 17065 KB
-- scene · Dimitri K - This Is The Life (soundcloud) · 133.5 bpm · 12.58s · 12 cuts/3 moshed · 11499 KB
-- robot · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 16.35s · 18 cuts/5 moshed · 14483 KB
-- hyper · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 19.89s · 19 cuts/2 moshed · 17828 KB
+## made (13, 174 on the site)
+- psych · New Beat Order, Robbe & KROMA - 6 Little Eggs (soundcloud) · 180.0 bpm · 14.67s · 18 cuts/1 moshed · 13270 KB
+- death · If You Want Me - Nico Moreno remix (soundcloud) · 150.0 bpm · 12.8s · 11 cuts/1 moshed · 11733 KB
+- free · Electrify (soundcloud) · 139.8 bpm · 18.89s · 17 cuts/0 moshed · 17125 KB
+- digi · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 15.07s · 24 cuts/2 moshed · 13817 KB
+- crt · KAS:ST - 2084 (soundcloud) · 131.8 bpm · 14.57s · 15 cuts/2 moshed · 12338 KB
+- riot · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/3 moshed · 17038 KB
+- riot · mischluft &  t e s t p r e s s - BOUNCE N BREAK (Radio Edit) (soundcloud) · 150.0 bpm · 11.2s · 10 cuts/0 moshed · 6520 KB
+- mound · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 13.74s · 13 cuts/2 moshed · 11714 KB
+- scene · Ftsk 13 Laboratory660 (soundcloud) · 169.5 bpm · 12.74s · 16 cuts/1 moshed · 11713 KB
+- goth · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 15.46s · 13 cuts/4 moshed · 13302 KB
+- vapor · NOW IT'S GONE (BL3SS REMIX) (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/1 moshed · 13734 KB
+- free · Bloodhound Lil Jeff Lost My Gun x i walk this earth all by myself (soundcloud) · 153.2 bpm · 14.1s · 14 cuts/3 moshed · 12972 KB
+- alien · Gallow Dance - Hardtek (Slowed) (soundcloud) · 127.8 bpm · 16.91s · 12 cuts/4 moshed · 15412 KB
 
 ## skipped
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- crt: no track (soundcloud:no candidates)
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
