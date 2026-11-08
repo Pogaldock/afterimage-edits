@@ -1,26 +1,26 @@
-# montage — 2026-11-07 22:11 UTC
+# montage — 2026-11-08 06:32 UTC
 
 
-## made (12, 174 on the site)
-- scene · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 16.24s · 15 cuts/1 moshed · 13444 KB
-- techno · If You Want Me - Nico Moreno remix (soundcloud) · 150.0 bpm · 11.2s · 15 cuts/3 moshed · 10342 KB
-- death · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 13.91s · 13 cuts/3 moshed · 12086 KB
-- digi · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 10.55s · 12 cuts/1 moshed · 9756 KB
-- vapor · Electrify (soundcloud) · 139.8 bpm · 12.02s · 12 cuts/1 moshed · 11130 KB
-- datamosh · Mischluft - Get It (soundcloud) · 145.8 bpm · 16.47s · 18 cuts/4 moshed · 15073 KB
-- punk · Southstar - Miss You (AIROD Rave Remix) (soundcloud) · 144.8 bpm · 14.92s · 10 cuts/1 moshed · 13645 KB
-- free · Premiere: Rebekah x Hellish - Don’t Let Go [Reckless] (soundcloud) · 159.2 bpm · 15.07s · 14 cuts/4 moshed · 13722 KB
-- psych · Mafia Style (soundcloud) · 145.8 bpm · 13.17s · 12 cuts/3 moshed · 12043 KB
-- free · SLAVA FUNK! (soundcloud) · 138.0 bpm · 19.13s · 16 cuts/4 moshed · 17212 KB
-- tech · Leader Of The Pack (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/4 moshed · 15587 KB
-- goth · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 15.24s · 15 cuts/1 moshed · 13656 KB
+## made (15, 174 on the site)
+- riot · Nico Moreno & Warface - 2 Be High (soundcloud) · 154.5 bpm · 17.09s · 22 cuts/1 moshed · 15547 KB
+- y2k · Anyma, Argy, Son Of Son - Voices in My Head (Amelie Lens Remix) (soundcloud) · 139.8 bpm · 13.74s · 12 cuts/1 moshed · 12636 KB
+- free · TNMN - MOVING BODY [RCKLSS014] PREMIERE (soundcloud) · 164.2 bpm · 13.15s · 18 cuts/3 moshed · 12100 KB
+- opium · Una Hora Más (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/3 moshed · 11827 KB
+- alien · Krowdexx & Dimitri K - IN ANOTHER LIFE (soundcloud) · 132.8 bpm · 16.27s · 10 cuts/3 moshed · 9371 KB
+- punk · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/4 moshed · 15088 KB
+- robot · Don't Say A Word - Kander (SEMTEX Schranz EDIT) (soundcloud) · 154.5 bpm · 17.09s · 17 cuts/4 moshed · 15417 KB
+- witch · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 16.2s · 15 cuts/5 moshed · 14787 KB
+- mound · Amelie Lens - our frequency (soundcloud) · 142.8 bpm · 13.45s · 16 cuts/1 moshed · 12387 KB
+- crt · ARCTIC MONKEYS - 505 (N4C HARD TECHNO REMIX) (soundcloud) · 154.5 bpm · 15.53s · 21 cuts/5 moshed · 14125 KB
+- digi · ❤️‍🔥🦖 MDEMIXXE 2025 ACID + HARD TECHNO MIX: YÅ - Come On Venoms (soundcloud) · 180.0 bpm · 12.0s · 17 cuts/1 moshed · 10917 KB
+- free · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 17.99s · 27 cuts/1 moshed · 16284 KB
+- psych · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 12.06s · 17 cuts/0 moshed · 11102 KB
+- hyper · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 13.07s · 11 cuts/1 moshed · 12035 KB
+- datamosh · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/3 moshed · 11696 KB
 
 ## skipped
-- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:ERROR: [soundcloud] summitde/m83-my-tears-are-becoming-a-sea-summit-ryx-emotional-schranz-edit: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drone: no track (soundcloud:ERROR: [soundcloud] user-448042187/la-mia-banda-fuma-loppio-tekno-tribe: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
