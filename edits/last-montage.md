@@ -1,26 +1,26 @@
-# montage — 2026-11-08 19:58 UTC
+# montage — 2026-11-09 01:10 UTC
 
 
-## made (14, 174 on the site)
-- sigil · DATSKO - Reason (Extended Mix) (soundcloud) · 144.8 bpm · 16.58s · 18 cuts/4 moshed · 14939 KB
-- vapor · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 14.2s · 11 cuts/2 moshed · 12587 KB
-- robot · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 18.49s · 19 cuts/1 moshed · 16844 KB
-- free · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 14.82s · 15 cuts/1 moshed · 13557 KB
-- aero · Una Hora Más (soundcloud) · 150.0 bpm · 17.6s · 16 cuts/3 moshed · 7871 KB
-- punk · Southstar - Miss You (AIROD Rave Remix) (soundcloud) · 144.8 bpm · 16.58s · 13 cuts/2 moshed · 15017 KB
-- factory · Acid (soundcloud) · 150.0 bpm · 14.4s · 16 cuts/4 moshed · 13180 KB
-- scene · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 14.4s · 18 cuts/0 moshed · 13060 KB
-- psych · Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (feat. Grace Bridie) OUT NOW ON ALL PLATFORMS (soundcloud) · 144.8 bpm · 14.92s · 13 cuts/2 moshed · 13517 KB
-- psych · Kyle Starkey x Entasia - 234 (Extended) (soundcloud) · 141.8 bpm · 18.62s · 18 cuts/4 moshed · 16894 KB
-- mound · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 16.35s · 13 cuts/3 moshed · 11435 KB
-- sigil · "LA TÊTE DANS LES CAISSES" FAT TRIBECORE (soundcloud) · 154.5 bpm · 10.87s · 14 cuts/1 moshed · 10031 KB
-- robot · ACIDUS - PLAY THAT BEAT [RCKLSS016] (soundcloud) · 159.2 bpm · 16.58s · 21 cuts/0 moshed · 13241 KB
-- drain · ARTBAT, KAS:ST & Losless - Pull Out (Original Mix) (soundcloud) · 127.8 bpm · 16.91s · 16 cuts/2 moshed · 15178 KB
+## made (11, 174 on the site)
+- punk · The Floorfillers - Works Your Body Down (Kyle Starkey Rework) (soundcloud) · 137.0 bpm · 17.52s · 14 cuts/1 moshed · 14796 KB
+- opium · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 15.97s · 13 cuts/0 moshed · 14504 KB
+- free · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 13.45s · 11 cuts/1 moshed · 12396 KB
+- alien · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 11.13s · 11 cuts/0 moshed · 10066 KB
+- mound · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 15.46s · 15 cuts/4 moshed · 11952 KB
+- free · Robbe, Seeko, New Beat Order, KROMA - Bubblegum Bitch (soundcloud) · 180.0 bpm · 12.0s · 14 cuts/2 moshed · 10916 KB
+- free · Loreen - Tattoo (SCHLASS & RYX Schranz Edit) (soundcloud) · 159.2 bpm · 10.55s · 15 cuts/1 moshed · 9865 KB
+- death · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 14.46s · 12 cuts/1 moshed · 13114 KB
+- techno · Fionn Curran - Give Me Luv (Reboot Records IRE) (soundcloud) · 134.2 bpm · 19.66s · 17 cuts/6 moshed · 16590 KB
+- free · PUSH UP x RAVE MOZART: HARD PSY/TECHNO MASHUP (soundcloud) · 159.2 bpm · 16.58s · 22 cuts/1 moshed · 13575 KB
+- punk · YDWT (soundcloud) · 159.2 bpm · 16.58s · 16 cuts/4 moshed · 15068 KB
 
 ## skipped
-- tech: no track (soundcloud:ERROR: [soundcloud] user-152198397/dj-hyperactive-wide-open: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- y2k: no track (soundcloud:ERROR: [soundcloud] kntxtmusic/charlotte-de-witte-feat-xsalt-no-division-original-mix: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:ERROR: [soundcloud] charlottedewittemusic/charlotte-de-witte-feat-conduit-a-prayer-for-the-dancefloor-original-mix-1: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
-- war: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- crt: no track (soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates)
+- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- digi: no track (soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
