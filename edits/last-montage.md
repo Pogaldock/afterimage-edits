@@ -1,26 +1,26 @@
-# montage — 2026-11-09 22:42 UTC
+# montage — 2026-11-10 07:52 UTC
 
 
-## made (11, 174 on the site)
-- sigil · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 15.46s · 16 cuts/1 moshed · 13381 KB
-- black · BAD BUNNY - CAFE CON RON (NO ROMEO SCHRANZ EDIT) [FREE DL] (soundcloud) · 159.2 bpm · 16.58s · 28 cuts/2 moshed · 15041 KB
-- death · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 19.13s · 16 cuts/3 moshed · 17279 KB
-- aero · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 11.77s · 11 cuts/2 moshed · 10676 KB
-- free · R 2 ME (soundcloud) · 183.0 bpm · 11.8s · 18 cuts/4 moshed · 9118 KB
-- mound · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 14 cuts/1 moshed · 10717 KB
-- alien · Krowdexx & Dimitri K - IN ANOTHER LIFE (soundcloud) · 132.8 bpm · 16.27s · 13 cuts/4 moshed · 14714 KB
-- techno · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/3 moshed · 17052 KB
-- punk · FANTASM - BURN THE FLOOR [RCKLSS017] (soundcloud) · 159.2 bpm · 13.56s · 14 cuts/3 moshed · 12416 KB
-- punk · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 18.08s · 15 cuts/3 moshed · 16361 KB
-- witch · YDWT (soundcloud) · 159.2 bpm · 13.56s · 14 cuts/1 moshed · 12400 KB
+## made (12, 174 on the site)
+- aero · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 13.56s · 16 cuts/1 moshed · 12202 KB
+- robot · Electrify (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/2 moshed · 15007 KB
+- y2k · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 15.07s · 14 cuts/2 moshed · 13751 KB
+- psych · KAS:ST - 2084 (soundcloud) · 131.8 bpm · 16.4s · 12 cuts/2 moshed · 14834 KB
+- y2k · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/2 moshed · 12130 KB
+- robot · Amelie Lens - our frequency (soundcloud) · 142.8 bpm · 15.13s · 14 cuts/1 moshed · 13261 KB
+- digi · Symmetrik x BL3SS - We Don’t Have To (Clothes Off) (feat. Grace Bridie) OUT NOW ON ALL PLATFORMS (soundcloud) · 144.8 bpm · 11.61s · 11 cuts/2 moshed · 10479 KB
+- y2k · ❤️‍🔥🦖 MDEMIXXE 2025 ACID + HARD TECHNO MIX: YÅ - Come On Venoms (soundcloud) · 180.0 bpm · 13.33s · 13 cuts/2 moshed · 12038 KB
+- vapor · DYEN X MR POLSKA - BALENCI (soundcloud) · 160.2 bpm · 11.98s · 17 cuts/2 moshed · 11117 KB
+- riot · KI/KI - What's a Girl to Do (KI/KI Remix) (soundcloud) · 145.8 bpm · 13.17s · 11 cuts/1 moshed · 12199 KB
+- opium · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 15.53s · 23 cuts/5 moshed · 14204 KB
+- death · ARTBAT, KAS:ST & Losless - Pull Out (Original Mix) (soundcloud) · 127.8 bpm · 20.66s · 16 cuts/2 moshed · 18714 KB
 
 ## skipped
-- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- crt: no track (soundcloud:no candidates)
 - scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- digi: no track (soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- datamosh: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] coco-courtin-tekworld/chris-liberator-sterling-moss-massive-line-original-mix: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
+- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
