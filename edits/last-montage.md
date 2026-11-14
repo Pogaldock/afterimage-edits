@@ -1,26 +1,26 @@
-# montage — 2026-11-14 18:27 UTC
+# montage — 2026-11-14 22:45 UTC
 
 
 ## made (12, 174 on the site)
-- mound · SLAVA FUNK (soundcloud) · 180.0 bpm · 14.67s · 14 cuts/3 moshed · 13167 KB
-- riot · A1-Fky-Aera_51 (soundcloud) · 159.2 bpm · 12.06s · 12 cuts/1 moshed · 11112 KB
-- black · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 17.39s · 14 cuts/5 moshed · 15732 KB
-- robot · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 12.17s · 11 cuts/0 moshed · 11112 KB
-- scene · Mischluft - Get It (soundcloud) · 145.8 bpm · 16.47s · 15 cuts/3 moshed · 14782 KB
-- free · Mischluft & David Löhlein (feat. Irgu) - Que Tipazo (soundcloud) · 150.0 bpm · 17.6s · 16 cuts/2 moshed · 15773 KB
-- witch · Nico Moreno - Insolent Rave (soundcloud) · 154.5 bpm · 15.53s · 22 cuts/2 moshed · 14194 KB
-- hyper · Slow Burner (soundcloud) · 135.2 bpm · 12.42s · 11 cuts/3 moshed · 10568 KB
-- opium · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 11.77s · 10 cuts/0 moshed · 9017 KB
-- robot · La Mia Banda Fuma L'Oppio TEKNO TRIBE (soundcloud) · 159.2 bpm · 10.55s · 15 cuts/1 moshed · 9740 KB
-- vapor · YDWT (soundcloud) · 159.2 bpm · 10.55s · 15 cuts/0 moshed · 9679 KB
-- vapor · Funk Tribu - Blue Summer (Original Mix) (soundcloud) · 153.2 bpm · 14.1s · 13 cuts/2 moshed · 12407 KB
+- drain · R-Zac 23 - WL 01 A (Untitled) (soundcloud) · 163.0 bpm · 14.72s · 18 cuts/1 moshed · 13446 KB
+- war · Bel Mercy (BEAUZ Hard Techno Remix) feat. Nokia (soundcloud) · 159.2 bpm · 13.56s · 12 cuts/2 moshed · 12152 KB
+- psych · SLAVA FUNK! 2.0 (soundcloud) · 138.8 bpm · 17.3s · 14 cuts/5 moshed · 14784 KB
+- free · tekno tribe mental 2013 (soundcloud) · 180.0 bpm · 14.67s · 15 cuts/1 moshed · 12995 KB
+- war · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/3 moshed · 11393 KB
+- psych · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 18.11s · 17 cuts/2 moshed · 16462 KB
+- y2k · Nikolina I loved you once (soundcloud) · 154.5 bpm · 13.98s · 13 cuts/3 moshed · 12835 KB
+- digi · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/1 moshed · 16011 KB
+- drain · MAU P - LIKE I LIKE IT (ELI BROWN EDIT) | FREE DOWNLOAD (soundcloud) · 131.8 bpm · 10.93s · 10 cuts/2 moshed · 10073 KB
+- techno · TRAIN FANTÔME - DRONE (LESSSS, SCHLASS,  RDØ HARD EDIT) (soundcloud) · 159.2 bpm · 12.06s · 13 cuts/2 moshed · 11171 KB
+- free · Bloodhound Lil Jeff Lost My Gun x i walk this earth all by myself (soundcloud) · 153.2 bpm · 14.1s · 14 cuts/1 moshed · 12961 KB
+- riot · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 18.62s · 16 cuts/2 moshed · 16904 KB
 
 ## skipped
-- digital: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- tech: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- factory: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- death: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
