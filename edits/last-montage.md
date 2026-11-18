@@ -1,26 +1,29 @@
-# montage — 2026-11-17 16:24 UTC
+# montage — 2026-11-18 01:25 UTC
 
 
-## made (15, 174 on the site)
-- death · Rack It Up [Premiered by Nico Moreno @ UMF Miami] (soundcloud) · 159.2 bpm · 15.07s · 14 cuts/2 moshed · 12684 KB
-- hyper · Shlømo & Vortek's - Dam Dam Dam (soundcloud) · 158.0 bpm · 13.67s · 16 cuts/1 moshed · 11484 KB
-- y2k · Charlotte de Witte feat. XSALT - No Division (Original Mix) (soundcloud) · 138.0 bpm · 17.39s · 14 cuts/1 moshed · 14107 KB
-- riot · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 17.39s · 13 cuts/1 moshed · 15803 KB
-- punk · Disparate Youth (Marlon Hoffstadt Edit) (soundcloud) · 151.0 bpm · 15.89s · 15 cuts/2 moshed · 14407 KB
-- free · KAS:ST - 2084 (soundcloud) · 131.8 bpm · 16.4s · 16 cuts/2 moshed · 14885 KB
-- vapor · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 13.91s · 14 cuts/1 moshed · 9627 KB
-- y2k · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 17.17s · 13 cuts/1 moshed · 14528 KB
-- factory · Mischluft & David Löhlein (feat. Irgu) - Que Tipazo (soundcloud) · 150.0 bpm · 14.4s · 18 cuts/5 moshed · 13000 KB
-- techno · Kyle Starkey x Entasia - 234 (Extended) (soundcloud) · 141.8 bpm · 15.24s · 14 cuts/1 moshed · 13763 KB
-- digi · ALARICO - SOLACE (soundcloud) · 146.8 bpm · 17.99s · 14 cuts/5 moshed · 14781 KB
-- psych · Sullivan King x TRYM X GRAPHYT - RUMBLE (soundcloud) · 159.2 bpm · 13.56s · 13 cuts/1 moshed · 12006 KB
-- alien · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 16.27s · 16 cuts/0 moshed · 11234 KB
-- punk · La Mia Banda Fuma L'Oppio TEKNO TRIBE (soundcloud) · 159.2 bpm · 10.55s · 10 cuts/1 moshed · 8199 KB
-- sigil · INF104 - Fantasm, Activator "Sparta" (Fantasm Rmx) (Infamia Records) (Out Now) (soundcloud) · 150.0 bpm · 12.8s · 12 cuts/3 moshed · 11703 KB
+## made (13, 174 on the site)
+- psych · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 16.81s · 17 cuts/0 moshed · 15313 KB
+- tech · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 13.74s · 13 cuts/2 moshed · 12298 KB
+- free · SLAVA FUNK (soundcloud) · 180.0 bpm · 12.0s · 16 cuts/2 moshed · 11128 KB
+- robot · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 19.52s · 15 cuts/3 moshed · 16444 KB
+- scene · tekno tribe mental 2013 (soundcloud) · 180.0 bpm · 13.33s · 21 cuts/1 moshed · 12247 KB
+- riot · Tekno Tribe Old School 02 ITALY (soundcloud) · 159.2 bpm · 12.06s · 12 cuts/3 moshed · 11119 KB
+- punk · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 13.56s · 12 cuts/1 moshed · 12461 KB
+- drain · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 17.17s · 14 cuts/3 moshed · 15602 KB
+- mound · Basswell - Bass Down Low (Rave Edit) (soundcloud) · 144.8 bpm · 11.61s · 10 cuts/1 moshed · 9869 KB
+- y2k · Kyle Starkey - Tryting [Agrio Tracks] (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/3 moshed · 13923 KB
+- techno · Slow Burner (soundcloud) · 135.2 bpm · 19.52s · 16 cuts/2 moshed · 13967 KB
+- y2k · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 16.81s · 15 cuts/3 moshed · 14529 KB
+- death · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 16.93s · 18 cuts/3 moshed · 15267 KB
 
 ## skipped
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] insolentraverecords/nico-moreno-purple-widow: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
 - scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- opium: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+
+## errors
+- publish: HTTPError: 503 Server Error: Service Unavailable for url: https://atlas.symbiozefpv.com/api/atlas/cur/obj?o=atlas%2Fstatic-949.tar
