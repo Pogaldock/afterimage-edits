@@ -1,29 +1,26 @@
-# montage — 2026-11-20 21:03 UTC
+# montage — 2026-11-21 02:43 UTC
 
 
 ## made (11, 174 on the site)
-- y2k · If You Want Me - Nico Moreno remix (soundcloud) · 150.0 bpm · 16.0s · 20 cuts/2 moshed · 14503 KB
-- death · Paula Hartmann - 7 Mädchen (RYX Schranz Rework) (soundcloud) · 155.5 bpm · 10.8s · 12 cuts/1 moshed · 9862 KB
-- hyper · Make Up Your Mind (soundcloud) · 128.5 bpm · 18.68s · 17 cuts/3 moshed · 16761 KB
-- alien · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 10.55s · 9 cuts/2 moshed · 9313 KB
-- robot · KETTAMA & Ewan McVicar - Take Me Away (Unreleased) (soundcloud) · 138.8 bpm · 17.3s · 14 cuts/4 moshed · 14619 KB
-- opium · Rollercoaster - Ewan McVicar and DART (Unreleased - As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 15.46s · 15 cuts/3 moshed · 13935 KB
-- digi · Mischluft & David Löhlein (feat. Irgu) - Que Tipazo (soundcloud) · 150.0 bpm · 14.4s · 12 cuts/2 moshed · 13102 KB
-- riot · 4am In A Rave feat. rhys from the sticks (soundcloud) · 146.8 bpm · 14.72s · 17 cuts/1 moshed · 13492 KB
-- witch · 999999999, FLKN - No Limit (soundcloud) · 154.5 bpm · 13.98s · 19 cuts/1 moshed · 8337 KB
-- death · Petite Meller - High Forever (Marlon Hoffstadt Remix) (soundcloud) · 154.5 bpm · 17.09s · 16 cuts/1 moshed · 15196 KB
-- free · Klangkuenstler - Weltschmerz [OW006] (soundcloud) · 139.8 bpm · 13.74s · 13 cuts/1 moshed · 12526 KB
+- punk · Dilas -  174 milligrams of Tribe Tekno (soundcloud) · 173.8 bpm · 15.19s · 18 cuts/1 moshed · 13884 KB
+- vapor · DATSKO - Reason (Extended Mix) (soundcloud) · 144.8 bpm · 11.61s · 11 cuts/1 moshed · 10801 KB
+- alien · SLAVA FUNK (soundcloud) · 180.0 bpm · 13.33s · 14 cuts/1 moshed · 12129 KB
+- aero · Electrify (soundcloud) · 139.8 bpm · 17.17s · 15 cuts/0 moshed · 15466 KB
+- mound · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 18.49s · 19 cuts/2 moshed · 16705 KB
+- weird · PRYDA - ALLEIN (WILLIAM LUCK SCHRANZ REWORK) (soundcloud) · 150.0 bpm · 14.4s · 14 cuts/0 moshed · 12979 KB
+- free · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 13.74s · 11 cuts/3 moshed · 12609 KB
+- punk · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 12.06s · 16 cuts/0 moshed · 10565 KB
+- robot · Breathe (Morgan Seatree & Marlon Hoffstadt Extended Remix) (soundcloud) · 146.8 bpm · 14.72s · 18 cuts/2 moshed · 12528 KB
+- drain · PUSH UP x RAVE MOZART: HARD PSY/TECHNO MASHUP (soundcloud) · 159.2 bpm · 16.58s · 19 cuts/2 moshed · 15171 KB
+- y2k · ARTBAT, KAS:ST & Losless - Pull Out (Original Mix) (soundcloud) · 127.8 bpm · 20.66s · 18 cuts/3 moshed · 18585 KB
 
 ## skipped
+- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:ERROR: [soundcloud] kaspro-293472555/please-me-x-titanium-mix-dart: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:ERROR: [soundcloud] darttrax/dart-newtone-feel-the-pressure-rt007: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- robot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- psych: no track ()
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates)
-- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- aero: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-
-## errors
-- publish: HTTPError: 503 Server Error: Service Unavailable for url: https://atlas.symbiozefpv.com/api/atlas/cur/obj?o=atlas%2Fstatic-947.tar
+- digi: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
