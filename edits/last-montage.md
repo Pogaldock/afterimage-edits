@@ -1,26 +1,26 @@
-# montage — 2026-11-24 03:06 UTC
+# montage — 2026-11-24 14:09 UTC
 
 
-## made (13, 174 on the site)
-- robot · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 14.62s · 18 cuts/3 moshed · 12558 KB
-- psych · Ben Hemsley - Angel (soundcloud) · 139.8 bpm · 17.17s · 17 cuts/0 moshed · 13356 KB
-- opium · Phase Fatale |  Reverse Fall (soundcloud) · 128.5 bpm · 18.68s · 18 cuts/3 moshed · 16760 KB
-- sigil · skinny love (soundcloud) · 127.8 bpm · 15.03s · 11 cuts/0 moshed · 13650 KB
-- aero · Trotters Independant Traders - Gotta Believe (Kyle Starkey Rework) (soundcloud) · 138.0 bpm · 19.13s · 17 cuts/3 moshed · 17374 KB
-- goth · Tame Impala, JENNIE - Dracula (Trym Remix) (soundcloud) · 147.8 bpm · 17.87s · 14 cuts/5 moshed · 16264 KB
-- mound · Krowdexx & Dimitri K - IN ANOTHER LIFE (soundcloud) · 132.8 bpm · 14.46s · 12 cuts/4 moshed · 13149 KB
-- riot · Bandidos Techno remix 2012 Psy (soundcloud) · 138.8 bpm · 13.84s · 12 cuts/0 moshed · 12501 KB
-- robot · Mischluft & David Löhlein (feat. Irgu) - Que Tipazo (soundcloud) · 150.0 bpm · 14.4s · 12 cuts/1 moshed · 12877 KB
-- punk · Slow Burner (soundcloud) · 135.2 bpm · 19.52s · 18 cuts/2 moshed · 14283 KB
-- scene · SLAVA FUNK! (soundcloud) · 138.0 bpm · 19.13s · 19 cuts/3 moshed · 17153 KB
-- digital · 999999999, FLKN - No Limit (soundcloud) · 154.5 bpm · 13.98s · 13 cuts/1 moshed · 12866 KB
-- war · Mha Iri, YOZÉ - Takutam [WDYD010] (Out Now) (soundcloud) · 154.5 bpm · 17.09s · 18 cuts/3 moshed · 12281 KB
+## made (12, 174 on the site)
+- y2k · Phase Fatale - Desecrating Vows (BITE025) (soundcloud) · 132.8 bpm · 12.66s · 8 cuts/0 moshed · 11419 KB
+- riot · The Way It Is (ft. Lisa Moorish) (soundcloud) · 144.8 bpm · 16.58s · 20 cuts/4 moshed · 14725 KB
+- punk · New Beat Order, Robbe & KROMA - 6 Little Eggs (soundcloud) · 180.0 bpm · 14.67s · 19 cuts/2 moshed · 12829 KB
+- free · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 14.2s · 11 cuts/1 moshed · 12386 KB
+- analog · R 2 ME (soundcloud) · 183.0 bpm · 14.43s · 15 cuts/1 moshed · 13133 KB
+- black · Holy Priest & Krowdexx - Bass Powah (soundcloud) · 159.2 bpm · 15.07s · 13 cuts/2 moshed · 10048 KB
+- techno · KAS:ST - 2084 (soundcloud) · 131.8 bpm · 14.57s · 13 cuts/1 moshed · 13317 KB
+- hyper · Nico Moreno x Warface - 2 Be High (Holy Priest Remix) (soundcloud) · 159.2 bpm · 12.06s · 15 cuts/1 moshed · 11135 KB
+- death · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 13.45s · 16 cuts/1 moshed · 12211 KB
+- hyper · DART & Kyle Starkey - Feel It [RT004] (soundcloud) · 141.8 bpm · 16.93s · 17 cuts/4 moshed · 12764 KB
+- riot · YDWT (soundcloud) · 159.2 bpm · 10.55s · 11 cuts/3 moshed · 9781 KB
+- analog · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 11.85s · 8 cuts/1 moshed · 10626 KB
 
 ## skipped
-- riot: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- witch: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- war: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- alien: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- scene: no track (soundcloud:ERROR: [soundcloud] n4c/arctic-monkeys-505-hard-techno-remix: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
