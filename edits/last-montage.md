@@ -1,26 +1,26 @@
-# montage — 2026-11-25 00:06 UTC
+# montage — 2026-11-25 09:01 UTC
 
 
-## made (15, 174 on the site)
-- free · KI/KI & Marlon Hoffstadt - Losing Control (soundcloud) · 147.8 bpm · 14.62s · 18 cuts/0 moshed · 13269 KB
-- vapor · [UNRELEASED] Kyle Starkey - The Way It Is (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/0 moshed · 13832 KB
-- robot · Party People (Extended Mix) (soundcloud) · 144.8 bpm · 11.61s · 8 cuts/3 moshed · 10623 KB
-- free · Hardtek disorder (soundcloud) · 169.5 bpm · 9.91s · 11 cuts/3 moshed · 9043 KB
-- war · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 12.06s · 13 cuts/2 moshed · 9909 KB
-- goth · tekno tribe mental 2013 (soundcloud) · 180.0 bpm · 10.67s · 16 cuts/4 moshed · 9505 KB
-- goth · KETTAMA & Interplanetary Criminal - Yosemite (Steel City Dance Discs) (soundcloud) · 142.8 bpm · 15.13s · 13 cuts/1 moshed · 13628 KB
-- death · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 11.53s · 10 cuts/1 moshed · 10702 KB
-- digital · Charlotte de Witte feat. Comma Dee - The Heads That Know (Original Mix) (soundcloud) · 138.0 bpm · 13.91s · 13 cuts/2 moshed · 12640 KB
-- y2k · Robbe, Seeko, New Beat Order, KROMA - Bubblegum Bitch (soundcloud) · 180.0 bpm · 13.33s · 17 cuts/1 moshed · 11338 KB
-- witch · You Spin Me Round (Billx Remix) (soundcloud) · 159.2 bpm · 13.56s · 23 cuts/2 moshed · 12457 KB
-- aero · One Mind (Original Mix) (soundcloud) · 139.8 bpm · 18.89s · 17 cuts/0 moshed · 16277 KB
-- digital · ❤️‍🔥🦖 MDEMIXXE 2025 ACID + HARD TECHNO MIX: YÅ - Come On Venoms (soundcloud) · 180.0 bpm · 10.67s · 16 cuts/2 moshed · 6207 KB
-- free · Narkotek - Bioterrorist Attack (soundcloud) · 183.0 bpm · 13.12s · 15 cuts/2 moshed · 12075 KB
-- alien · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 19.89s · 17 cuts/5 moshed · 17977 KB
+## made (14, 174 on the site)
+- robot · Bel Mercy (BEAUZ Hard Techno Remix) feat. Nokia (soundcloud) · 159.2 bpm · 13.56s · 17 cuts/2 moshed · 12412 KB
+- drone · CHRIS STASSY & Interplanetary Criminal - Dangerous ep - uts29 (soundcloud) · 135.2 bpm · 15.97s · 14 cuts/0 moshed · 13368 KB
+- mound · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 13.56s · 20 cuts/1 moshed · 12375 KB
+- free · Gonzi & Creeds - FULL POWER (Extended Mix) (soundcloud) · 159.2 bpm · 13.56s · 16 cuts/1 moshed · 12417 KB
+- y2k · Mischluft - New Funk (soundcloud) · 145.8 bpm · 11.53s · 13 cuts/0 moshed · 10667 KB
+- digi · Partiboi69 x KETTAMA - Pumpin (Extended) (soundcloud) · 139.8 bpm · 18.89s · 18 cuts/2 moshed · 14993 KB
+- y2k · Ancient Methods - Image Is My Commodity (soundcloud) · 128.5 bpm · 18.68s · 17 cuts/1 moshed · 15038 KB
+- sigil · CLOUDY - 7 Mädchen (Remix) [Live @ HIVE] (soundcloud) · 163.0 bpm · 14.72s · 21 cuts/1 moshed · 13360 KB
+- digi · Funk Tribu - Hold On (Extended Mix) (soundcloud) · 144.8 bpm · 14.92s · 13 cuts/5 moshed · 13518 KB
+- y2k · Rollercoaster - Ewan McVicar and DART (Unreleased- As Played At Creamfields 2026) (soundcloud) · 139.8 bpm · 18.89s · 15 cuts/1 moshed · 15078 KB
+- hyper · YN Jay X Rio Da Yung Og- Sneaky Beat (soundcloud) · 131.0 bpm · 12.82s · 11 cuts/0 moshed · 11724 KB
+- free · Fassade (soundcloud) · 154.5 bpm · 15.53s · 19 cuts/2 moshed · 14126 KB
+- riot · Sara Landry - GIRLBOSS (soundcloud) · 159.2 bpm · 16.58s · 21 cuts/3 moshed · 15157 KB
+- robot · Kyle Starkey - Do You Love (soundcloud) · 142.8 bpm · 16.81s · 17 cuts/3 moshed · 14171 KB
 
 ## skipped
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - psych: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- vapor: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - scene: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
