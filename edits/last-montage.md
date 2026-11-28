@@ -1,26 +1,26 @@
-# montage — 2026-11-27 23:43 UTC
+# montage — 2026-11-28 08:15 UTC
 
 
-## made (10, 174 on the site)
-- scene · skinny love (soundcloud) · 127.8 bpm · 16.91s · 13 cuts/1 moshed · 14922 KB
-- black · Schlass - Drop Like A Earthquake (Crusherz Remix) (soundcloud) · 159.2 bpm · 16.58s · 21 cuts/3 moshed · 15120 KB
-- drain · Electrify (soundcloud) · 139.8 bpm · 15.46s · 12 cuts/4 moshed · 14028 KB
-- death · SKEPTA X FIONN CURRAN (soundcloud) · 142.8 bpm · 11.77s · 11 cuts/1 moshed · 10726 KB
-- free · New Beat Order, Robbe, Seeko - Freaks (soundcloud) · 180.0 bpm · 12.0s · 17 cuts/2 moshed · 11152 KB
-- hyper · The Prodigy - No Good (Marlon Hoffstadt's Rave Revival) (soundcloud) · 150.0 bpm · 11.2s · 14 cuts/2 moshed · 10346 KB
-- free · DATSKO - Where Have You Been (Remix) (soundcloud) · 158.0 bpm · 12.15s · 12 cuts/1 moshed · 11255 KB
-- death · Amelie Lens - Activate (soundcloud) · 142.8 bpm · 15.13s · 14 cuts/2 moshed · 13596 KB
-- psych · Won't Look Back (Malugi's Hardcore Happiness Edit) (soundcloud) · 141.8 bpm · 13.54s · 10 cuts/1 moshed · 12406 KB
-- free · YDWT (soundcloud) · 159.2 bpm · 16.58s · 22 cuts/2 moshed · 15006 KB
+## made (14, 174 on the site)
+- scene · Dilas -  174 milligrams of Tribe Tekno (soundcloud) · 173.8 bpm · 12.43s · 19 cuts/2 moshed · 11250 KB
+- witch · Hardtek disorder (soundcloud) · 169.5 bpm · 11.33s · 17 cuts/1 moshed · 10108 KB
+- riot · KETTAMA - It Gets Better (Forever Mix) (Steel City Dance Discs) (soundcloud) · 139.8 bpm · 18.89s · 19 cuts/0 moshed · 16942 KB
+- mound · Kyle Starkey, Kara Okay – I Believe [TNT038] (soundcloud) · 142.8 bpm · 15.13s · 12 cuts/0 moshed · 13084 KB
+- goth · KI/KI - What's a Girl to Do in '25 (soundcloud) · 145.8 bpm · 14.82s · 15 cuts/3 moshed · 13367 KB
+- war · Una Hora Más (soundcloud) · 150.0 bpm · 11.2s · 16 cuts/3 moshed · 10182 KB
+- alien · KETTAMA & Ewan McVicar - Take Me Away (Unreleased) (soundcloud) · 138.8 bpm · 12.11s · 10 cuts/0 moshed · 9793 KB
+- y2k · Ben Hemsley x Gaskin - If Your Girl (soundcloud) · 131.8 bpm · 16.4s · 12 cuts/4 moshed · 14903 KB
+- y2k · Mischluft & David Löhlein (feat. Irgu) - Que Tipazo (soundcloud) · 150.0 bpm · 16.0s · 18 cuts/1 moshed · 14556 KB
+- free · Slow Burner (soundcloud) · 135.2 bpm · 15.97s · 16 cuts/1 moshed · 14408 KB
+- alien · BAD BOY SOUND *hardtek/tribe* (soundcloud) · 159.2 bpm · 13.56s · 24 cuts/2 moshed · 10781 KB
+- robot · Drop The Pressure (Malugi Edit) (soundcloud) · 146.8 bpm · 14.72s · 13 cuts/6 moshed · 13144 KB
+- free · Gaskin x Ben Hemsley - If your girl only knew (soundcloud) · 132.8 bpm · 16.27s · 14 cuts/2 moshed · 14818 KB
+- opium · Prospa  & KETTAMA - Break Free (soundcloud) · 128.5 bpm · 14.94s · 11 cuts/2 moshed · 13617 KB
 
 ## skipped
-- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- hyper: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- y2k: no track (soundcloud:no candidates; soundcloud:ERROR: [soundcloud] thatouffaz/la-tribecore-dalice: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>); soundcloud:no candidates; soundcloud:no candidates)
-- mound: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- goth: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- war: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- analog: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- punk: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- sigil: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
 - drain: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- techno: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
-- y2k: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- black: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- free: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
+- drone: no track (soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates; soundcloud:no candidates)
